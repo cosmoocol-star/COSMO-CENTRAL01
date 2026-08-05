@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#10041a">
+<title>💰 COSMO — Facturación</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F2EAF4; --surface:rgba(255,255,255,0.86); --surface2:rgba(120,80,130,0.22);
+  --accent:#7c3aed; --accent2:#A872AD;
+  --teal:#0e7490; --blue:#6D3F79;
+  --gold:#b45309; --green:#15803d; --red:#dc2626;
+  --text:#2A1F30; --muted:#6B5A73; --muted2:#9C8BA3;
+  --border:rgba(90,60,100,0.10); --border2:rgba(90,60,100,0.16);
+  --radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 28px;background:rgba(248,242,250,0.92);border-bottom:1px solid rgba(168,114,173,0.30);backdrop-filter:blur(12px);flex-wrap:wrap;gap:8px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-sub{font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.sync-dot{width:9px;height:9px;border-radius:50%;background:#9ca3af;flex-shrink:0;cursor:pointer;margin-left:8px;box-shadow:0 0 0 3px rgba(156,163,175,0.16);transition:background .3s,box-shadow .3s;display:inline-block;}
+.sync-dot.ok{background:#15803d;box-shadow:0 0 0 3px rgba(21,128,61,0.15);}
+.sync-dot.run{background:#b45309;box-shadow:0 0 0 3px rgba(180,83,9,0.18);animation:syncPulseFac 1s ease-in-out infinite;}
+.sync-dot.off{background:#9ca3af;}
+.sync-dot.err{background:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,0.15);}
+@keyframes syncPulseFac{0%,100%{transform:scale(1);}50%{transform:scale(1.35);}}
+#app{max-width:920px;margin:0 auto;padding:24px 24px 60px;}
+.page-title{margin-bottom:20px;}
+.page-title h1{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.page-title p{font-size:11px;color:var(--muted);margin-top:2px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:16px 18px;}
+.card-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;}
+.card-value{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);}
+.card-value.green{color:var(--green);}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap;}
+.toolbar h2{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);}
+.btn{padding:8px 14px;background:rgba(147,180,240,0.15);border:1px solid rgba(147,180,240,0.4);border-radius:9px;color:var(--blue);font-size:11px;font-weight:600;font-family:'Space Mono',monospace;cursor:pointer;transition:all 0.2s;}
+.btn:hover{background:rgba(147,180,240,0.25);}
+.btn-sync{background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.35);color:var(--teal);}
+.mov-list{background:var(--surface);border:1px solid var(--border2);border-radius:14px;overflow:hidden;}
+.mov-row{display:grid;grid-template-columns:80px 1fr 110px 50px;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;}
+.mov-row:last-child{border-bottom:none;}
+.mov-row.head{background:rgba(120,80,130,0.04);font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);padding:8px 16px;}
+.mov-fecha{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);}
+.mov-concepto{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mov-cliente{font-size:10px;color:var(--muted);}
+.mov-origen{font-size:9px;padding:3px 8px;border-radius:12px;white-space:nowrap;text-align:center;}
+.mov-origen.pedido{background:rgba(21,128,61,0.1);color:var(--green);}
+.mov-origen.manual{background:rgba(180,83,9,0.1);color:var(--gold);}
+.mov-origen.tipo-abono{background:rgba(180,83,9,0.1);color:var(--gold);}
+.mov-origen.tipo-saldo_final{background:rgba(14,116,144,0.1);color:var(--teal);}
+.mov-origen.tipo-pago_completo{background:rgba(21,128,61,0.1);color:var(--green);}
+.mov-origen.tipo-ajuste{background:rgba(220,38,38,0.1);color:var(--red);}
+.mov-origen.tipo-envio{background:rgba(220,38,38,0.1);color:var(--red);}
+.mov-origen.tipo-manual{background:rgba(109,63,121,0.1);color:var(--blue);}
+.mov-origen.tipo-compra_insumo{background:rgba(220,38,38,0.1);color:var(--red);}
+.mov-origen.tipo-pago_personal{background:rgba(180,83,9,0.1);color:var(--gold);}
+.mov-origen.tipo-gasto_general{background:rgba(220,38,38,0.1);color:var(--red);}
+.mov-monto{font-family:'Space Mono',monospace;font-weight:600;text-align:right;}
+.mov-monto.neg{color:var(--red);}
+.mov-del{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:14px;}
+.mov-del:hover{color:var(--red);}
+.empty{text-align:center;padding:40px 0;color:var(--muted2);font-size:11px;}
+.modal-overlay{position:fixed;inset:0;z-index:999;background:rgba(60,40,70,0.30);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:rgba(252,248,253,0.99);border:1px solid rgba(168,85,247,0.35);border-radius:16px;padding:22px 20px;width:min(360px,90vw);}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:#8b3fb0;margin-bottom:14px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;}
+.field input,.field textarea,.field select{width:100%;background:#fff;border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;outline:none;box-sizing:border-box;}
+.modal-actions{display:flex;gap:8px;margin-top:6px;}
+.modal-actions button{flex:1;padding:10px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid transparent;}
+.btn-save{background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.5);color:#15803d;}
+.btn-cancel{background:rgba(120,80,130,0.046);border-color:rgba(120,80,130,0.115);color:#475569;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#2A1F30;color:#fff;padding:10px 18px;border-radius:10px;font-size:12px;z-index:9999;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.25);}
+@media(max-width:600px){ .mov-row{grid-template-columns:1fr;gap:4px;} .mov-row.head{display:none;} .mov-row{padding:12px;border-radius:10px;margin-bottom:6px;border:1px solid var(--border2);} }
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:rgba(120,80,130,0.046);border:1px solid var(--border2);border-radius:10px;padding:3px;margin-bottom:18px;width:fit-content;}
+.tab-btn{position:relative;padding:7px 18px;border-radius:7px;border:none;background:transparent;color:var(--muted);font-size:11px;font-family:'Space Mono',monospace;cursor:pointer;transition:all 0.18s;white-space:nowrap;}
+.tab-btn.active{background:rgba(168,114,173,0.14);border:1px solid rgba(168,114,173,0.30);color:var(--blue);font-weight:700;}
+.tab-badge{position:absolute;top:-5px;right:-5px;min-width:15px;height:15px;border-radius:8px;background:var(--red);color:#fff;font-size:8px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 3px;}
+.vista{display:none;}
+.vista.active{display:block;}
+
+/* INVENTARIO */
+.inv-banner{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.22);border-radius:10px;margin-bottom:16px;font-size:11px;color:var(--red);display:none;}
+.inv-etapa{margin-bottom:18px;}
+.inv-etapa-title{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.inv-list{background:var(--surface);border:1px solid var(--border2);border-radius:14px;overflow:hidden;}
+.inv-row{display:grid;grid-template-columns:1fr 90px 90px;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);}
+.inv-row:last-child{border-bottom:none;}
+.inv-name{font-size:12px;color:var(--text);font-weight:600;}
+.inv-unit{font-size:9px;color:var(--muted2);margin-top:1px;}
+.inv-provider{margin-top:4px;display:flex;align-items:center;gap:8px;}
+.inv-buy-link{font-size:9px;color:var(--green);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:3px;}
+.inv-buy-link:hover{text-decoration:underline;}
+.inv-edit-link{font-size:9px;color:var(--muted2);cursor:pointer;}
+.inv-edit-link:hover{color:var(--blue);}
+.inv-add-provider{font-size:9px;color:var(--muted2);cursor:pointer;border-bottom:1px dashed var(--muted2);}
+.inv-add-provider:hover{color:var(--blue);border-color:var(--blue);}
+.inv-bar-wrap{background:rgba(120,80,130,0.10);border-radius:6px;height:7px;overflow:hidden;}
+.inv-bar{height:100%;border-radius:6px;transition:width 0.3s;}
+.inv-pct{font-size:10px;font-family:'Space Mono',monospace;text-align:right;margin-top:3px;}
+.inv-refill-btn{padding:7px 10px;background:rgba(21,128,61,0.12);border:1px solid rgba(21,128,61,0.4);border-radius:8px;color:var(--green);font-size:10px;font-weight:700;font-family:'Space Mono',monospace;cursor:pointer;white-space:nowrap;}
+.inv-refill-btn:hover{background:rgba(21,128,61,0.22);}
+.inv-refill-btn.urgent{background:rgba(220,38,38,0.12);border-color:rgba(220,38,38,0.4);color:var(--red);}
+.inv-refill-btn.urgent:hover{background:rgba(220,38,38,0.22);}
+
+/* COSTEO */
+.costeo-insumo-row{display:grid;grid-template-columns:1fr 100px 34px;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);}
+.costeo-insumo-row:last-child{border-bottom:none;}
+.costeo-tamano-card{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:14px;}
+.costeo-item-line{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);padding:3px 0;}
+.costeo-total-line{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;}
+.costeo-margen-line{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);}
+.costeo-modal-item{display:flex;gap:6px;margin-bottom:6px;align-items:center;}
+.costeo-modal-item select{flex:1;padding:7px 8px;border-radius:7px;border:1px solid var(--border2);background:rgba(255,255,255,0.9);font-size:11px;color:var(--text);}
+.costeo-modal-item input{width:72px;padding:7px 8px;border-radius:7px;border:1px solid var(--border2);background:rgba(255,255,255,0.9);font-size:11px;color:var(--text);}
+.costeo-add-item-btn{margin-top:2px;font-size:10px;padding:6px 10px;}
+.icon-action{cursor:pointer;font-size:11px;color:var(--muted);}
+.icon-action:hover{color:var(--blue);}
+.icon-action.danger:hover{color:var(--red);}
+.icon-action.attach-empty{opacity:.4;}
+.icon-action.attach-empty:hover{opacity:1;}
+
+/* PERSONAL */
+.personal-card{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:14px;}
+.personal-badge{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;}
+.personal-badge.produccion{background:rgba(21,128,61,0.12);color:var(--green);}
+.personal-badge.admin{background:rgba(109,63,121,0.1);color:var(--blue);}
+.personal-turno-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:11px;}
+.personal-btn-entrada{padding:8px 14px;background:rgba(21,128,61,0.12);border:1px solid rgba(21,128,61,0.4);border-radius:8px;color:var(--green);font-size:11px;font-weight:700;font-family:'Space Mono',monospace;cursor:pointer;}
+.personal-btn-entrada:hover{background:rgba(21,128,61,0.22);}
+.personal-btn-salida{padding:8px 14px;background:rgba(220,38,38,0.12);border:1px solid rgba(220,38,38,0.4);border-radius:8px;color:var(--red);font-size:11px;font-weight:700;font-family:'Space Mono',monospace;cursor:pointer;}
+.personal-btn-salida:hover{background:rgba(220,38,38,0.22);}
+.personal-btn-pagar{padding:6px 12px;background:rgba(180,83,9,0.12);border:1px solid rgba(180,83,9,0.4);border-radius:8px;color:var(--gold);font-size:10px;font-weight:700;font-family:'Space Mono',monospace;cursor:pointer;}
+.personal-btn-pagar:hover{background:rgba(180,83,9,0.22);}
+.personal-en-turno{font-size:11px;color:var(--green);font-weight:700;}
+.personal-tabla{width:100%;border-collapse:collapse;margin-top:12px;font-size:11px;}
+.personal-tabla th{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);padding:6px 8px;border-bottom:1px solid var(--border2);}
+.personal-tabla td{padding:9px 8px;border-bottom:1px solid var(--border);color:var(--text);}
+.personal-tabla tfoot td{font-weight:700;border-bottom:none;padding-top:12px;}
+.btn.tipo-activo{background:rgba(168,114,173,0.22);border-color:rgba(168,114,173,0.6);color:var(--accent2);}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;">
+    <div>
+      <div class="logo">COSMO</div>
+      <div class="logo-sub">Facturación</div>
+    </div>
+    <span id="sync-dot" class="sync-dot" title="Sincronización" onclick="_fbFlushAll();_fbPull(true);"></span>
+  </div>
+</header>
+
+<div id="app">
+  <div class="page-title">
+    <h1>💰 FACTURACIÓN</h1>
+    <p>Movimientos de ingreso — sincronizados automáticamente desde Pedidos</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-mov" onclick="switchVista('mov')">💵 Movimientos</button>
+    <button class="tab-btn" id="tab-inv" onclick="switchVista('inv')">📦 Inventario<span class="tab-badge" id="inv-tab-badge"></span></button>
+    <button class="tab-btn" id="tab-costeo" onclick="switchVista('costeo')">📐 Costeo</button>
+    <button class="tab-btn" id="tab-personal" onclick="switchVista('personal')">👷 Personal</button>
+    <button class="tab-btn" id="tab-metricas" onclick="switchVista('metricas')">📊 Métricas</button>
+  </div>
+
+  <div class="vista active" id="vista-mov">
+    <div class="cards" id="cards-root"></div>
+
+    <div class="toolbar">
+      <h2>Movimientos</h2>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-sync" onclick="sincronizarPedidos(true)">↻ Sincronizar</button>
+        <button class="btn" onclick="abrirModal()">+ Movimiento</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <input type="month" id="mov-filtro-mes" onchange="_movFiltrarCambio()" style="padding:8px 10px;border-radius:9px;border:1px solid var(--border2);background:#fff;font-size:11px;color:var(--text);">
+      <button class="btn" id="mov-filtro-mes-limpiar" onclick="_movFiltrarLimpiarMes()" style="display:none;">✕ Quitar filtro de mes</button>
+      <input type="text" id="mov-filtro-texto" oninput="_movFiltrarCambio()" placeholder="🔍 Buscar por concepto o cliente..." style="flex:1;min-width:180px;padding:8px 12px;border-radius:9px;border:1px solid var(--border2);background:#fff;font-size:11px;color:var(--text);">
+    </div>
+
+    <div class="mov-list" id="mov-root"></div>
+  </div>
+
+  <div class="vista" id="vista-inv">
+    <div class="toolbar">
+      <h2>Inventario de insumos</h2>
+      <div style="display:flex;gap:8px;">
+        <button class="btn" id="inv-sort-btn" onclick="_invToggleSort()">⬆️ Más bajos primero</button>
+        <button class="btn btn-sync" onclick="_invSyncPull()">↻ Sincronizar</button>
+      </div>
+    </div>
+    <div class="inv-banner" id="inv-banner"></div>
+    <div id="inv-root"></div>
+  </div>
+
+  <div class="vista" id="vista-costeo">
+    <div class="toolbar">
+      <h2>Margen por categoría</h2>
+    </div>
+    <div id="costeo-categoria-root" style="margin-bottom:26px;"></div>
+  </div>
+
+  <div class="vista" id="vista-personal">
+    <div class="toolbar">
+      <h2>Personal</h2>
+      <button class="btn" onclick="personalModal()">+ Personal</button>
+    </div>
+    <div id="personal-root"></div>
+  </div>
+
+  <div class="vista" id="vista-metricas">
+    <div class="toolbar"><h2>Métricas</h2></div>
+    <div id="metricas-root"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mov-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="mm-titulo">➕ NUEVO MOVIMIENTO</div>
+    <div class="field">
+      <label>Tipo</label>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="btn" id="mm-tipo-ingreso" onclick="_mmSetTipo('ingreso')" style="flex:1;">💵 Ingreso</button>
+        <button type="button" class="btn" id="mm-tipo-gasto" onclick="_mmSetTipo('gasto')" style="flex:1;">🧾 Gasto</button>
+      </div>
+    </div>
+    <div class="field"><label>Concepto</label><input type="text" id="mm-concepto" placeholder="Ej: Venta directa en feria"></div>
+    <div class="field" id="mm-campo-cliente"><label>Cliente (opcional)</label><input type="text" id="mm-cliente" placeholder="Nombre del cliente"></div>
+    <div class="field" id="mm-campo-categoria-ingreso"><label>Categoría</label>
+      <select id="mm-categoria-ingreso">
+        <option value="venta_directa">💵 Venta directa</option>
+        <option value="otro">📋 Otro ingreso</option>
+      </select>
+    </div>
+    <div class="field" id="mm-campo-categoria-gasto"><label>Categoría</label>
+      <select id="mm-categoria-gasto">
+        <option value="arriendo">🏠 Arriendo</option>
+        <option value="servicios">💡 Servicios (luz, agua, internet)</option>
+        <option value="transporte">🚚 Transporte</option>
+        <option value="imprevisto">⚠️ Imprevisto / contratiempo</option>
+        <option value="otro">📋 Otro</option>
+      </select>
+    </div>
+    <div class="field"><label>Monto</label><input type="number" id="mm-monto" min="0" placeholder="0"></div>
+    <div class="field" id="mm-campo-fecha"><label>Fecha</label><input type="date" id="mm-fecha"></div>
+    <div class="field" id="mm-campo-margen" style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="mm-margen" style="width:auto;">
+      <label style="margin:0;font-size:11px;color:var(--text);" for="mm-margen">Cuenta en el margen bruto (OJOS)</label>
+    </div>
+    <div class="field"><label>📎 Comprobante (opcional)</label><input type="file" id="mm-comprobante" accept="image/*" onchange="_mmComprobanteElegido(this)">
+      <div style="font-size:9px;color:var(--muted2);margin-top:3px;">o pega una captura de pantalla con Ctrl+V</div>
+    </div>
+    <div id="mm-comprobante-preview"></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="guardarManual()">✓ Guardar</button>
+      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="refill-modal">
+  <div class="modal-box">
+    <div class="modal-title">🔄 REABASTECER INSUMO</div>
+    <div class="field"><label>Insumo</label><input type="text" id="rf-nombre" readonly style="background:rgba(120,80,130,0.06);color:var(--muted);"></div>
+    <div id="rf-contexto" style="font-size:10px;color:var(--muted2);margin:-4px 0 12px;line-height:1.5;"></div>
+    <div class="field"><label>Monto pagado</label><input type="number" id="rf-monto" min="0" placeholder="$"></div>
+    <div class="field"><label>Fecha de compra</label><input type="date" id="rf-fecha"></div>
+    <div class="field"><label>📎 Comprobante (opcional)</label><input type="file" id="rf-comprobante" accept="image/*" onchange="_rfComprobanteElegido(this)">
+      <div style="font-size:9px;color:var(--muted2);margin-top:3px;">o pega una captura de pantalla con Ctrl+V</div>
+    </div>
+    <div id="rf-comprobante-preview"></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="guardarRefill()">✓ Guardar y marcar Lleno</button>
+      <button class="btn-cancel" onclick="cerrarRefillModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="proveedor-modal">
+  <div class="modal-box">
+    <div class="modal-title">🛒 PROVEEDOR DEL INSUMO</div>
+    <div class="field"><label>Insumo</label><input type="text" id="pv-nombre" readonly style="background:rgba(120,80,130,0.06);color:var(--muted);"></div>
+    <div class="field"><label>Proveedor (opcional)</label><input type="text" id="pv-proveedor" placeholder="Ej: Distribuidora Andina"></div>
+    <div class="field"><label>Link o contacto de compra</label><input type="text" id="pv-link" placeholder="https://... / wa.me/57... / tel:..."></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="guardarProveedor()">✓ Guardar</button>
+      <button class="btn-cancel" onclick="cerrarProveedorModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="personal-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="per-titulo">👷 PERSONAL</div>
+    <div class="field"><label>Nombre</label><input type="text" id="per-nombre" placeholder="Ej: Julián"></div>
+    <div class="field"><label>Tarifa por hora</label><input type="number" id="per-tarifa" min="0" placeholder="$"></div>
+    <div class="field" style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="per-produccion" style="width:auto;">
+      <label style="margin:0;font-size:11px;color:var(--text);" for="per-produccion">Es producción — cuenta en el margen bruto (OJOS)</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="personalGuardar()">✓ Guardar</button>
+      <button class="btn-cancel" onclick="personalCerrar()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editar-turno-modal">
+  <div class="modal-box">
+    <div class="modal-title">✎ AJUSTAR HORARIO</div>
+    <div class="field"><label>Entrada</label><input type="datetime-local" id="et-entrada"></div>
+    <div class="field" id="et-campo-salida"><label>Salida</label><input type="datetime-local" id="et-salida"></div>
+    <div id="et-preview" style="font-size:11px;color:var(--muted);margin:-6px 0 10px;"></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="guardarEdicionTurno()">✓ Guardar</button>
+      <button class="btn-cancel" onclick="cerrarEditarTurnoModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pago-personal-modal">
+  <div class="modal-box">
+    <div class="modal-title">💰 REGISTRAR PAGO</div>
+    <div class="field"><label>Persona</label><input type="text" id="pp-nombre" readonly style="background:rgba(120,80,130,0.06);color:var(--muted);"></div>
+    <div class="field"><label>Total a pagar</label><input type="text" id="pp-total" readonly style="background:rgba(120,80,130,0.06);color:var(--text);font-weight:700;"></div>
+    <div class="field"><label>📎 Comprobante (opcional)</label><input type="file" id="pp-comprobante" accept="image/*" onchange="_ppComprobanteElegido(this)">
+      <div style="font-size:9px;color:var(--muted2);margin-top:3px;">o pega una captura de pantalla con Ctrl+V</div>
+    </div>
+    <div id="pp-comprobante-preview"></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="confirmarPagoPersonal()">✓ Confirmar pago</button>
+      <button class="btn-cancel" onclick="cerrarPagoPersonalModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="attach-hidden-input" accept="image/*" style="display:none" onchange="_attachArchivoElegido(this)">
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════
+var MOV_KEY = 'cosmo_facturacion_movs';   // array de movimientos
+var REG_KEY = 'cosmo_facturacion_reg';    // {pedidoId: montoYaRegistrado} — evita duplicar
+
+function movLoad(){ try{ return JSON.parse(localStorage.getItem(MOV_KEY)||'[]'); }catch(e){ return []; } }
+function movSave(arr){ _facSellarArr(MOV_KEY, arr, MOV_DEL_KEY); var s=JSON.stringify(arr); localStorage.setItem(MOV_KEY,s); _fbSave(MOV_KEY,s); }
+function regLoad(){ try{ return JSON.parse(localStorage.getItem(REG_KEY)||'{}'); }catch(e){ return {}; } }
+// Ya NO se sincroniza como blob propio: es 100% derivable de MOV_KEY —
+// se recalcula localmente en cada sync (ver _facRecalcReg más abajo), así
+// nunca puede quedar inconsistente entre dispositivos.
+function regSave(obj){ var s=JSON.stringify(obj); localStorage.setItem(REG_KEY,s); }
+var REG_ENVIO_KEY = 'cosmo_facturacion_reg_envio'; // {pedidoId:true} — evita registrar el gasto de envío 2 veces
+function regEnvioLoad(){ try{ return JSON.parse(localStorage.getItem(REG_ENVIO_KEY)||'{}'); }catch(e){ return {}; } }
+function regEnvioSave(obj){ var s=JSON.stringify(obj); localStorage.setItem(REG_ENVIO_KEY,s); }
+function pedidosLoad(){ try{ return JSON.parse(localStorage.getItem('cosmo_pedidos_v2')||'[]'); }catch(e){ return []; } }
+
+// Inventario de insumos — MISMA clave que usa el Hub (cosmo_prod_meta), así
+// el nivel de stock queda sincronizado en ambos lados vía Firestore.
+var META_KEY = 'cosmo_prod_meta';
+function metaLoad(){ try{ return JSON.parse(localStorage.getItem(META_KEY)||'{}'); }catch(e){ return {}; } }
+function metaSave(obj){ var s=JSON.stringify(obj); localStorage.setItem(META_KEY,s); _fbSave(META_KEY,s); }
+
+// Gastos — misma clave que usa el Hub (cg_gastos). Solo la usamos para
+// registrar la compra al reabastecer un insumo; el resto del módulo de
+// Gastos sigue viviendo en el Hub.
+var GASTOS_KEY = 'cg_gastos';
+function gastosLoad(){ try{ return JSON.parse(localStorage.getItem(GASTOS_KEY)||'[]'); }catch(e){ return []; } }
+function gastosSave(arr){ var s=JSON.stringify(arr); localStorage.setItem(GASTOS_KEY,s); _fbSave(GASTOS_KEY,s); }
+function gid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+
+// Comprime una imagen elegida por el usuario (comprobante de pago) a un JPEG
+// chico en base64, para no inflar el documento que se sincroniza a Firestore
+// (que tiene límite de ~1MB por campo). maxW = ancho máximo en px, calidad 0-1.
+function _comprimirImagen(file, maxW, calidad, cb){
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      var w = img.width, h = img.height;
+      if(w > maxW){ h = Math.round(h*(maxW/w)); w = maxW; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(canvas.toDataURL('image/jpeg', calidad));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Procesa un archivo de comprobante (venga del selector de archivo o de
+// pegar con Ctrl+V) y pinta la vista previa — comparte lógica entre los
+// dos modales que usan comprobante (reabastecer insumo, pagar personal).
+function _procesarArchivoComprobante(file, cfg){
+  if(!file) return;
+  _comprimirImagen(file, 700, 0.6, function(dataUrl){
+    cfg.setValor(dataUrl);
+    document.getElementById(cfg.previewId).innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px;margin:6px 0 10px;">'
+      + '<img src="'+dataUrl+'" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--border2);">'
+      + '<span style="font-size:10px;color:var(--green);">✓ Comprobante listo ('+Math.round(dataUrl.length/1024)+' KB)</span>'
+      + '<span class="icon-action danger" onclick="'+cfg.quitarFnName+'()">✕</span>'
+    + '</div>';
+  });
+}
+
+// Pegar con Ctrl+V / Cmd+V: si hay un modal de comprobante abierto y el
+// portapapeles trae una imagen (ej. una captura de pantalla), se usa igual
+// que si se hubiera elegido con el selector de archivo.
+document.addEventListener('paste', function(e){
+  var dt = e.clipboardData || window.clipboardData;
+  if(!dt || !dt.items) return;
+  var file = null;
+  for(var i=0;i<dt.items.length;i++){
+    if(dt.items[i].type && dt.items[i].type.indexOf('image')===0){ file = dt.items[i].getAsFile(); break; }
+  }
+  if(!file) return;
+
+  if(document.getElementById('refill-modal').classList.contains('open')){
+    e.preventDefault();
+    _procesarArchivoComprobante(file, { previewId:'rf-comprobante-preview', quitarFnName:'_rfQuitarComprobante', setValor:function(v){ _rfComprobante=v; } });
+    toast('📎 Comprobante pegado');
+  } else if(document.getElementById('pago-personal-modal').classList.contains('open')){
+    e.preventDefault();
+    _procesarArchivoComprobante(file, { previewId:'pp-comprobante-preview', quitarFnName:'_ppQuitarComprobante', setValor:function(v){ _ppComprobante=v; } });
+    toast('📎 Comprobante pegado');
+  } else if(document.getElementById('mov-modal').classList.contains('open')){
+    e.preventDefault();
+    _procesarArchivoComprobante(file, { previewId:'mm-comprobante-preview', quitarFnName:'_mmQuitarComprobante', setValor:function(v){ _mmComprobante=v; } });
+    toast('📎 Comprobante pegado');
+  }
+});
+
+function fmt(n){ return '$'+Math.round(n).toLocaleString('es-CO'); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function movId(){ return 'm_'+Date.now()+'_'+Math.random().toString(36).slice(2,6); }
+
+var _toastT;
+function toast(msg, ms){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(_toastT);
+  _toastT = setTimeout(function(){ t.style.display='none'; }, ms||3000);
+}
+
+// ══════════════════════════════════════
+// LÓGICA DE PAGO DEL PEDIDO (misma que Cosmo Pedidos)
+// ══════════════════════════════════════
+function pagoEstado(p){
+  if(p.estadoPago) return p.estadoPago;
+  return p.pagado ? 'pagado' : 'sin_pago';
+}
+// Total NETO del pedido = SOLO productos (subtotal - descuento).
+// Los pedidos nuevos ya vienen con el total neto (marca totalNetoV2);
+// a los viejos —que traían el envío "incluido" sumado— se les resta aquí.
+function totalNeto(p){
+  if(p.totalNetoV2) return p.total || 0;
+  var e = p.envio || {};
+  var envInc = (e.tipo === 'incluido') ? (e.monto || 0) : 0;
+  return Math.max(0, (p.total || 0) - envInc);
+}
+function pagoAbonadoReal(p){
+  var e = pagoEstado(p);
+  if(e === 'pagado')   return totalNeto(p);
+  if(e === 'sin_pago') return 0;
+  return Math.min(Math.max(0, p.abonado || 0), totalNeto(p));
+}
+
+// ══════════════════════════════════════
+// SINCRONIZACIÓN: pedidos → movimientos
+// Cada sync compara, para cada pedido, lo que DEBERÍA estar registrado
+// contra lo que YA está registrado — en 3 líneas independientes:
+//   1) Ingreso bruto del pedido (abono/saldo final/pago completo)
+//   2) Gasto de envío (se activa solo si el pedido está "pagado")
+//   3) Deducción de ese envío sobre el ingreso (solo aplica si es "incluido";
+//      "gratis" nunca deduce porque nunca se cobró)
+// Si el pedido se EDITA después (cambia envío de incluido↔gratis, corrige
+// el valor, etc.), el objetivo cambia y el próximo sync genera solo el
+// ajuste por la diferencia — nunca duplica, nunca hace falta borrar nada.
+// ══════════════════════════════════════
+function sincronizarPedidos(manual){
+  var pedidos = pedidosLoad();
+  var reg = regLoad();
+  var regEnvio = regEnvioLoad(); // {pedidoId: {gasto:<acumulado>, deduccion:<acumulado>}}
+  var movs = movLoad();
+  var creados = 0;
+
+  pedidos.forEach(function(p){
+    var estado = pagoEstado(p);
+    var nombreCli = (p.cliente&&p.cliente.nombre) || 'Pedido';
+    var regE = regEnvio[p.id] || {gasto:0, deduccion:0};
+
+    // ── Objetivo de envío según el estado/tipo ACTUAL del pedido ──
+    // "incluido": la plata del envío entra y sale (se paga la transportadora),
+    //   así que NO genera movimientos — el ingreso ya se registra neto (solo productos).
+    // "gratis": COSMO asume el costo, ese gasto SÍ se registra.
+    var envioTipo = p.envio && p.envio.tipo;
+    var gastoObjetivo = (estado === 'pagado' && envioTipo === 'gratis') ? (p.envio.valor || 0) : 0;
+    var deduccionObjetivo = 0; // ya no aplica: el ingreso entra neto desde el inicio
+
+    // 1) Ajuste del gasto de envío (cubre creación Y ediciones posteriores)
+    var deltaGasto = gastoObjetivo - regE.gasto;
+    if(Math.abs(deltaGasto) >= 1){
+      var primeraVez = regE.gasto === 0;
+      var envioConcepto = !primeraVez ? ('↻ Ajuste envío — ' + nombreCli)
+                         : envioTipo === 'gratis' ? ('🎁 Envío gratis (costo asumido) — ' + nombreCli)
+                         : ('🚚 Envío — ' + nombreCli);
+      movs.push({ id: movId(), ts: Date.now(), monto: -deltaGasto, concepto: envioConcepto, cliente: nombreCli, pedidoId: p.id, origen: 'pedido', tipo: 'envio' });
+      regE.gasto = gastoObjetivo;
+      creados++;
+    }
+
+    // 2) Ajuste de la deducción sobre el ingreso (solo cuando el envío
+    //    pasa a/desde "incluido", o cambia su valor)
+    var deltaDeduccion = deduccionObjetivo - regE.deduccion;
+    if(Math.abs(deltaDeduccion) >= 1){
+      movs.push({ id: movId(), ts: Date.now(), monto: -deltaDeduccion, concepto: '↻ Ajuste ingreso por envío — ' + nombreCli, cliente: nombreCli, pedidoId: p.id, origen: 'pedido', tipo: 'ajuste' });
+      regE.deduccion = deduccionObjetivo;
+      creados++;
+    }
+
+    if(deltaGasto !== 0 || deltaDeduccion !== 0) regEnvio[p.id] = regE;
+
+    // 3) Ingreso bruto del pedido (lo que realmente entró de plata, sin
+    //    restar nada de envío aquí — eso ya lo maneja el punto 2 arriba)
+    var pagadoReal = pagoAbonadoReal(p);
+    var yaReg = reg[p.id] || 0;
+    var delta = pagadoReal - yaReg;
+    if(Math.abs(delta) < 1){ if(pagadoReal !== yaReg) reg[p.id] = pagadoReal; return; }
+
+    var tipo, concepto;
+    if(delta < 0){
+      tipo = 'ajuste';
+      concepto = 'Ajuste — ' + nombreCli;
+    }else if(estado === 'abonado'){
+      tipo = 'abono';
+      concepto = 'Abono — ' + nombreCli;
+    }else if(estado === 'pagado' && yaReg > 0){
+      tipo = 'saldo_final';
+      concepto = 'Saldo final — ' + nombreCli;
+    }else{
+      tipo = 'pago_completo';
+      concepto = 'Pago completo — ' + nombreCli;
+    }
+
+    movs.push({
+      id: movId(),
+      ts: Date.now(),
+      monto: delta,
+      concepto: concepto,
+      cliente: nombreCli,
+      pedidoId: p.id,
+      origen: 'pedido',
+      tipo: tipo
+    });
+    reg[p.id] = pagadoReal;
+    creados++;
+  });
+
+  // ── Pedidos eliminados: si un id que teníamos registrado ya no existe
+  // en Pedidos, se borran sus movimientos (ingreso + envío + ajustes) y
+  // se limpia su registro, para que no quede plata fantasma ──
+  var idsActuales = {};
+  pedidos.forEach(function(p){ idsActuales[p.id] = true; });
+  var idsRegistrados = Object.keys(reg).concat(Object.keys(regEnvio));
+  var idsEliminados = idsRegistrados.filter(function(id, i, arr){ return !idsActuales[id] && arr.indexOf(id)===i; });
+  var eliminados = 0;
+  if(idsEliminados.length){
+    var idsSet = {}; idsEliminados.forEach(function(id){ idsSet[id]=true; });
+    var antes = movs.length;
+    movs = movs.filter(function(m){ return !(m.pedidoId && idsSet[m.pedidoId]); });
+    eliminados = antes - movs.length;
+    idsEliminados.forEach(function(id){ delete reg[id]; delete regEnvio[id]; });
+  }
+
+  if(creados > 0 || eliminados > 0){
+    movSave(movs);
+    regSave(reg);
+    regEnvioSave(regEnvio);
+  }
+  if(manual){
+    var partes = [];
+    if(creados > 0) partes.push(creados+' nuevo'+(creados>1?'s':''));
+    if(eliminados > 0) partes.push(eliminados+' eliminado'+(eliminados>1?'s':'')+' (pedido borrado)');
+    toast(partes.length ? ('✓ '+partes.join(', ')) : 'Ya está todo al día', 2600);
+  }
+  render();
+}
+
+// ══════════════════════════════════════
+// MOVIMIENTO MANUAL
+// ══════════════════════════════════════
+// ══════════════════════════════════════
+// GASTOS GENERALES — arriendo, servicios, transporte, imprevistos...
+// Gastos que no son ni compra de insumo ni pago de personal. Por defecto NO
+// cuentan en el margen bruto (son gasto operativo, no de producción), pero
+// se puede marcar el que sí aplique.
+// ══════════════════════════════════════
+function gastosGeneralesLoad(){ try{ return JSON.parse(localStorage.getItem('cosmo_gastos_generales')||'[]'); }catch(e){ return []; } }
+function gastosGeneralesSave(arr){ _facSellarArr('cosmo_gastos_generales', arr, GEN_DEL_KEY); var s=JSON.stringify(arr); localStorage.setItem('cosmo_gastos_generales',s); _fbSave('cosmo_gastos_generales',s); }
+
+var GASTO_CATEGORIA_LABEL = {
+  arriendo:   '🏠 Arriendo',
+  servicios:  '💡 Servicios',
+  transporte: '🚚 Transporte',
+  imprevisto: '⚠️ Imprevisto',
+  otro:       '📋 Otro'
+};
+
+// ── Modal unificado: un movimiento manual puede ser Ingreso o Gasto ──
+var _mmComprobante = null;
+var _mmTipo = 'ingreso';
+
+function _mmSetTipo(tipo){
+  _mmTipo = tipo;
+  var esGasto = tipo==='gasto';
+  document.getElementById('mm-tipo-ingreso').classList.toggle('tipo-activo', !esGasto);
+  document.getElementById('mm-tipo-gasto').classList.toggle('tipo-activo', esGasto);
+  document.getElementById('mm-titulo').textContent = esGasto ? '🧾 NUEVO GASTO' : '➕ NUEVO INGRESO';
+  document.getElementById('mm-campo-cliente').style.display = esGasto ? 'none' : '';
+  document.getElementById('mm-campo-categoria-ingreso').style.display = esGasto ? 'none' : '';
+  document.getElementById('mm-campo-categoria-gasto').style.display = esGasto ? '' : 'none';
+  document.getElementById('mm-campo-fecha').style.display = esGasto ? '' : 'none';
+  document.getElementById('mm-campo-margen').style.display = esGasto ? '' : 'none';
+}
+window._mmSetTipo = _mmSetTipo;
+
+function abrirModal(tipo){
+  document.getElementById('mm-concepto').value = '';
+  document.getElementById('mm-cliente').value = '';
+  document.getElementById('mm-monto').value = '';
+  document.getElementById('mm-categoria-ingreso').value = 'venta_directa';
+  document.getElementById('mm-categoria-gasto').value = 'arriendo';
+  document.getElementById('mm-fecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('mm-margen').checked = false;
+  document.getElementById('mm-comprobante').value = '';
+  document.getElementById('mm-comprobante-preview').innerHTML = '';
+  _mmComprobante = null;
+  _mmSetTipo(tipo || 'ingreso');
+  document.getElementById('mov-modal').classList.add('open');
+  setTimeout(function(){ document.getElementById('mm-concepto').focus(); }, 50);
+}
+window.abrirModal = abrirModal;
+
+function cerrarModal(){ document.getElementById('mov-modal').classList.remove('open'); }
+window.cerrarModal = cerrarModal;
+
+function _mmComprobanteElegido(input){
+  var file = input.files && input.files[0];
+  _procesarArchivoComprobante(file, { previewId:'mm-comprobante-preview', quitarFnName:'_mmQuitarComprobante', setValor:function(v){ _mmComprobante=v; } });
+}
+window._mmComprobanteElegido = _mmComprobanteElegido;
+
+function _mmQuitarComprobante(){
+  _mmComprobante = null;
+  document.getElementById('mm-comprobante').value = '';
+  document.getElementById('mm-comprobante-preview').innerHTML = '';
+}
+window._mmQuitarComprobante = _mmQuitarComprobante;
+
+function guardarManual(){
+  var concepto = document.getElementById('mm-concepto').value.trim();
+  var monto = parseFloat(document.getElementById('mm-monto').value) || 0;
+  if(!concepto){ toast('Escribe un concepto', 2000); return; }
+  if(monto <= 0){ toast('El monto debe ser mayor a 0', 2000); return; }
+
+  if(_mmTipo==='gasto'){
+    var fecha = document.getElementById('mm-fecha').value || new Date().toISOString().slice(0,10);
+    var categoriaG = document.getElementById('mm-categoria-gasto').value;
+    var cuentaEnMargen = document.getElementById('mm-margen').checked;
+    var arr = gastosGeneralesLoad();
+    arr.push({ id: gid(), concepto: concepto, monto: monto, fecha: fecha, categoria: categoriaG, cuentaEnMargen: cuentaEnMargen, evidencia: _mmComprobante });
+    gastosGeneralesSave(arr);
+    cerrarModal();
+    render();
+    toast('✓ Gasto registrado', 2000);
+  } else {
+    var cliente = document.getElementById('mm-cliente').value.trim();
+    var categoriaI = document.getElementById('mm-categoria-ingreso').value;
+    var movs = movLoad();
+    movs.push({ id: movId(), ts: Date.now(), monto: monto, concepto: concepto, cliente: cliente, categoria: categoriaI, pedidoId: null, origen: 'manual', tipo: 'manual', evidencia: _mmComprobante });
+    movSave(movs);
+    cerrarModal();
+    render();
+    toast('✓ Movimiento agregado', 2000);
+  }
+}
+
+function eliminarGastoGeneral(id){
+  if(!confirm('¿Eliminar este gasto?')) return;
+  gastosGeneralesSave(gastosGeneralesLoad().filter(function(g){ return g.id!==id; }));
+  render();
+  toast('🗑 Gasto eliminado');
+}
+window.eliminarGastoGeneral = eliminarGastoGeneral;
+
+function eliminarMov(id){
+  var m = movLoad().find(function(x){ return x.id===id; });
+  if(m && m.origen==='pedido'){
+    toast('Este movimiento viene de un pedido — no se puede borrar desde aquí');
+    return;
+  }
+  if(!confirm('¿Eliminar este movimiento?')) return;
+  var movs = movLoad().filter(function(m){ return m.id !== id; });
+  movSave(movs);
+  render();
+}
+window.eliminarMov = eliminarMov;
+window.guardarManual = guardarManual;
+window.sincronizarPedidos = sincronizarPedidos;
+
+// ══════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════
+var _movFiltro = { mes: '', texto: '' };
+
+function _movFiltrarCambio(){
+  _movFiltro.mes = document.getElementById('mov-filtro-mes').value;
+  _movFiltro.texto = document.getElementById('mov-filtro-texto').value.trim().toLowerCase();
+  document.getElementById('mov-filtro-mes-limpiar').style.display = _movFiltro.mes ? '' : 'none';
+  render();
+}
+window._movFiltrarCambio = _movFiltrarCambio;
+
+function _movFiltrarLimpiarMes(){
+  _movFiltro.mes = '';
+  document.getElementById('mov-filtro-mes').value = '';
+  document.getElementById('mov-filtro-mes-limpiar').style.display = 'none';
+  render();
+}
+window._movFiltrarLimpiarMes = _movFiltrarLimpiarMes;
+
+function render(){
+  var movs = movLoad().slice().sort(function(a,b){ return b.ts - a.ts; });
+
+  // Cards resumen — siguen siendo solo ingresos, sin tocar su significado actual
+  var totalHist = movs.reduce(function(s,m){ return s+m.monto; }, 0);
+  var ahora = new Date();
+  var totalMes = movs.filter(function(m){
+    var d = new Date(m.ts);
+    return d.getMonth()===ahora.getMonth() && d.getFullYear()===ahora.getFullYear();
+  }).reduce(function(s,m){ return s+m.monto; }, 0);
+
+  var cardsHtml = ''
+    + '<div class="card"><div class="card-label">Total histórico</div><div class="card-value green">'+fmt(totalHist)+'</div></div>'
+    + '<div class="card"><div class="card-label">Este mes</div><div class="card-value green">'+fmt(totalMes)+'</div></div>'
+    + '<div class="card"><div class="card-label">Movimientos</div><div class="card-value">'+movs.length+'</div></div>';
+  document.getElementById('cards-root').innerHTML = cardsHtml;
+
+  // Lista — acá SÍ se mezclan los ingresos con las compras de insumos (Inventario → Rellenar),
+  // para que quede visible que "ese movimiento" quedó registrado, aunque viva en otra
+  // clave de almacenamiento (cg_gastos) y no afecte las tarjetas de arriba.
+  var comprasInsumo = gastosLoad()
+    .filter(function(g){ return g.tipo==='insumo'; })
+    .map(function(g){
+      return {
+        id: g.id, monto: -(g.monto||0),
+        ts: new Date((g.fecha||_mesActualStr()+'-01')+'T12:00:00').getTime(),
+        concepto: '🧪 Compra insumo: '+(g.nombre||g.insumoKey||''),
+        cliente: '—', tipo: 'compra_insumo', _esGasto: true, evidencia: g.evidencia||null, _fuente: 'gasto'
+      };
+    });
+  var personalMap = {};
+  personalLoad().forEach(function(p){ personalMap[p.id]=p; });
+  var pagosPersonal = pagosPersonalLoad()
+    .map(function(pg){
+      var p = personalMap[pg.personalId];
+      var nTurnos = (pg.turnoIds||[]).length;
+      return {
+        id: pg.id, monto: -(pg.monto||0), ts: pg.ts,
+        concepto: '👷 Pago personal: '+(p?p.nombre:'')+' — '+nTurnos+' turno'+(nTurnos!==1?'s':''),
+        cliente: '—', tipo: 'pago_personal', _esGasto: true, evidencia: pg.evidencia||null, _fuente: 'pago_personal'
+      };
+    });
+  movs.forEach(function(m){ m._fuente = 'mov'; });
+  var gastosGen = gastosGeneralesLoad()
+    .map(function(g){
+      return {
+        id: g.id, monto: -(g.monto||0),
+        ts: new Date((g.fecha||_mesActualStr()+'-01')+'T12:00:00').getTime(),
+        concepto: (GASTO_CATEGORIA_LABEL[g.categoria]||'📋')+' '+g.concepto,
+        cliente: '—', tipo: 'gasto_general', _esGasto: true, evidencia: g.evidencia||null, _fuente: 'gasto_general', _borrable: true
+      };
+    });
+  var todos = movs.concat(comprasInsumo).concat(pagosPersonal).concat(gastosGen).sort(function(a,b){ return b.ts-a.ts; });
+  var totalSinFiltrar = todos.length;
+
+  if(_movFiltro.mes){
+    todos = todos.filter(function(m){
+      var d = new Date(m.ts);
+      return (d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')) === _movFiltro.mes;
+    });
+  }
+  if(_movFiltro.texto){
+    todos = todos.filter(function(m){
+      return (m.concepto||'').toLowerCase().indexOf(_movFiltro.texto)!==-1
+          || (m.cliente||'').toLowerCase().indexOf(_movFiltro.texto)!==-1;
+    });
+  }
+
+  var root = document.getElementById('mov-root');
+  if(!totalSinFiltrar){
+    root.innerHTML = '<div class="empty">Sin movimientos todavía.<br>Se crean solos cuando un pedido queda Abonado o Pagado, o cuando reabasteces un insumo en Inventario.</div>';
+    return;
+  }
+  if(!todos.length){
+    root.innerHTML = '<div class="empty">Ningún movimiento coincide con el filtro.</div>';
+    return;
+  }
+  var TIPO_LABEL = {
+    abono:         '◐ Abono',
+    saldo_final:   '✓ Saldo final',
+    pago_completo: '● Pago completo',
+    ajuste:        '⚠ Ajuste',
+    envio:         '🚚 Envío',
+    manual:        '✍️ Manual',
+    compra_insumo: '🧪 Compra insumo',
+    pago_personal: '👷 Pago personal',
+    gasto_general: '🧾 Gasto'
+  };
+  var html = '<div class="mov-row head"><div>Fecha</div><div>Concepto</div><div>Tipo</div><div></div></div>';
+  todos.forEach(function(m){
+    var d = new Date(m.ts);
+    var fechaStr = d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'});
+    var tipo = m.tipo || (m.origen==='pedido' ? 'pago_completo' : 'manual');
+    var comprobanteIcon = m.evidencia
+      ? '<span class="icon-action" title="Ver comprobante" onclick="verComprobante(\''+m.id+'\')">📎</span>'
+      : '<span class="icon-action attach-empty" title="Adjuntar comprobante" onclick="adjuntarComprobante(\''+m.id+'\',\''+m._fuente+'\')">📎</span>';
+    var esManual = !m._esGasto && m.origen!=='pedido';
+    var botonBorrar = esManual
+      ? '<button class="mov-del" onclick="eliminarMov(\''+m.id+'\')" title="Eliminar">✕</button>'
+      : (m._borrable ? '<button class="mov-del" onclick="eliminarGastoGeneral(\''+m.id+'\')" title="Eliminar">✕</button>' : '');
+    var ultimaCol = '<div style="display:flex;gap:6px;justify-content:flex-end;align-items:center;">'
+      + comprobanteIcon
+      + botonBorrar
+    + '</div>';
+    html += '<div class="mov-row">'
+      + '<div class="mov-fecha">'+fechaStr+'</div>'
+      + '<div class="mov-concepto" title="'+esc(m.concepto)+'">'+esc(m.concepto)+'<div class="mov-monto'+(m.monto<0?' neg':'')+'" style="text-align:left;font-size:13px;">'+fmt(m.monto)+'</div></div>'
+      + '<div class="mov-origen tipo-'+tipo+'">'+(TIPO_LABEL[tipo]||tipo)+'</div>'
+      + ultimaCol
+      + '</div>';
+  });
+  html += _renderGaleriaComprobantes(todos);
+  root.innerHTML = html;
+  _movEvidencias = {};
+  todos.forEach(function(m){ if(m.evidencia) _movEvidencias[m.id] = m.evidencia; });
+}
+
+function _renderGaleriaComprobantes(items){
+  var conEvidencia = items.filter(function(m){ return m.evidencia; });
+  if(!conEvidencia.length) return '';
+  var ingresos = conEvidencia.filter(function(m){ return m.monto >= 0; });
+  var gastos = conEvidencia.filter(function(m){ return m.monto < 0; });
+
+  function _grupoComprobantes(titulo, arr){
+    if(!arr.length) return '';
+    var h = '<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin:12px 0 6px;">'+titulo+' ('+arr.length+')</div>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:10px;">';
+    arr.forEach(function(m){
+      var d = new Date(m.ts);
+      h += '<div style="text-align:center;cursor:pointer;width:70px;" onclick="verComprobante(\''+m.id+'\')" title="'+esc(m.concepto)+'">'
+        + '<img src="'+m.evidencia+'" style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border2);">'
+        + '<div style="font-size:8px;color:var(--muted2);margin-top:4px;">'+d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'})+'</div>'
+      + '</div>';
+    });
+    h += '</div>';
+    return h;
+  }
+
+  var html = '<details style="margin-top:18px;">';
+  html += '<summary style="cursor:pointer;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">📎 Ver comprobantes ('+conEvidencia.length+')</summary>';
+  html += _grupoComprobantes('💵 Ingresos', ingresos);
+  html += _grupoComprobantes('🧾 Gastos', gastos);
+  html += '</details>';
+  return html;
+}
+
+var _movEvidencias = {};
+function verComprobante(movId){
+  var src = _movEvidencias[movId];
+  if(!src) return;
+  var w = window.open('', '_blank');
+  if(!w) return;
+  w.document.write('<title>Comprobante</title><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="'+src+'" style="max-width:100%;max-height:100vh;"></body>');
+}
+window.verComprobante = verComprobante;
+
+// Adjuntar un comprobante DESPUÉS de creado el movimiento (útil para los que
+// se generan solos al sincronizar con Pedidos: abono, pago completo, etc.,
+// donde no hay un modal donde pedirlo en el momento).
+var _attachTarget = null;
+function adjuntarComprobante(movId, fuente){
+  _attachTarget = { movId: movId, fuente: fuente };
+  document.getElementById('attach-hidden-input').click();
+}
+window.adjuntarComprobante = adjuntarComprobante;
+
+function _attachArchivoElegido(input){
+  var file = input.files && input.files[0];
+  if(!file || !_attachTarget) return;
+  var target = _attachTarget;
+  _comprimirImagen(file, 700, 0.6, function(dataUrl){
+    if(target.fuente==='mov'){
+      var arr = movLoad();
+      var m = arr.find(function(x){ return x.id===target.movId; });
+      if(m){ m.evidencia = dataUrl; movSave(arr); }
+    } else if(target.fuente==='gasto'){
+      var arr2 = gastosLoad();
+      var g = arr2.find(function(x){ return x.id===target.movId; });
+      if(g){ g.evidencia = dataUrl; gastosSave(arr2); }
+    } else if(target.fuente==='pago_personal'){
+      var arr3 = pagosPersonalLoad();
+      var pg = arr3.find(function(x){ return x.id===target.movId; });
+      if(pg){ pg.evidencia = dataUrl; pagosPersonalSave(arr3); }
+    } else if(target.fuente==='gasto_general'){
+      var arr4 = gastosGeneralesLoad();
+      var gg = arr4.find(function(x){ return x.id===target.movId; });
+      if(gg){ gg.evidencia = dataUrl; gastosGeneralesSave(arr4); }
+    }
+    input.value = '';
+    _attachTarget = null;
+    render();
+    toast('📎 Comprobante adjuntado');
+  });
+}
+window._attachArchivoElegido = _attachArchivoElegido;
+
+// ══════════════════════════════════════
+// TABS
+// ══════════════════════════════════════
+function switchVista(v){
+  ['mov','inv','costeo','personal','metricas'].forEach(function(id){
+    var btn=document.getElementById('tab-'+id);
+    var vista=document.getElementById('vista-'+id);
+    var active=id===v;
+    if(btn) btn.classList.toggle('active',active);
+    if(vista) vista.classList.toggle('active',active);
+  });
+  if(v==='inv') renderInventario();
+  if(v==='costeo') renderCosteo();
+  if(v==='personal') renderPersonal();
+  if(v==='metricas') renderMetricas();
+}
+window.switchVista = switchVista;
+
+// ══════════════════════════════════════
+// INVENTARIO DE INSUMOS
+// ══════════════════════════════════════
+var ETAPAS = {
+  impresion: {label:'Impresión', icon:'🖨️'},
+  corte:     {label:'Corte',     icon:'✂️'},
+  resinado:  {label:'Resinado',  icon:'🧪'},
+  empaque:   {label:'Empaque',   icon:'📦'}
+};
+
+function _invNivel(ins){
+  var n = (ins.nivel!==undefined) ? ins.nivel : 75;
+  if(n<=4) n = n*25; // migrar formato antiguo (0-4) al nuevo (0-100), igual que el Hub
+  return n;
+}
+
+var _invSortMode = localStorage.getItem('cosmo_inv_sort') || 'etapa';
+function _invToggleSort(){
+  _invSortMode = _invSortMode==='etapa' ? 'nivel' : 'etapa';
+  localStorage.setItem('cosmo_inv_sort', _invSortMode);
+  renderInventario();
+}
+window._invToggleSort = _invToggleSort;
+
+function _invRowHtml(item, showTag){
+  var ek=item.ek, ii=item.ii, ins=item.ins;
+  var n = _invNivel(ins);
+  var color = n<40 ? 'var(--red)' : (n<60 ? 'var(--gold)' : 'var(--green)');
+  var urgent = n<40;
+  var tag = showTag ? '<span style="font-size:8px;color:var(--muted2);margin-left:6px;">'+(ETAPAS[ek]?ETAPAS[ek].icon+' '+ETAPAS[ek].label:'')+'</span>' : '';
+  var provHtml;
+  if(ins.proveedorLink){
+    provHtml = '<a class="inv-buy-link" href="'+esc(ins.proveedorLink)+'" target="_blank" rel="noopener" title="'+esc(ins.proveedorLink)+'">🛒 Comprar'+(ins.proveedorNombre?' — '+esc(ins.proveedorNombre):'')+'</a>'
+      + '<span class="inv-edit-link" data-ek="'+ek+'" data-ii="'+ii+'" onclick="abrirProveedorModal(this.dataset.ek,parseInt(this.dataset.ii))">✎</span>';
+  } else {
+    provHtml = '<span class="inv-add-provider" data-ek="'+ek+'" data-ii="'+ii+'" onclick="abrirProveedorModal(this.dataset.ek,parseInt(this.dataset.ii))">+ Agregar proveedor</span>';
+  }
+  var h = '<div class="inv-row">';
+  h += '<div><div class="inv-name">'+esc(ins.name)+tag+'</div><div class="inv-unit">'+esc(ins.unit||'unids')+'</div><div class="inv-provider">'+provHtml+'</div></div>';
+  h += '<div><div class="inv-bar-wrap"><div class="inv-bar" style="width:'+n+'%;background:'+color+';"></div></div><div class="inv-pct" style="color:'+color+';">'+Math.round(n)+'%</div></div>';
+  h += '<button class="inv-refill-btn'+(urgent?' urgent':'')+'" data-ek="'+ek+'" data-ii="'+ii+'" onclick="abrirRefillModal(this.dataset.ek,parseInt(this.dataset.ii))">🔄 Rellenar</button>';
+  h += '</div>';
+  return h;
+}
+
+function renderInventario(){
+  var root = document.getElementById('inv-root');
+  var banner = document.getElementById('inv-banner');
+  var badge = document.getElementById('inv-tab-badge');
+  var sortBtn = document.getElementById('inv-sort-btn');
+  if(!root) return;
+
+  var meta = metaLoad();
+  var bajos = [];
+  var html = '';
+  var todos = [];
+
+  Object.keys(ETAPAS).forEach(function(ek){
+    var insumos = (meta[ek] && meta[ek].insumos) || [];
+    insumos.forEach(function(ins, ii){ todos.push({ek:ek, ii:ii, ins:ins}); });
+  });
+  todos.forEach(function(item){ if(_invNivel(item.ins)<40) bajos.push(item.ins.name); });
+
+  if(!todos.length){
+    html = '<div class="empty">Sin insumos configurados todavía.<br>Los tipos de insumo se agregan desde el Hub → Producción; aquí solo se actualiza su nivel de stock.</div>';
+  } else if(_invSortMode==='nivel'){
+    var flat = todos.slice().sort(function(a,b){ return _invNivel(a.ins)-_invNivel(b.ins); });
+    html += '<div class="inv-list">';
+    flat.forEach(function(item){ html += _invRowHtml(item, true); });
+    html += '</div>';
+  } else {
+    Object.keys(ETAPAS).forEach(function(ek){
+      var et = ETAPAS[ek];
+      var items = todos.filter(function(item){ return item.ek===ek; }).sort(function(a,b){ return _invNivel(a.ins)-_invNivel(b.ins); });
+      if(!items.length) return;
+      html += '<div class="inv-etapa"><div class="inv-etapa-title">'+et.icon+' '+et.label+'</div>';
+      html += '<div class="inv-list">';
+      items.forEach(function(item){ html += _invRowHtml(item, false); });
+      html += '</div></div>';
+    });
+  }
+  root.innerHTML = html;
+
+  if(sortBtn) sortBtn.textContent = _invSortMode==='etapa' ? '⬆️ Más bajos primero' : '📁 Agrupar por etapa';
+
+  if(bajos.length){
+    banner.style.display='flex';
+    banner.innerHTML = '⚠️ <strong>'+bajos.length+'</strong> insumo'+(bajos.length>1?'s':'')+' con stock bajo: '+bajos.map(esc).join(', ');
+  } else {
+    banner.style.display='none';
+  }
+
+  if(badge){
+    if(bajos.length){ badge.style.display='flex'; badge.textContent=bajos.length; }
+    else badge.style.display='none';
+  }
+}
+window.renderInventario = renderInventario;
+
+var _refillEk = null, _refillIi = null;
+// Contexto de compra: cuándo fue la última vez que se registró este insumo
+// como gasto, y cuántos productos se han vendido en total desde entonces —
+// para tener una idea del ritmo de consumo al decidir cuánto comprar.
+function _rfContextoInsumo(nombreInsumo){
+  var gastos = gastosLoad().filter(function(g){
+    return g.tipo==='insumo' && (g.insumoKey===nombreInsumo || g.nombre===nombreInsumo);
+  }).sort(function(a,b){ return (b.fecha||'').localeCompare(a.fecha||''); });
+  if(!gastos.length) return null;
+  var ultima = gastos[0];
+  var tsDesde = new Date(ultima.fecha+'T00:00:00').getTime();
+  if(isNaN(tsDesde)) return null;
+  var vendidos = 0;
+  pedidosLoad().forEach(function(p){
+    if(p.estado==='borrador') return;
+    if((p.tsCreado||0) < tsDesde) return;
+    (p.productos||[]).forEach(function(pr){ vendidos += (pr.qty||0); });
+  });
+  return { fecha: ultima.fecha, vendidos: vendidos };
+}
+
+var _rfComprobante = null;
+
+function abrirRefillModal(ek, ii){
+  var meta = metaLoad();
+  var ins = meta[ek] && meta[ek].insumos && meta[ek].insumos[ii];
+  if(!ins) return;
+  _refillEk = ek; _refillIi = ii;
+  _rfComprobante = null;
+  document.getElementById('rf-nombre').value = ins.name;
+  document.getElementById('rf-monto').value = '';
+  document.getElementById('rf-fecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('rf-comprobante').value = '';
+  document.getElementById('rf-comprobante-preview').innerHTML = '';
+
+  var ctx = _rfContextoInsumo(ins.name);
+  var elCtx = document.getElementById('rf-contexto');
+  if(elCtx){
+    elCtx.innerHTML = ctx
+      ? '📅 Última compra: <strong style="color:var(--text);">'+new Date(ctx.fecha+'T00:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})+'</strong> · desde entonces se han vendido <strong style="color:var(--text);">'+ctx.vendidos+'</strong> producto'+(ctx.vendidos!==1?'s':'')
+      : 'Sin compras anteriores registradas para este insumo.';
+  }
+
+  document.getElementById('refill-modal').classList.add('open');
+  setTimeout(function(){ document.getElementById('rf-monto').focus(); }, 50);
+}
+window.abrirRefillModal = abrirRefillModal;
+
+function cerrarRefillModal(){ document.getElementById('refill-modal').classList.remove('open'); }
+window.cerrarRefillModal = cerrarRefillModal;
+
+function _rfComprobanteElegido(input){
+  var file = input.files && input.files[0];
+  _procesarArchivoComprobante(file, { previewId:'rf-comprobante-preview', quitarFnName:'_rfQuitarComprobante', setValor:function(v){ _rfComprobante=v; } });
+}
+window._rfComprobanteElegido = _rfComprobanteElegido;
+
+function _rfQuitarComprobante(){
+  _rfComprobante = null;
+  document.getElementById('rf-comprobante').value = '';
+  document.getElementById('rf-comprobante-preview').innerHTML = '';
+}
+window._rfQuitarComprobante = _rfQuitarComprobante;
+
+function guardarRefill(){
+  var monto = parseFloat(document.getElementById('rf-monto').value) || 0;
+  var fecha = document.getElementById('rf-fecha').value || new Date().toISOString().slice(0,10);
+  if(_refillEk===null || _refillIi===null) return;
+  if(monto<=0){ toast('El monto debe ser mayor a 0', 2000); return; }
+
+  var meta = metaLoad();
+  var ins = meta[_refillEk] && meta[_refillEk].insumos && meta[_refillEk].insumos[_refillIi];
+  if(!ins){ cerrarRefillModal(); return; }
+
+  // 1) Subir el nivel a Lleno (100) — mismo efecto que registrar una compra en el Hub
+  ins.nivel = 100;
+  metaSave(meta);
+
+  // 2) Registrar el gasto — mismo formato que usa el Hub (tipo:'insumo', insumoKey)
+  //    para que aparezca en Costeo / Rentabilidad allá también.
+  var gastos = gastosLoad();
+  gastos.push({ id: gid(), nombre: ins.name, monto: monto, tipo: 'insumo', fecha: fecha, etaKey: _refillEk, insumoKey: ins.name, evidencia: _rfComprobante });
+  gastosSave(gastos);
+
+  cerrarRefillModal();
+  renderInventario();
+  render();   // refresca Movimientos, por si esa pestaña queda visible
+  toast('✓ '+ins.name+' reabastecido y gasto registrado', 2600);
+}
+window.guardarRefill = guardarRefill;
+
+function _invSyncPull(){
+  _fbPull(function(){ renderInventario(); toast('✓ Inventario actualizado', 2000); });
+}
+window._invSyncPull = _invSyncPull;
+
+var _provEk = null, _provIi = null;
+function abrirProveedorModal(ek, ii){
+  var meta = metaLoad();
+  var ins = meta[ek] && meta[ek].insumos && meta[ek].insumos[ii];
+  if(!ins) return;
+  _provEk = ek; _provIi = ii;
+  document.getElementById('pv-nombre').value = ins.name;
+  document.getElementById('pv-proveedor').value = ins.proveedorNombre || '';
+  document.getElementById('pv-link').value = ins.proveedorLink || '';
+  document.getElementById('proveedor-modal').classList.add('open');
+  setTimeout(function(){ document.getElementById('pv-link').focus(); }, 50);
+}
+window.abrirProveedorModal = abrirProveedorModal;
+
+function cerrarProveedorModal(){ document.getElementById('proveedor-modal').classList.remove('open'); }
+window.cerrarProveedorModal = cerrarProveedorModal;
+
+function _normalizarLink(v){
+  v = v.trim();
+  if(!v) return '';
+  if(/^(https?:|tel:|mailto:)/i.test(v)) return v;
+  return 'https://'+v;
+}
+
+function guardarProveedor(){
+  if(_provEk===null || _provIi===null) return;
+  var proveedorNombre = document.getElementById('pv-proveedor').value.trim();
+  var link = _normalizarLink(document.getElementById('pv-link').value);
+
+  var meta = metaLoad();
+  var ins = meta[_provEk] && meta[_provEk].insumos && meta[_provEk].insumos[_provIi];
+  if(!ins){ cerrarProveedorModal(); return; }
+
+  ins.proveedorNombre = proveedorNombre;
+  ins.proveedorLink = link;
+  metaSave(meta);
+
+  cerrarProveedorModal();
+  renderInventario();
+  toast(link ? '✓ Proveedor guardado' : '✓ Proveedor eliminado', 2000);
+}
+window.guardarProveedor = guardarProveedor;
+
+function costeoConfigLoad(){ try{ return JSON.parse(localStorage.getItem('cosmo_costeo_config')||'{}'); }catch(e){ return {}; } }
+function costeoConfigSave(cfg){ var s=JSON.stringify(cfg); localStorage.setItem('cosmo_costeo_config',s); _fbSave('cosmo_costeo_config',s); }
+
+function _mesActualStr(){
+  var d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+
+// Unidades vendidas ese mes, calculadas de los pedidos reales (cosmo_pedidos_v2,
+// solo lectura). Cuenta las cantidades de producto de todo pedido creado ese mes
+// que no sea un borrador — así los gastos indirectos se reparten con datos reales,
+// no con una estimación a mano.
+function _costeoUnidadesAuto(mesStr){
+  var total = 0;
+  pedidosLoad().forEach(function(p){
+    if(p.estado==='borrador') return;
+    var d = new Date(p.tsCreado||0);
+    if(isNaN(d.getTime())) return;
+    var pm = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    if(pm !== mesStr) return;
+    (p.productos||[]).forEach(function(pr){ total += (pr.qty||0); });
+  });
+  return total;
+}
+
+// ══════════════════════════════════════
+// MARGEN POR CATEGORÍA (OJOS)
+// En vez de calcular cantidad de insumo por tamaño, usa datos que ya existen:
+// lo que de verdad se gastó en insumos ese mes (Gastos) ÷ unidades vendidas
+// ese mes (Pedidos) = costo promedio por unidad. Lo mismo con los ingresos
+// reales (Movimientos) para el precio promedio. Cero estimaciones a mano.
+// ══════════════════════════════════════
+function _categoriaMesCambiar(v){
+  var cfg = costeoConfigLoad();
+  cfg.mes = v;
+  costeoConfigSave(cfg);
+  renderCosteo();
+}
+window._categoriaMesCambiar = _categoriaMesCambiar;
+
+function renderCategoria(){
+  var root = document.getElementById('costeo-categoria-root');
+  if(!root) return;
+
+  var cfg = costeoConfigLoad();
+  var mes = cfg.mes || _mesActualStr();
+
+  var unidades = _costeoUnidadesAuto(mes);
+
+  var gastoInsumos = gastosLoad()
+    .filter(function(g){ return g.tipo==='insumo' && (g.fecha||'').slice(0,7)===mes; })
+    .reduce(function(s,g){ return s+(g.monto||0); }, 0);
+
+  var personalProdIds = {};
+  personalLoad().forEach(function(p){ if(p.esProduccion) personalProdIds[p.id]=true; });
+  var gastoPersonal = pagosPersonalLoad()
+    .filter(function(pg){
+      if(!personalProdIds[pg.personalId]) return false;
+      var d = new Date(pg.ts);
+      var pm = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      return pm===mes;
+    })
+    .reduce(function(s,pg){ return s+(pg.monto||0); }, 0);
+
+  var gastoGeneralMargen = gastosGeneralesLoad()
+    .filter(function(g){ return g.cuentaEnMargen && (g.fecha||'').slice(0,7)===mes; })
+    .reduce(function(s,g){ return s+(g.monto||0); }, 0);
+
+  var costoTotal = gastoInsumos + gastoPersonal + gastoGeneralMargen;
+
+  // Solo ingresos que vienen de PEDIDOS: las unidades vendidas también salen
+  // de ahí, así que mezclar ingresos manuales (que no tienen unidades
+  // asociadas) inflaría el precio promedio por unidad.
+  var ingresos = movLoad()
+    .filter(function(m){
+      if(m.origen!=='pedido') return false;
+      var d = new Date(m.ts);
+      var pm = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      return pm===mes;
+    })
+    .reduce(function(s,m){ return s+(m.monto||0); }, 0);
+
+  var costoProm = unidades>0 ? costoTotal/unidades : null;
+  var precioProm = unidades>0 ? ingresos/unidades : null;
+  var margen = (costoProm!==null && precioProm!==null) ? precioProm-costoProm : null;
+  var margenPct = (margen!==null && precioProm>0) ? (margen/precioProm*100) : null;
+  var color = margenPct===null ? 'var(--muted)' : (margenPct>=40 ? 'var(--green)' : (margenPct>=20 ? 'var(--gold)' : 'var(--red)'));
+
+  var html = '<div class="costeo-tamano-card">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
+    + '<div style="font-size:14px;font-weight:700;color:var(--text);">🎯 OJOS</div>'
+    + '<input type="month" value="'+esc(mes)+'" onchange="_categoriaMesCambiar(this.value)" style="padding:6px 8px;border-radius:7px;border:1px solid var(--border2);font-size:11px;color:var(--text);background:#fff;">'
+  + '</div>';
+
+  if(unidades<=0){
+    html += '<div class="empty" style="padding:20px 0;">Sin unidades vendidas registradas ese mes — no se puede calcular el margen. Prueba con otro mes.</div>';
+  } else {
+    html += '<div class="costeo-item-line"><span>Unidades vendidas</span><span>'+unidades+'</span></div>';
+    html += '<div class="costeo-item-line"><span>Gasto real en insumos ese mes</span><span>'+fmt(gastoInsumos)+'</span></div>';
+    html += '<div class="costeo-item-line"><span>Gasto en personal de producción ese mes</span><span>'+fmt(gastoPersonal)+'</span></div>';
+    if(gastoGeneralMargen>0) html += '<div class="costeo-item-line"><span>Otros gastos marcados para margen</span><span>'+fmt(gastoGeneralMargen)+'</span></div>';
+    html += '<div class="costeo-item-line"><span>Ingreso de pedidos ese mes</span><span>'+fmt(ingresos)+'</span></div>';
+    html += '<div class="costeo-total-line" style="border-top:1px solid var(--border);margin-top:6px;padding-top:8px;"><span style="color:var(--muted);">Costo promedio por unidad</span><span style="font-weight:700;">'+fmt(costoProm)+'</span></div>';
+    html += '<div class="costeo-total-line"><span style="color:var(--muted);">Precio promedio de venta</span><span>'+fmt(precioProm)+'</span></div>';
+    html += '<div class="costeo-margen-line"><span style="font-size:11px;color:var(--muted);">Margen promedio</span><span style="font-weight:700;color:'+color+';">'+fmt(margen)+(margenPct!==null?' ('+margenPct.toFixed(0)+'%)':' (sin ingresos ese mes)')+'</span></div>';
+  }
+  html += '</div>';
+  html += '<div style="font-size:9px;color:var(--muted2);margin-top:8px;">Calculado con lo que ya registras: gastos tipo "insumo", pagos a personal de producción, e ingresos de pedidos (los ingresos manuales no entran acá porque no tienen unidades asociadas).</div>';
+
+  root.innerHTML = html;
+}
+window.renderCategoria = renderCategoria;
+
+function renderCosteo(){
+  renderCategoria();
+}
+window.renderCosteo = renderCosteo;
+
+// ══════════════════════════════════════
+// PERSONAL — horas trabajadas (reloj) y pago por hora
+// Los pagos a personal marcado "producción" cuentan como costo en el
+// margen bruto (OJOS), igual que los insumos. Los pagos quedan visibles
+// en Movimientos como cualquier otra salida de dinero.
+// ══════════════════════════════════════
+function personalLoad(){ try{ return JSON.parse(localStorage.getItem('cosmo_personal')||'[]'); }catch(e){ return []; } }
+function personalSave(arr){ _facSellarArr('cosmo_personal', arr, PERS_DEL_KEY); var s=JSON.stringify(arr); localStorage.setItem('cosmo_personal',s); _fbSave('cosmo_personal',s); }
+function turnosLoad(){ try{ return JSON.parse(localStorage.getItem('cosmo_personal_turnos')||'[]'); }catch(e){ return []; } }
+function turnosSave(arr){ _facSellarArr('cosmo_personal_turnos', arr, TURNO_DEL_KEY); var s=JSON.stringify(arr); localStorage.setItem('cosmo_personal_turnos',s); _fbSave('cosmo_personal_turnos',s); }
+
+function _fmtHoras(h){
+  var horas = Math.floor(h);
+  var min = Math.round((h-horas)*60);
+  if(min===60){ horas++; min=0; }
+  return horas+'h '+min+'m';
+}
+function _fmtHora(ts){ return new Date(ts).toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}); }
+
+function renderPersonal(){
+  var root = document.getElementById('personal-root');
+  if(!root) return;
+  var personal = personalLoad();
+  var turnos = turnosLoad();
+
+  if(!personal.length){
+    root.innerHTML = '<div class="empty">Agrega a tu equipo para empezar a marcar entrada/salida y pagarles por hora.</div>';
+    return;
+  }
+
+  var html = '';
+  personal.forEach(function(p){
+    var misTurnos = turnos.filter(function(t){ return t.personalId===p.id; });
+    var abierto = misTurnos.find(function(t){ return !t.salida; });
+    var pendientes = misTurnos.filter(function(t){ return t.salida && !t.pagado; });
+    var totalPendiente = pendientes.reduce(function(s,t){ return s+(t.monto||0); }, 0);
+
+    html += '<div class="personal-card">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+      + '<div style="display:flex;align-items:center;gap:8px;">'
+        + '<span style="font-size:13px;font-weight:700;color:var(--text);">'+esc(p.nombre)+'</span>'
+        + '<span class="personal-badge '+(p.esProduccion?'produccion':'admin')+'">'+(p.esProduccion?'Producción':'Administrativo')+'</span>'
+      + '</div>'
+      + '<div style="display:flex;gap:10px;">'
+        + '<span class="icon-action" onclick="personalModal(\''+p.id+'\')">✎</span>'
+        + '<span class="icon-action danger" onclick="personalBorrar(\''+p.id+'\')">✕</span>'
+      + '</div>'
+    + '</div>';
+    html += '<div style="font-size:10px;color:var(--muted2);margin-bottom:10px;">'+fmt(p.tarifa)+' / hora</div>';
+
+    if(abierto){
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;">'
+        + '<span class="personal-en-turno">⏱ En turno desde '+_fmtHora(abierto.entrada)+' ('+_fmtHoras((Date.now()-abierto.entrada)/3600000)+')</span>'
+        + '<div style="display:flex;gap:8px;align-items:center;">'
+          + '<span class="icon-action" title="Ajustar hora de entrada" onclick="editarTurno(\''+abierto.id+'\')">✎</span>'
+          + '<button class="personal-btn-salida" onclick="marcarSalida(\''+abierto.id+'\')">⏹ Marcar salida</button>'
+        + '</div>'
+      + '</div>';
+    } else {
+      html += '<button class="personal-btn-entrada" onclick="marcarEntrada(\''+p.id+'\')">▶ Marcar entrada</button>';
+    }
+
+    if(pendientes.length){
+      html += '<table class="personal-tabla"><thead><tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Horas</th><th>Monto</th><th></th></tr></thead><tbody>';
+      pendientes.forEach(function(t){
+        var d = new Date(t.entrada);
+        html += '<tr>'
+          + '<td>'+d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'})+'</td>'
+          + '<td>'+_fmtHora(t.entrada)+'</td>'
+          + '<td>'+_fmtHora(t.salida)+'</td>'
+          + '<td>'+_fmtHoras(t.horas)+'</td>'
+          + '<td>'+fmt(t.monto)+'</td>'
+          + '<td style="text-align:right;white-space:nowrap;">'
+            + '<span class="icon-action" title="Ajustar horario" onclick="editarTurno(\''+t.id+'\')">✎</span> '
+            + '<span class="icon-action danger" onclick="turnoBorrar(\''+t.id+'\')" title="Quitar este turno">✕</span>'
+          + '</td>'
+        + '</tr>';
+      });
+      html += '</tbody><tfoot><tr>'
+        + '<td colspan="4">Total acumulado</td>'
+        + '<td>'+fmt(totalPendiente)+'</td>'
+        + '<td style="text-align:right;"><button class="personal-btn-pagar" onclick="pagarTodoPendiente(\''+p.id+'\')">💰 Pagar</button></td>'
+      + '</tr></tfoot></table>';
+    }
+    html += '</div>';
+  });
+
+  root.innerHTML = html;
+}
+window.renderPersonal = renderPersonal;
+
+// ── Modal: agregar/editar persona ──
+var _perEditId = null;
+function personalModal(id){
+  var p = id ? personalLoad().find(function(x){ return x.id===id; }) : null;
+  _perEditId = id || null;
+  document.getElementById('per-titulo').textContent = p ? '👷 EDITAR PERSONAL' : '👷 NUEVO PERSONAL';
+  document.getElementById('per-nombre').value = p ? p.nombre : '';
+  document.getElementById('per-tarifa').value = p ? p.tarifa : '';
+  document.getElementById('per-produccion').checked = p ? !!p.esProduccion : false;
+  document.getElementById('personal-modal').classList.add('open');
+  setTimeout(function(){ document.getElementById('per-nombre').focus(); }, 50);
+}
+window.personalModal = personalModal;
+
+function personalCerrar(){ document.getElementById('personal-modal').classList.remove('open'); }
+window.personalCerrar = personalCerrar;
+
+function personalGuardar(){
+  var nombre = document.getElementById('per-nombre').value.trim();
+  if(!nombre){ alert('Ponle un nombre.'); return; }
+  var tarifa = parseFloat(document.getElementById('per-tarifa').value)||0;
+  var esProduccion = document.getElementById('per-produccion').checked;
+
+  var arr = personalLoad();
+  if(_perEditId){
+    var p = arr.find(function(x){ return x.id===_perEditId; });
+    if(p){ p.nombre=nombre; p.tarifa=tarifa; p.esProduccion=esProduccion; }
+  } else {
+    arr.push({ id: gid(), nombre: nombre, tarifa: tarifa, esProduccion: esProduccion });
+  }
+  personalSave(arr);
+  personalCerrar();
+  renderPersonal();
+  toast('✓ Personal guardado');
+}
+window.personalGuardar = personalGuardar;
+
+function personalBorrar(id){
+  var turnos = turnosLoad();
+  var abierto = turnos.find(function(t){ return t.personalId===id && !t.salida; });
+  if(abierto){ toast('Tiene un turno abierto — márcale la salida primero'); return; }
+  // Los turnos sin pagar quedarían huérfanos: seguirían contando como "pago
+  // pendiente" en Métricas pero ya no se podrían ver ni pagar desde Personal.
+  var pendientes = turnos.filter(function(t){ return t.personalId===id && t.salida && !t.pagado; });
+  if(pendientes.length){
+    var totalPend = pendientes.reduce(function(s,t){ return s+(t.monto||0); }, 0);
+    toast('Tiene '+pendientes.length+' turno'+(pendientes.length!==1?'s':'')+' sin pagar ('+fmt(totalPend)+') — págalos o quítalos primero', 3500);
+    return;
+  }
+  if(!confirm('¿Eliminar esta persona? Su historial de turnos ya pagados se conserva.')) return;
+  personalSave(personalLoad().filter(function(x){ return x.id!==id; }));
+  renderPersonal();
+  toast('🗑 Personal eliminado');
+}
+window.personalBorrar = personalBorrar;
+
+// ── Reloj: entrada / salida ──
+function marcarEntrada(personalId){
+  var arr = turnosLoad();
+  if(arr.some(function(t){ return t.personalId===personalId && !t.salida; })){ toast('Ya tiene un turno abierto'); return; }
+  arr.push({ id: gid(), personalId: personalId, entrada: Date.now(), salida: null, horas: 0, monto: 0, pagado: false });
+  turnosSave(arr);
+  renderPersonal();
+  toast('▶ Entrada marcada');
+}
+window.marcarEntrada = marcarEntrada;
+
+function marcarSalida(turnoId){
+  var arr = turnosLoad();
+  var t = arr.find(function(x){ return x.id===turnoId; });
+  if(!t) return;
+  var p = personalLoad().find(function(x){ return x.id===t.personalId; });
+  t.salida = Date.now();
+  t.horas = Math.max(0, (t.salida-t.entrada)/3600000);
+  t.monto = Math.round(t.horas * (p?p.tarifa:0));
+  turnosSave(arr);
+  renderPersonal();
+  toast('⏹ Salida marcada — '+_fmtHoras(t.horas)+' ('+fmt(t.monto)+')');
+}
+window.marcarSalida = marcarSalida;
+
+function turnoBorrar(turnoId){
+  var t = turnosLoad().find(function(x){ return x.id===turnoId; });
+  if(!t || t.pagado) return;
+  if(!confirm('¿Quitar este turno de '+_fmtHoras(t.horas)+' ('+fmt(t.monto)+')? No se ha pagado, así que no queda ningún movimiento registrado.')) return;
+  turnosSave(turnosLoad().filter(function(x){ return x.id!==turnoId; }));
+  renderPersonal();
+  toast('🗑 Turno eliminado');
+}
+window.turnoBorrar = turnoBorrar;
+
+// ── Ajustar horario (por si no se marcó justo a tiempo) — solo turnos sin
+// pagar, tanto el que sigue abierto (ajustar entrada) como los ya cerrados
+// pendientes de pago (ajustar entrada y/o salida).
+var _etTurnoId = null;
+
+function _tsADatetimeLocal(ts){
+  var d = new Date(ts);
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+
+function editarTurno(turnoId){
+  var t = turnosLoad().find(function(x){ return x.id===turnoId; });
+  if(!t || t.pagado) return;
+  _etTurnoId = turnoId;
+  document.getElementById('et-entrada').value = _tsADatetimeLocal(t.entrada);
+  var campoSalida = document.getElementById('et-campo-salida');
+  if(t.salida){
+    campoSalida.style.display = '';
+    document.getElementById('et-salida').value = _tsADatetimeLocal(t.salida);
+  } else {
+    campoSalida.style.display = 'none';
+  }
+  document.getElementById('et-preview').textContent = '';
+  document.getElementById('editar-turno-modal').classList.add('open');
+}
+window.editarTurno = editarTurno;
+
+function cerrarEditarTurnoModal(){ document.getElementById('editar-turno-modal').classList.remove('open'); }
+window.cerrarEditarTurnoModal = cerrarEditarTurnoModal;
+
+function guardarEdicionTurno(){
+  var arr = turnosLoad();
+  var t = arr.find(function(x){ return x.id===_etTurnoId; });
+  if(!t) return;
+
+  var entradaVal = document.getElementById('et-entrada').value;
+  if(!entradaVal){ toast('Falta la hora de entrada'); return; }
+  var nuevaEntrada = new Date(entradaVal).getTime();
+
+  if(t.salida){
+    var salidaVal = document.getElementById('et-salida').value;
+    if(!salidaVal){ toast('Falta la hora de salida'); return; }
+    var nuevaSalida = new Date(salidaVal).getTime();
+    if(nuevaSalida <= nuevaEntrada){ toast('La salida debe ser después de la entrada'); return; }
+    t.entrada = nuevaEntrada;
+    t.salida = nuevaSalida;
+    var p = personalLoad().find(function(x){ return x.id===t.personalId; });
+    t.horas = Math.max(0, (t.salida-t.entrada)/3600000);
+    t.monto = Math.round(t.horas * (p?p.tarifa:0));
+  } else {
+    if(nuevaEntrada > Date.now()){ toast('La entrada no puede ser en el futuro'); return; }
+    t.entrada = nuevaEntrada;
+  }
+
+  turnosSave(arr);
+  cerrarEditarTurnoModal();
+  renderPersonal();
+  toast('✓ Horario ajustado');
+}
+window.guardarEdicionTurno = guardarEdicionTurno;
+
+// ── Pagar ──
+// Registro de pagos a personal — UN registro por evento de pago (no uno por
+// turno), con su comprobante opcional adjunto. Los turnos solo quedan
+// marcados pagado=true para saber que ya no están pendientes.
+function pagosPersonalLoad(){ try{ return JSON.parse(localStorage.getItem('cosmo_personal_pagos')||'[]'); }catch(e){ return []; } }
+function pagosPersonalSave(arr){ _facSellarArr('cosmo_personal_pagos', arr, null); var s=JSON.stringify(arr); localStorage.setItem('cosmo_personal_pagos',s); _fbSave('cosmo_personal_pagos',s); }
+
+var _ppPersonalId = null;
+var _ppTurnoIds = [];
+var _ppComprobante = null;
+
+function pagarTodoPendiente(personalId){
+  var p = personalLoad().find(function(x){ return x.id===personalId; });
+  var pendientes = turnosLoad().filter(function(t){ return t.personalId===personalId && t.salida && !t.pagado; });
+  if(!pendientes.length) return;
+  var total = pendientes.reduce(function(s,t){ return s+(t.monto||0); }, 0);
+
+  _ppPersonalId = personalId;
+  _ppTurnoIds = pendientes.map(function(t){ return t.id; });
+  _ppComprobante = null;
+
+  document.getElementById('pp-nombre').value = p ? p.nombre : '';
+  document.getElementById('pp-total').value = fmt(total)+' ('+pendientes.length+' turno'+(pendientes.length!==1?'s':'')+')';
+  document.getElementById('pp-comprobante').value = '';
+  document.getElementById('pp-comprobante-preview').innerHTML = '';
+  document.getElementById('pago-personal-modal').classList.add('open');
+}
+window.pagarTodoPendiente = pagarTodoPendiente;
+
+function cerrarPagoPersonalModal(){ document.getElementById('pago-personal-modal').classList.remove('open'); }
+window.cerrarPagoPersonalModal = cerrarPagoPersonalModal;
+
+function _ppComprobanteElegido(input){
+  var file = input.files && input.files[0];
+  _procesarArchivoComprobante(file, { previewId:'pp-comprobante-preview', quitarFnName:'_ppQuitarComprobante', setValor:function(v){ _ppComprobante=v; } });
+}
+window._ppComprobanteElegido = _ppComprobanteElegido;
+
+function _ppQuitarComprobante(){
+  _ppComprobante = null;
+  document.getElementById('pp-comprobante').value = '';
+  document.getElementById('pp-comprobante-preview').innerHTML = '';
+}
+window._ppQuitarComprobante = _ppQuitarComprobante;
+
+function confirmarPagoPersonal(){
+  var arrTurnos = turnosLoad();
+  var ahora = Date.now();
+  var total = 0;
+  _ppTurnoIds.forEach(function(id){
+    var t = arrTurnos.find(function(x){ return x.id===id; });
+    if(t && !t.pagado){ t.pagado = true; t.tsPago = ahora; total += (t.monto||0); }
+  });
+  turnosSave(arrTurnos);
+
+  var pagos = pagosPersonalLoad();
+  pagos.push({ id: gid(), personalId: _ppPersonalId, monto: total, ts: ahora, turnoIds: _ppTurnoIds.slice(), evidencia: _ppComprobante });
+  pagosPersonalSave(pagos);
+
+  cerrarPagoPersonalModal();
+  renderPersonal();
+  render();
+  toast('💰 Pago registrado');
+}
+window.confirmarPagoPersonal = confirmarPagoPersonal;
+
+// ══════════════════════════════════════
+// MÉTRICAS — dashboard con lo esencial: comparación mes a mes, evolución de
+// los últimos 6 meses, desglose de gastos por categoría, y qué requiere
+// atención (pagos pendientes, stock bajo). Todo calculado de datos que ya
+// existen, sin pedir nada nuevo.
+// ══════════════════════════════════════
+function _metricasUltimosMeses(n){
+  var out = [];
+  var hoy = new Date();
+  for(var i=n-1;i>=0;i--){
+    var d = new Date(hoy.getFullYear(), hoy.getMonth()-i, 1);
+    out.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'));
+  }
+  return out;
+}
+
+function _metricasDatosMes(mes){
+  var ingresos = movLoad().filter(function(m){
+    var d = new Date(m.ts);
+    return (d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'))===mes;
+  }).reduce(function(s,m){ return s+(m.monto||0); }, 0);
+
+  var gInsumo = gastosLoad()
+    .filter(function(g){ return g.tipo==='insumo' && (g.fecha||'').slice(0,7)===mes; })
+    .reduce(function(s,g){ return s+(g.monto||0); }, 0);
+
+  var gPersonal = pagosPersonalLoad()
+    .filter(function(pg){
+      var d = new Date(pg.ts);
+      return (d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'))===mes;
+    })
+    .reduce(function(s,pg){ return s+(pg.monto||0); }, 0);
+
+  var ggArr = gastosGeneralesLoad().filter(function(g){ return (g.fecha||'').slice(0,7)===mes; });
+  var gGenerales = ggArr.reduce(function(s,g){ return s+(g.monto||0); }, 0);
+  var porCategoria = {};
+  ggArr.forEach(function(g){ porCategoria[g.categoria] = (porCategoria[g.categoria]||0) + (g.monto||0); });
+
+  var gastoTotal = gInsumo + gPersonal + gGenerales;
+  return { mes: mes, ingresos: ingresos, gInsumo: gInsumo, gPersonal: gPersonal, gGenerales: gGenerales, porCategoria: porCategoria, gastoTotal: gastoTotal, utilidad: ingresos-gastoTotal };
+}
+
+function _metricasDelta(actual, previo){
+  if(previo===null || previo===undefined) return null;
+  if(previo===0) return actual===0 ? null : (actual>0 ? 100 : -100);
+  return ((actual-previo)/Math.abs(previo))*100;
+}
+
+function _metricasDeltaHtml(d){
+  if(d===null) return '';
+  var color = d>=0 ? 'var(--green)' : 'var(--red)';
+  var flecha = d>=0 ? '▲' : '▼';
+  return '<div style="font-size:9px;color:'+color+';margin-top:2px;">'+flecha+' '+Math.abs(d).toFixed(0)+'% vs mes anterior</div>';
+}
+
+function _metricasGraficaHtml(datos){
+  var W = 640, H = 200, padL = 8, padR = 8, padT = 10, padB = 26;
+  var maxVal = Math.max.apply(null, datos.map(function(d){ return Math.max(d.ingresos, d.gastoTotal); }).concat([1]));
+  var plotW = W - padL - padR, plotH = H - padT - padB;
+  var groupW = plotW / datos.length;
+  var barW = Math.min(22, groupW/3.2);
+
+  var svg = '<line x1="'+padL+'" y1="'+(padT+plotH)+'" x2="'+(W-padR)+'" y2="'+(padT+plotH)+'" stroke="var(--border2)" stroke-width="1"></line>';
+  datos.forEach(function(d, i){
+    var cx = padL + i*groupW + groupW/2;
+    var hI = maxVal>0 ? (d.ingresos/maxVal)*plotH : 0;
+    var hG = maxVal>0 ? (d.gastoTotal/maxVal)*plotH : 0;
+    svg += '<rect x="'+(cx-barW-2)+'" y="'+(padT+plotH-hI)+'" width="'+barW+'" height="'+hI+'" fill="var(--green)" rx="2"></rect>';
+    svg += '<rect x="'+(cx+2)+'" y="'+(padT+plotH-hG)+'" width="'+barW+'" height="'+hG+'" fill="var(--red)" rx="2"></rect>';
+    var lbl = new Date(d.mes+'-01T12:00:00').toLocaleDateString('es-CO',{month:'short'});
+    svg += '<text x="'+cx+'" y="'+(H-8)+'" font-size="9" fill="var(--muted2)" text-anchor="middle">'+lbl+'</text>';
+  });
+
+  return '<div class="card" style="padding:16px;">'
+    + '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;">'+svg+'</svg>'
+    + '<div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:9px;color:var(--muted2);">'
+      + '<span><span style="display:inline-block;width:8px;height:8px;background:var(--green);border-radius:2px;margin-right:4px;"></span>Ingresos</span>'
+      + '<span><span style="display:inline-block;width:8px;height:8px;background:var(--red);border-radius:2px;margin-right:4px;"></span>Gastos</span>'
+    + '</div></div>';
+}
+
+function _metricasDesgloseHtml(actual){
+  var items = [
+    { label:'🧪 Insumos', monto: actual.gInsumo },
+    { label:'👷 Personal', monto: actual.gPersonal }
+  ];
+  Object.keys(GASTO_CATEGORIA_LABEL).forEach(function(cat){
+    var m = actual.porCategoria[cat] || 0;
+    if(m>0) items.push({ label: GASTO_CATEGORIA_LABEL[cat], monto: m });
+  });
+  items = items.filter(function(it){ return it.monto>0; }).sort(function(a,b){ return b.monto-a.monto; });
+
+  if(!items.length) return '<div class="empty">Sin gastos registrados este mes.</div>';
+
+  var total = items.reduce(function(s,it){ return s+it.monto; }, 0);
+  var html = '<div class="card" style="padding:16px;">';
+  items.forEach(function(it){
+    var pct = total>0 ? (it.monto/total*100) : 0;
+    html += '<div style="margin-bottom:12px;">'
+      + '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>'+it.label+'</span><span>'+fmt(it.monto)+' ('+pct.toFixed(0)+'%)</span></div>'
+      + '<div style="background:rgba(120,80,130,0.08);border-radius:6px;height:6px;overflow:hidden;"><div style="width:'+pct.toFixed(1)+'%;height:100%;background:var(--accent2);"></div></div>'
+    + '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function _metricasAtencionHtml(){
+  var html = '<div class="card" style="padding:16px;">';
+  var huboAlgo = false;
+
+  var turnosPend = turnosLoad().filter(function(t){ return t.salida && !t.pagado; });
+  if(turnosPend.length){
+    huboAlgo = true;
+    var totalPend = turnosPend.reduce(function(s,t){ return s+(t.monto||0); }, 0);
+    var personasSet = {}; turnosPend.forEach(function(t){ personasSet[t.personalId]=true; });
+    var nPersonas = Object.keys(personasSet).length;
+    html += '<div class="costeo-item-line"><span>👷 Personal con pago pendiente ('+nPersonas+' persona'+(nPersonas!==1?'s':'')+', '+turnosPend.length+' turno'+(turnosPend.length!==1?'s':'')+')</span><span style="color:var(--gold);font-weight:700;">'+fmt(totalPend)+'</span></div>';
+  }
+
+  var meta = metaLoad();
+  var bajos = [];
+  Object.keys(ETAPAS).forEach(function(ek){
+    ((meta[ek]&&meta[ek].insumos)||[]).forEach(function(ins){ if(_invNivel(ins)<40) bajos.push(ins.name); });
+  });
+  if(bajos.length){
+    huboAlgo = true;
+    html += '<div class="costeo-item-line"><span>📦 Insumos con stock bajo</span><span style="color:var(--red);font-weight:700;">'+bajos.length+'</span></div>';
+    html += '<div style="font-size:10px;color:var(--muted2);margin:-4px 0 8px;">'+bajos.map(esc).join(', ')+'</div>';
+  }
+
+  if(!huboAlgo) html += '<div class="empty" style="padding:10px 0;">Todo al día — sin pagos pendientes ni insumos bajos.</div>';
+  html += '</div>';
+  return html;
+}
+
+function renderMetricas(){
+  var root = document.getElementById('metricas-root');
+  if(!root) return;
+
+  var meses = _metricasUltimosMeses(6);
+  var datos = meses.map(_metricasDatosMes);
+  var actual = datos[datos.length-1];
+  var previo = datos[datos.length-2];
+
+  var colorUtil = actual.utilidad>=0 ? 'var(--green)' : 'var(--red)';
+  var html = '<div class="cards" style="margin-bottom:22px;">'
+    + '<div class="card"><div class="card-label">Ingresos este mes</div><div class="card-value green">'+fmt(actual.ingresos)+'</div>'+_metricasDeltaHtml(_metricasDelta(actual.ingresos, previo?previo.ingresos:null))+'</div>'
+    + '<div class="card"><div class="card-label">Gastos totales</div><div class="card-value" style="color:var(--red);">'+fmt(actual.gastoTotal)+'</div>'+_metricasDeltaHtml(_metricasDelta(actual.gastoTotal, previo?previo.gastoTotal:null))+'</div>'
+    + '<div class="card"><div class="card-label">Utilidad neta</div><div class="card-value" style="color:'+colorUtil+';">'+fmt(actual.utilidad)+'</div>'+_metricasDeltaHtml(_metricasDelta(actual.utilidad, previo?previo.utilidad:null))+'</div>'
+  + '</div>';
+
+  html += '<div class="toolbar"><h2>Ingresos vs gastos — últimos 6 meses</h2></div>';
+  html += _metricasGraficaHtml(datos);
+
+  html += '<div class="toolbar" style="margin-top:22px;"><h2>Gastos de este mes por categoría</h2></div>';
+  html += _metricasDesgloseHtml(actual);
+
+  html += '<div class="toolbar" style="margin-top:22px;"><h2>Requiere atención</h2></div>';
+  html += _metricasAtencionHtml();
+
+  root.innerHTML = html;
+}
+window.renderMetricas = renderMetricas;
+
+// ══════════════════════════════════════
+// FIREBASE SYNC — v2: multi-dispositivo en tiempo real (mismo estándar que
+// Cosmo Pedidos v39). Antes: pull único al cargar la página y cada guardado
+// PISABA el array remoto completo — dos dispositivos abiertos a la vez (ej.
+// alguien registra un movimiento manual en el PC mientras otro marca un
+// turno de personal desde el celular) podían borrarse cambios entre sí.
+// Ahora: pull cada 10 s (pestaña visible) + inmediato al volver a la app,
+// y las colecciones propias de Facturación (movimientos, personal, turnos,
+// pagos de personal, gastos generales) se FUSIONAN por id en vez de
+// sobrescribirse, con "lápidas" para que un borrado no se reviva.
+//
+// REG_KEY y REG_ENVIO_KEY (cuánto ingreso/envío ya quedó registrado por
+// pedido) dejaron de sincronizarse como blobs propios: son estado 100%
+// derivable de MOV_KEY, así que ahora se RECALCULAN localmente a partir de
+// los movimientos ya fusionados en cada sync — así nunca pueden quedar
+// inconsistentes entre sí ni duplicar un ingreso por una carrera entre
+// dispositivos (antes, si dos dispositivos sincronizaban pedidos casi al
+// mismo tiempo con un REG_KEY desactualizado, podían generarse movimientos
+// de ingreso duplicados).
+//
+// META_KEY (cosmo_prod_meta), GASTOS_KEY (cg_gastos) y cosmo_costeo_config
+// se dejan con el comportamiento anterior (adoptar el remoto si es más
+// nuevo) a propósito: los dos primeros son claves COMPARTIDAS con el Hub, y
+// fusionarlas aquí sin conocer su código podría revivir algo que el Hub
+// borró. cosmo_pedidos_v2 sigue siendo de solo lectura (nunca se escribe
+// desde aquí; Pedidos ya tiene su propia fusión multi-dispositivo).
+// ══════════════════════════════════════
+var _FB = 'https://firestore.googleapis.com/v1/projects/cosmo-98107/databases/(default)/documents/cosmo-hub/';
+var _fbPend = {}, _fbT = {}, FB_DEBOUNCE = 900;
+
+function _fbSave(key,value){
+  try{
+    localStorage.setItem('__ts_'+key, String(Date.now()));
+    _fbPend[key] = String(value);
+    clearTimeout(_fbT[key]);
+    _fbT[key] = setTimeout(function(){ _fbFlushKey(key); }, FB_DEBOUNCE);
+  }catch(e){}
+}
+function _fbFlushKey(key){
+  if(!(key in _fbPend)) return;
+  var value = _fbPend[key]; delete _fbPend[key];
+  clearTimeout(_fbT[key]);
+  try{
+    var ts = Date.now();
+    localStorage.setItem('__ts_'+key, String(ts));
+    fetch(_FB+encodeURIComponent(key)+'?updateMask.fieldPaths=data&updateMask.fieldPaths=updatedAt',{
+      method:'PATCH',headers:{'Content-Type':'application/json'},keepalive:true,
+      body:JSON.stringify({fields:{data:{stringValue:value},updatedAt:{integerValue:String(ts)}}})
+    }).then(function(r){
+      if(r.ok){
+        var flds={}; flds[key]={integerValue:String(ts)};
+        fetch(_FB+'__manifest?updateMask.fieldPaths='+encodeURIComponent(key),{method:'PATCH',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({fields:flds})}).catch(function(){});
+      }
+    }).catch(function(){});
+  }catch(e){}
+}
+function _fbFlushAll(){ Object.keys(_fbPend).forEach(_fbFlushKey); }
+window.addEventListener('beforeunload', _fbFlushAll);
+
+// ── Lápidas de borrado (una lista por colección) ──
+// Se podan a los 60 días para que no crezcan sin límite.
+var MOV_DEL_KEY   = 'cosmo_facturacion_movs_del';
+var GEN_DEL_KEY   = 'cosmo_gastos_generales_del';
+var PERS_DEL_KEY  = 'cosmo_personal_del';
+var TURNO_DEL_KEY = 'cosmo_personal_turnos_del';
+var _FAC_DEL_DIAS = 60;
+
+function _facParseArr(s){ try{ var v=JSON.parse(s||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+
+function _facMergeTumbas(loc, rem){
+  var idx={};
+  (loc||[]).concat(rem||[]).forEach(function(t){ if(t&&t.id) idx[t.id]=Math.max(idx[t.id]||0, t.ts||0); });
+  var lim = Date.now()-_FAC_DEL_DIAS*86400000;
+  var out=Object.keys(idx).filter(function(id){ return idx[id]>lim; }).map(function(id){ return {id:id, ts:idx[id]}; });
+  out.sort(function(a,b){ return (b.ts-a.ts) || (a.id<b.id?-1:1); });
+  return out;
+}
+
+// Sella `_m` (última modificación) en lo que cambió de verdad —comparando
+// contra lo que había guardado antes de este save— y registra como lápida
+// cualquier elemento que ya no esté. Mismo patrón que pedSave() en Pedidos,
+// generalizado para cualquier colección de Facturación con `id`.
+function _facSellarArr(key, arrNuevo, delKey){
+  var prev = {}, prevIds = {};
+  _facParseArr(localStorage.getItem(key)).forEach(function(x){ if(x&&x.id){ prev[x.id]=x; prevIds[x.id]=1; } });
+  var ahora = Date.now();
+  var canon = function(x){ var c={}; for(var k in x){ if(k!=='_m') c[k]=x[k]; } return JSON.stringify(c); };
+  (arrNuevo||[]).forEach(function(x){
+    if(!x||!x.id) return;
+    var pv = prev[x.id];
+    if(!pv){ x._m = ahora; }
+    else{
+      if(canon(pv)!==canon(x)) x._m = ahora;
+      else if(pv._m && !x._m) x._m = pv._m;
+      delete prevIds[x.id];
+    }
+  });
+  if(!delKey) return;
+  var borrados = Object.keys(prevIds);
+  if(!borrados.length) return;
+  var tumbas = _facParseArr(localStorage.getItem(delKey));
+  borrados.forEach(function(id){ tumbas.push({id:id, ts:ahora}); });
+  tumbas = _facMergeTumbas(tumbas, []);
+  try{ localStorage.setItem(delKey, JSON.stringify(tumbas)); }catch(e){}
+  _fbSave(delKey, JSON.stringify(tumbas));
+}
+
+// Fusiona una colección local con la remota: por id gana quien tenga `_m`
+// más nuevo; las lápidas (más nuevas que el `_m` del elemento) lo eliminan.
+function _facMergeArr(loc, rem, tumbas){
+  var idx={};
+  (loc||[]).forEach(function(x){ if(x&&x.id) idx[x.id]=x; });
+  (rem||[]).forEach(function(x){
+    if(!x||!x.id) return;
+    var mio=idx[x.id];
+    if(!mio){ idx[x.id]=x; return; }
+    var a=(mio._m||0), b=(x._m||0);
+    if(b>a) idx[x.id]=x;
+    else if(b===a && JSON.stringify(x)>JSON.stringify(mio)) idx[x.id]=x; // empate: desempate determinista
+  });
+  var tIdx={};
+  (tumbas||[]).forEach(function(t){ if(t&&t.id) tIdx[t.id]=Math.max(tIdx[t.id]||0, t.ts||0); });
+  var out=[];
+  Object.keys(idx).forEach(function(id){
+    if(tIdx[id] && tIdx[id] >= (idx[id]._m||0)) return;
+    out.push(idx[id]);
+  });
+  out.sort(function(a,b){ return String(a.id)<String(b.id)?-1:1; });
+  return out;
+}
+
+// REG_KEY/REG_ENVIO_KEY recalculados desde MOV_KEY ya fusionado — ver nota
+// arriba. 'ajuste' normalmente corrige el ingreso del pedido, salvo el caso
+// legado que corrige la deducción de envío (se distingue por el concepto).
+function _facRecalcReg(movs){
+  var reg = {}, regEnvio = {};
+  (movs||[]).forEach(function(m){
+    if(!m || !m.pedidoId || m.origen !== 'pedido') return;
+    if(m.tipo === 'envio'){
+      var re = regEnvio[m.pedidoId] || (regEnvio[m.pedidoId] = {gasto:0, deduccion:0});
+      re.gasto += -(m.monto||0);
+    } else if(m.tipo === 'ajuste' && /ingreso por env/i.test(m.concepto||'')){
+      var re2 = regEnvio[m.pedidoId] || (regEnvio[m.pedidoId] = {gasto:0, deduccion:0});
+      re2.deduccion += -(m.monto||0);
+    } else {
+      reg[m.pedidoId] = (reg[m.pedidoId]||0) + (m.monto||0);
+    }
+  });
+  Object.keys(reg).forEach(function(id){ reg[id] = Math.round(reg[id]); });
+  Object.keys(regEnvio).forEach(function(id){
+    regEnvio[id].gasto = Math.round(regEnvio[id].gasto);
+    regEnvio[id].deduccion = Math.round(regEnvio[id].deduccion);
+  });
+  return {reg:reg, regEnvio:regEnvio};
+}
+function _facAplicarRecalcReg(){
+  var r = _facRecalcReg(movLoad());
+  if(JSON.stringify(r.reg) !== JSON.stringify(regLoad())) regSave(r.reg);
+  if(JSON.stringify(r.regEnvio) !== JSON.stringify(regEnvioLoad())) regEnvioSave(r.regEnvio);
+}
+
+// Qué colecciones se fusionan por id (con su lápida) vs. cuáles se adoptan
+// tal cual del remoto si es más nuevo (config/compartidas con el Hub).
+var _FB_ARR_MERGE = {};
+_FB_ARR_MERGE[MOV_KEY] = MOV_DEL_KEY;
+_FB_ARR_MERGE['cosmo_personal'] = PERS_DEL_KEY;
+_FB_ARR_MERGE['cosmo_personal_turnos'] = TURNO_DEL_KEY;
+_FB_ARR_MERGE['cosmo_personal_pagos'] = null;   // solo se agrega/edita, nunca se borra
+_FB_ARR_MERGE['cosmo_gastos_generales'] = GEN_DEL_KEY;
+
+var _FB_TOMB_KEYS = [MOV_DEL_KEY, PERS_DEL_KEY, TURNO_DEL_KEY, GEN_DEL_KEY];
+
+// cosmo_pedidos_v2 se pide solo-lectura: nunca lo escribimos, solo lo bajamos.
+// cosmo_prod_meta y cg_gastos sí se escriben desde aquí (tab Inventario),
+// igual que ya se escriben desde el Hub — mismo doc en Firestore para ambos,
+// se dejan con adopción simple (ver nota arriba).
+var _FB_KEYS = [MOV_KEY, 'cosmo_pedidos_v2', META_KEY, GASTOS_KEY, 'cosmo_costeo_config',
+                'cosmo_personal', 'cosmo_personal_turnos', 'cosmo_personal_pagos', 'cosmo_gastos_generales']
+               .concat(_FB_TOMB_KEYS);
+
+var _fbPulling = false, _fbLastPull = 0;
+function _fbPull(force, cb){
+  if(_fbPulling){ if(cb) cb(); return; }
+  if(!force && Date.now()-_fbLastPull<3000){ if(cb) cb(); return; }
+  _fbPulling = true; _fbLastPull = Date.now();
+  _syncDot('run');
+  fetch(_FB+'__manifest')
+  .then(function(r){ return r.ok ? r.json() : null; })
+  .then(function(doc){
+    if(!doc || !doc.fields){ _syncDot('ok'); return; }
+    var jobs = [];
+    _FB_KEYS.forEach(function(key){
+      var f = doc.fields[key];
+      if(!f || !f.integerValue) return;
+      var remoto = parseInt(f.integerValue,10)||0;
+      var local  = parseInt(localStorage.getItem('__ts_'+key)||'0',10)||0;
+      if(remoto > local) jobs.push({key:key, ts:remoto});
+    });
+    if(!jobs.length){ _syncDot('ok'); return; }
+    // Lápidas primero: la fusión de sus colecciones las necesita ya bajadas.
+    jobs.sort(function(a,b){ return (_FB_TOMB_KEYS.indexOf(a.key)===-1?1:0)-(_FB_TOMB_KEYS.indexOf(b.key)===-1?1:0); });
+    var huboCambios = false;
+    var cadena = Promise.resolve();
+    jobs.forEach(function(j){
+      cadena = cadena.then(function(){
+        return fetch(_FB+encodeURIComponent(j.key))
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(d){
+            var remStr = (d && d.fields && d.fields.data && d.fields.data.stringValue) || '';
+            if(!remStr) return;
+            var key = j.key;
+            if(_FB_TOMB_KEYS.indexOf(key)!==-1){
+              var merged = _facMergeTumbas(_facParseArr(localStorage.getItem(key)), _facParseArr(remStr));
+              var mergedStr = JSON.stringify(merged);
+              if(mergedStr !== localStorage.getItem(key)){ localStorage.setItem(key, mergedStr); huboCambios = true; }
+              if(mergedStr !== remStr) _fbSave(key, mergedStr);
+              else localStorage.setItem('__ts_'+key, String(j.ts));
+            } else if(_FB_ARR_MERGE.hasOwnProperty(key)){
+              var delKey = _FB_ARR_MERGE[key];
+              var tumbas = delKey ? _facParseArr(localStorage.getItem(delKey)) : [];
+              var loc = _facParseArr(localStorage.getItem(key));
+              var merged2 = _facMergeArr(loc, _facParseArr(remStr), tumbas);
+              var merged2Str = JSON.stringify(merged2);
+              if(merged2Str !== localStorage.getItem(key)){ localStorage.setItem(key, merged2Str); huboCambios = true; }
+              if(merged2Str !== remStr) _fbSave(key, merged2Str);
+              else localStorage.setItem('__ts_'+key, String(j.ts));
+            } else {
+              // Adopción simple (pedidos, config, claves compartidas con el Hub)
+              if(remStr !== localStorage.getItem(key)){ localStorage.setItem(key, remStr); huboCambios = true; }
+              localStorage.setItem('__ts_'+key, String(j.ts));
+            }
+          }).catch(function(){});
+      });
+    });
+    return cadena.then(function(){
+      _syncDot('ok');
+      _facAplicarRecalcReg();     // reg/regEnvio siempre consistentes con MOV_KEY
+      if(!huboCambios) return;
+      sincronizarPedidos(false);  // re-derivar movimientos si cosmo_pedidos_v2 cambió
+      renderInventario();
+      if(document.getElementById('vista-costeo').classList.contains('active')) renderCosteo();
+      if(document.getElementById('vista-personal').classList.contains('active')) renderPersonal();
+      if(document.getElementById('vista-metricas').classList.contains('active')) renderMetricas();
+      toast('☁️ Datos sincronizados desde otro dispositivo', 2200);
+    });
+  })
+  .catch(function(){ _syncDot(navigator.onLine===false ? 'off' : 'err'); })
+  .then(function(){ _fbPulling = false; if(cb) cb(); });
+}
+
+// ── Programador: cada 10 s con la pestaña visible + inmediato al volver ──
+var SYNC_MS = 10000;
+var _syncTimer = null;
+function _syncStart(){
+  if(_syncTimer) return;
+  _syncTimer = setInterval(function(){ if(document.visibilityState==='visible') _fbPull(); }, SYNC_MS);
+}
+function _syncStop(){ clearInterval(_syncTimer); _syncTimer = null; }
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'hidden'){ _fbFlushAll(); _syncStop(); }
+  else { _fbPull(true); _syncStart(); }
+});
+window.addEventListener('focus',  function(){ _fbPull(); });
+window.addEventListener('online', function(){ _fbPull(true); });
+window.addEventListener('offline',function(){ _syncDot('off'); });
+window.addEventListener('storage', function(ev){
+  if(!ev || !ev.key || _FB_KEYS.indexOf(ev.key)===-1) return;
+  _facAplicarRecalcReg();
+  render();
+  renderInventario();
+});
+
+function _syncDot(estado){
+  var d = document.getElementById('sync-dot');
+  if(!d) return;
+  d.className = 'sync-dot ' + estado;
+  if(estado==='ok')       d.title = '☁️ Sincronizado con tus otros dispositivos · toca para forzar ahora';
+  else if(estado==='run') d.title = '☁️ Sincronizando…';
+  else if(estado==='off') d.title = 'Sin conexión — los cambios quedan guardados aquí y suben solos al volver internet';
+  else                    d.title = 'No se pudo sincronizar · toca para reintentar';
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+render();
+renderInventario();
+_syncDot(navigator.onLine===false ? 'off' : 'run');
+_fbPull(true, function(){
+  sincronizarPedidos(false);
+  renderInventario();
+  if(document.getElementById('vista-costeo').classList.contains('active')) renderCosteo();
+  if(document.getElementById('vista-personal').classList.contains('active')) renderPersonal();
+  if(document.getElementById('vista-metricas').classList.contains('active')) renderMetricas();
+});
+if(document.visibilityState !== 'hidden') _syncStart();
+
+// Refresca el reloj de "en turno desde..." mientras la pestaña Personal esté abierta
+setInterval(function(){
+  var tab = document.getElementById('tab-personal');
+  if(tab && tab.classList.contains('active')) renderPersonal();
+}, 30000);
+</script>
+</body>
+</html>
