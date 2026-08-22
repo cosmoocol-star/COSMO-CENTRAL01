@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F2EAF4">
+<title>👥 COSMO — Equipo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F2EAF4; --surface:rgba(255,255,255,0.86); --surface2:rgba(120,80,130,0.22);
+  --accent:#7c3aed; --accent2:#A872AD;
+  --teal:#0e7490; --blue:#6D3F79;
+  --gold:#b45309; --green:#15803d; --red:#dc2626;
+  --text:#2A1F30; --muted:#6B5A73; --muted2:#9C8BA3;
+  --border:rgba(90,60,100,0.10); --border2:rgba(90,60,100,0.16);
+  --radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 28px;background:rgba(248,242,250,0.92);border-bottom:1px solid rgba(168,114,173,0.30);backdrop-filter:blur(12px);flex-wrap:wrap;gap:8px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-sub{font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.sync-dot{width:9px;height:9px;border-radius:50%;background:#9ca3af;flex-shrink:0;cursor:pointer;margin-left:8px;box-shadow:0 0 0 3px rgba(156,163,175,0.16);transition:background .3s,box-shadow .3s;display:inline-block;}
+.sync-dot.ok{background:#15803d;box-shadow:0 0 0 3px rgba(21,128,61,0.15);}
+.sync-dot.run{background:#b45309;box-shadow:0 0 0 3px rgba(180,83,9,0.18);animation:syncPulseEq 1s ease-in-out infinite;}
+.sync-dot.off{background:#9ca3af;}
+.sync-dot.err{background:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,0.15);}
+@keyframes syncPulseEq{0%,100%{transform:scale(1);}50%{transform:scale(1.35);}}
+#app{max-width:820px;margin:0 auto;padding:24px 20px 60px;}
+.page-title{margin-bottom:16px;}
+.page-title h1{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.page-title p{font-size:11px;color:var(--muted);margin-top:2px;}
+.tabs{display:flex;gap:0;margin-bottom:18px;border-bottom:1px solid rgba(168,114,173,0.30);overflow-x:auto;}
+.tab-btn{padding:9px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-family:'Bebas Neue',sans-serif;white-space:nowrap;}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.vista{display:none;}
+.vista.active{display:block;}
+.tc{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px;}
+.tc-top{display:flex;align-items:center;gap:10px;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#2A1F30;color:#fff;padding:10px 18px;border-radius:10px;font-size:12px;z-index:9999;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.25);}
+input,textarea{font-family:inherit;}
+
+/* ── Mascota del header ────────────────────────────────────────────────────
+   Misma familia visual que Cosmo Pedidos: la mascota a la izquierda, el
+   nombre al lado. Cada app lleva el personaje del valor COSMO que le
+   corresponde, así se reconocen entre sí de un vistazo. */
+.logo-wrap{display:flex;align-items:center;gap:11px;}
+.logo-mascota{height:42px;width:auto;flex-shrink:0;filter:drop-shadow(0 2px 5px rgba(90,60,100,0.18));transition:transform .45s cubic-bezier(.34,1.56,.64,1);}
+.logo-wrap:hover .logo-mascota{transform:rotate(-8deg) scale(1.07);}
+.logo-valor{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;opacity:.45;margin-top:1px;}
+@media(max-width:600px){ .logo-mascota{height:32px;} .logo-wrap{gap:8px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap" title="Coherencia · La constelación armoniosa">
+    <img class="logo-mascota" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAA+z0lEQVR42u19d3gVVfr/55yZuSW56YXQewugYFARxEsnJFFsieviKt2CLmtZRVm/k+sCCbjurus2+yIruokinSQiECslkSJNegkkENJvbpuZ8/7+uPeGgAkEy/7Uzfs8eUgud2beeXs75wCt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt0Aqt8LMC6X/55VW7XR7RpQsvPH6cWkXhfwwYa/r3Vvgf4L0KcACyOijuz5lJ8S8CUAKftYrCz5nxG+12eXdOuolJDFP7xzxQszSZapYm09T+MQ9wiWHti8lm1Q65VRB+/tBm5Z/tp8gzSyPPLG3FH286ASDmf1Ir/kfekYZHWTqO6Bk5q+Og2L7tB8UPHn1Hj3ZgIAAgg9iH7x08XlJUvvXYrvKvCr4++88dTpwLXP+zDhB/rlkAIwIDwGfFJyo56Q/R2bJdbz57b5/pSfcP6N3T3iHMcOsEAgOBMc4o8cb2kdcOius3irOR50664jc88NuV/eLLlZw95cLh+PkqivyzCOpUsEyo/j8cDgGAApE9AXt9gAMPtA1Ze1Qzbu5qU0T9OZcsc84b2Epg9RVuERpu0o/qgh0tdW4I3MfXmPVEYMhUWSaATIeD2M/AOvwkJTvICGQ6iLFvMIEtUZPDrLo3SpLlKAaES5JkM8eGGFvW7X3qvrlXjWjbL4Z0l84ZD0iJICghsijZeY4vzt61/sZbrspyn6nlQrAaH9OrvdVaVWGhs+aV4mLtG7ioKs8E4HA46KfoLn4yAqCq4JlQgxreAG/OtkdGx1jac44OnPEYBmY1SBBnzEPE6omMGhKsPiZKrsv+056qjF+12XzP7wZ3cVd5BQC/CDBmWCJN0j+e+nxT9VHpzhtGt+1aXem1yoyFMYnbwBHCBSTipJHBaoQhTtd4qeRXC/LLGjOdiBgyMxn7CQnDj9oFEMCgqow5HMLhgHDAATU90TQgsUM3i1Xuzg0kcBAXoCpdoMyt+Q5Wu9zl05//vK6p+73ysH1ySF29TZyuJxZhEhaTxEAgjy6EcdIp2VyibVWMIo98ZGXRNwTwPruldxcl2irxtiZFahsr8X5r5k9QCKxG6OJoidt5iDFWFWS83zI44HBAtFqAb6HtgApHQNtVu10eODqkr1WWEgmIYtyo9ep0RNeMI3c4Pjzb9D1U3q/fXpaenkiZGbnyuJt6z1j32fHym1xVL4+9s0ek0SMK+yvcCDHL6BqmAHsr8MGKo7WVfbs+3ysuLOemJ5Yf2Kja5U0YITKbdjXIechuMydYOpsUqQcYEhi4TzPoUG1dze5J2Z9WNXYTF1uuVgFohmmNiZ0zb1T7MMkymHO0FwaqfCT2VB5wH5iyuNDTlB8OXBtM3RgRgTGG/IUpD1ol/vVNT6z+6OWk+B0D24de9XGdvqLrVV1idu45s7at5Bk1PEQZu/5g1eoTw3o9cHP32MmVXvHvO59de1xVwYNaTADLVP1BYFPxxwfq+C5WM+8PzjtyRk5dFztT5ubt+jELwo9CAAIpG4IEXTU/tb/CcR1jTDGg7zlywr3j4b8XOq8k8AoSOy87dYYu6GTaM2vziIgxxsJ72mztDjqd+47n3vuHuK6RfwkZ/JcTN0SEDDogWw9VVFTUvfbbMe06xZon19Xob96xIL+0sRC0NDZZPj850cr5NQCP0GHs23+26ovH/7TZ/WO3CP91H6+qKg/+nZ+VmpS/MOWh/OzU+9YsmNDrYob6XcOlhSj4XQBYuyB10tqs1Nsaf4agpJHKC/+Q9sSyuSO7ExELXh3EJ2fu2K4fLkqb86Zqj2yIRxpXluibykMEdsFzALyt2mPzs9JuLshKnb16QUryyzOTQi50df+rzG9EqLXzkxM/XJT6YH526n0r1TGdGhNUvYigLb3vuuyU1HULU371DeYDLCfdXwBbuyD5vqXqmHYAkOMvirHG3181f2z//EVpj6npiSYiYldiMS8WhrceHxu6Ljt1fEF26m/WZaWOCTSfggLH/qe0Pqg9OU8nxxVkp03Jz065f8Xvx3ZtzMSmNOybRPYT2FU0fbirePqLwc/XzJswOC879eEmmH+BtVj1+3GTljwzvu3FGg4AOenpEgCs/n3KTXnZqTMAgHL8nzm33DfQVTz9ZTRjCb5RlWyEQ45qt63LTrm9YGHq7NXzUgY2jn9+9sxv/JJrFySPK1iY+vjaBcnXXsD4K9QyAKDt90XWbZneDwBynhnVvmBh6lPPPz42lDXB2AbtJGIf/uGWqe9n39YBzXyvQQjmp2SsWTAhLYjjuc2Twr3b/c9j39LqvT9vfNuC7NQZBdlpU3KeGhPRnLD+9DWeLjSrOWpKQn5W2qx12SkZLz6SbA4WUFqi8ZcVsPREU8HC1Mdz5vqtSXM+NmDOsT5zxOzXpvZudylNDuDN8rNTfr3iufH9vnf3Ny95SMHC1MdXL0i5/hs0C+D5k2Z8Y1Odl50yNH9R6pOr5qf2/z5NX07ANK9bkHL3yvnJoy+lTX5hI3Z819+jzm7/04clX/zhlsY4NlmMArB4zuiY/EWpT+aodpvfRX03vBsHwDlPjYnIX5g6Mz8r5R673S773U2OdCm8fjJw9E3VAgD52am/yM9Ouf+tx8eGfp/mLkjED56bMCAvO/XBxvcm+qZLIfITVi/5z3tEm8g4/V61c++Stk0JY5D4DVnFvOQh+Vkpk38I/INuMT877bGcp5PjAKB0x1uhP0HN92tYzd7FMXrJfzbqFSsPH1gzZ9EKdXTyD5H+EBF78ZFkc3522mNvq/ZYFrAItFGVm/6+XwC0U7nvEn1MRul7FWcDAtCUySUCo5x0KcjwvOzUGaueG3f19xy4NQSKK7Jv7rfKMebhuq/f+Lvhyi/xnXhXDRS1+E9EAHIkAhiVfTCajI+I6FPynVi63P9/Gy85buUPzlpO1IZ0bcH4W1YuSB53sWbWbZ3av/rzadFNafXHr0676sTWF5bvXfnUrKZMLZHKq7dOvrYxbgzA24/ZY/MXpjzqTw2vLG653PsFs4yCl6a2o9IcItpEdGZZOR140dzCjOOK4XuXqtzcXDCA1izNPVqz79BB1FXvAuPZpKo8N7e8+codqZwxEGMtq5ARwOBw0NuP2WNlJnctzndv2LjRLjOHQ9RtnTJGOzjrTbNJKiTOIi5gcKb/+qrTJ9us/NPf/rB/y+azL89MUho/14+LQ1hk+Y/G8Uc+dBVN/+2mTXZJkMon/bHwnCHEoesGdrb760ktF9jg+1FOutQUM1lGrkGUI4175I3TmoEntHpPSfmpkvdYr9nejRtVual+xI9KAIjAMjJyjRXzR7WRPBW3rvzn6+NZeNrVpo6/2MwcDpGRkWE0dx1jDnH0Tbulrnjq6BbVAVSVMYBi4kPG6Yb2haOwUB9RHk9EYJrGDsKj36F0jYw2m+hRVVU5cvf675fpIAAwmUyd4/snfW2xhZtD2sa1CQpVTk66xJhfiGSrMoyHmccwRudGjizUN23axInA9p2tXm+SWf+3Hh8bCn85mrUkIK7YOrljzdbJQ1lGrtEcMxnLMAhgpg4ZLyx//vW+21YsL149P2XkyJEO/YdIE78/XwwwxkBvqvbIECVkiht89b1/3Xr0smaPwIqLZ8r1xVMXdBp11RaF8+f8dXKVXVKZHA6R83RyHAePLtIKioiIsYxcA1BZ9LA3jmse/V1vWd0TulfkjBixifv/L4DjbHskMVIy5uaW67p2NlKmHkGhSk/PFYwBCldKyISJ3qNV+brHuwYARozYZCBTZY//abPba2BfVJTpRgYQqeqlhTU3nQOAFegYGmre4Nv/4CpX0ZQbm4vyGUCUkyNlOHKdh6JNSxSJD1gxL3kIczjEj7VWwPzBWA9zwaK0J96fP7Z/4/TskoIT+I7ry2m/pIrHSd//gKdu27Sxjf+vOd+/Zv6EW1fMnzDsYt9PROzE5+nW5q5b/fuUoavnpUz01yXGdMrLSp3aXBCoquB04BHzBe8KsL8+ZLety0qbpaYnmthlLaPKqWim4t0+PYeqf0u+nTMP0eZJ4USXtnTBIPPN++yWgkVpTyx7bkzfH2XVMEjY/IWpM1fNTx3euIrW0jTo3ObpHTzF0/7tO/zwda6tkzuyywQ9b6p2y7qsCbPeVO2W5gmfLjXWsCCD12VNmP7O3HEdgwzNy06dsfS3Y9pdXIQhurQArstKTV/p8FcyL8eU3TnpprqtU/v7dt9/v6tounopAW/KfeSo46I/XJQ2J5gi0o+lf9CgjQsmpK3LSk2/EuZfcJ+imcqVPG/Zs6NvWP37MXdfrt5/8d/vqOO7rJnvr+0HLdRKx/gb1mRNuKOpezVXSgbA3v7dTT3XzJvwwJVW7egKG0BB4Vqmju6Vn5322MykJOVH4QqCRF323Ji+BVmps4FvtkOvNKfPaSZCDmpremKiCYxh2yujH9n4mr0/EbG0tgi5XDzTYKWyUiZ/8NyEAUHCEsBenpmkrMtKnf3mbHtkkLmXulcSoOTkpEuQGIpfnfjk6udHdk4HJPtlRuz8wW269F0UzV8sSv3Fj6F3wIiIvfDoEGv+wrTf/hdME0tKggLGMKEDBryUEbN0EHBze6DnzJcRcstQhAFQLiWoK9RxPdYtuFBjg0RcuWD8DesWpNx9OcImAQokoCPQzgpcn5Xa58U/pvd+ACr4pEnR4YmA6Ye2tnnZqQ+eL0Z9t0CefwdkGGOM+sbGTDR0fWtGVl45qSr/gWblmR2QgLbKCAs9N3Bgr/zQnjfc/cjvUlZOntjz4+NzpHmSjogxYxCCprQwU2UAuNmqpNV5tbXBWLuh1EvEbnkmfzMYRa9Qx/VgDodoirB2QO6Wky5ulPDrO0ZEFf758X5fJAxUfu2StIVp/7S+UfZ5ZUK/MbD+YELgcBAB7Ey1J0cxyWNfeHSINTOTLpuG/mCm/z11dLf8rAmzfmhzZAdkULqUEm/+V95fxxJ5VxARCSKdyPsybXh1OE3sELb8FzejzZhuiGgs2A2NouyU29dlp6Q25+cZgKXqmHb5C9N+++IjPcwXD4DYARmcYWQoHP+eO4h050oiKieiI0Te52j7ign0y95RW8dfjS5jxiACP9Cqq4aYK2vCqDXzmo5b/iv1/qApygkMcvwQZUoASAckSBwDgPS3np1ERAU+15n7DNfZueQ6+xS5ztxvED3qy5k3jG6QMev5t9qEDukAa2PmL5s37rr8hSkPBVMyVQVXVXDv9unv+bbPeLdxRL5m/oRh+VmpMy8K1jjjHF2A67PuHS2IXta1mkW6t3oNeatzqL7sUUH0a+8nbyXTKJu0SP0rbPY42H4o+quB8bj87LRfv//M+LYUSE3/Ky5AVVXOGKNcNfkqXZAz49kPj5LqL+M21qjvTSDS04HY/qGDBkTNvWP2fBKuExykcY4ycHYWjAnuq3RJKZP7UP9B8Y8sf+pMTJvuEWY1PdGUkZFrrJqf2j9UMdl3ndUW+3FyUGYmCFBBDAnEEAaAIT1HEKk8de66z4Sgc3kLUycxh0MQEWYmJUlkGPyqtua59z2dxeAT8NVvlsi3FMK3HBKvZe4zbmXorV3F4Js6TlvxKLr3HhEl4Xtcd3ExPR0OCKfPV2gNk0YzgED0XzX/bM2CCQ8Ecmd2Ye//+7MEQe0fCExf+ZKDiEh3lT1EnvLp5Cl/gDzl95OnfCbVl84g0h/RV/3ZTkNlPPpWfptQAFg5b/w16xemPpOjjotuKW4NgdbC1En5WSn3+MMFjh7A2JeffFgQkeEq8z/XU/5gAI+ZVF82g8j7sL71/TQaFa68qObANjQGYd8r7RvVDRpqGtkp9+c8M6r9tw3A+ZVpPzhjoGXPjenDwN2/fH79aVVVGWMgf4MjXQpagtL8e+K/s0CkpwNGWNR113V5cvx9j5HwbmWM1QQUSzT0lbjEoNX62Kj0njRgcMLD8+89E1ewcPCvbCZtwuFK798yHAWVgSUCdDnN8geAKk9+as3bAKtf/3zq4y9N6dnuuj4Jc37xaCaDvo2AugDpjAAegCQxeGp8PGlsRxpi73jvsgz06n9HFP8+rEBR0UylNP+eeJaRazSkkrkZHAA8Pr3IFmoaHixl/8AuwL8CN0QxX+tz6ZsDxqihk8VYrlG968Eo3/4H86LizFMJYNikfqtgKAlQcpctM67lNVMyHnqkpynMJnx16zhjMi5ONBgDNJ/gIfFWjL+rT7dbe8e83D6Od1z0yo6X7l+4viYouE03Fb75uSNQcx//9JoPYtpGfFlXXv2XlF/NtIcnxAhPdZ7EedM1KxLEuFkSd87oH5kQoUw392N0XQ+EfNsoPSicMXVeKSre+pG7eNoU5nAIxnINf+cQbMdH3p1ckmJffmpMRGCtAfuhBIA5HA7x6qPjog0SIbfOyz9IRMzhAFUWzYzwbJ/+ur7n/tWhZGxT2oSOF4Dp26aEdkBO26hSvGFpc/2wTo+NuOt+Ep7tDOIQwKxo6rYSZ9BqfTT+Fz3JwyyDUh/a+raUYEj2zrB8m/V5GQ4Hu89utwy6Z+nGfUeo660zZ0vQ9gHiIMAsDZp/ATElBk+1lw8a2YGGjOp0z6ezK3sNs4fLQzrA8u2FwG/qOdDZEmF5w7t9xsf6wYdW1m2bcjcY4Cgs1DVhHGlnkwYF0/MfRACCN24TywdwwY8CEMjMZJSTzqOSXqkF0TEpNiSVc3QX5fU+ifNxABhGZBrNuAGmAjxYQbPb7bKqqnJOTo60iUg8N3a+3kuqf+5Xj81qL1lChbf2Lc64Cc3KFAM0TfCQGIu45b7EuLYe/Oau3Bpf7/FR5vvsnS3piTAlAUqgWte4FMsAcD8OfjzSc9KldErHW1985hkE/O7O+6dfExobbXiq3+KMX9qiE8AgM3HXg1eHxYYrcypttcL+cJQpPb2DJT0xsQGHFm1KlZvOGWMUZ2GjpBBZMVyaxxRjHU4eY5jBjK3BwM/npO2yrPg7moF2d4u1+kokkTFGaxZMmOLx0od3OPJKAvkzBQcofNtn5CnhpjEwSEJ8CLxHav5lPlQ9PegigkJnB/gmIoPLjZphhgCAUAsQ3RHo2i0MD06ZM/wXdz2TJ3w1OVz41oOxsCY17yIzDEuoLF7//Ta+5MXil8s99IYTOHkCqALByxXQ9L9BKX4FSjdbHE+cHKKPmNxFH6V8opNmMDBmsQJRCUCHTibce+fMPg89/Oci0lwfMcP9H8Z4+GVxEIJgDTeJlS/v5v/I/Pz9U9XaXyqBI6eAShDcTPbLidD/j98/2CF9Wgy2F9Ab35hUlSPTQc6t0xMtNnm7HGVRUOWBULjmrvSk2Ya8UbBxo10eMaLQYAy0LmvC9LrauhUZWZ+WB/jaIkFoaYDCGGO0RE0OZ4wruxxrTgekx/+QTeBEIN9OOgabSfKV1v1VOmXsEEzUIhES65/rCz6PCAbLhLAy1qkr0DEC1DUqFD3jEkJ6JnRJ7BYV27ZDfIeYdqMm9kLv4TeQVruMC9+GFjHfH7AzeN0Gn/bsdXTV9Qn3b1h55N6zp+qOlZfWH6ts4zpYCc+RI3NROnKwVF1WXk7b5iCq8KHjsWOsaBfRhXWOvtbWLaZtTIf49m3b3zShv3RN6i9heHcww/M+GG8ZDpwzeOo0fsvM/tSjf8wd+TkHJp4+UXfsXGn9scp2zoMVkudAtY8OdWCOEzVA6eMbUVX8BCz7i2EcAnwACJmZxJiDyj/TDJOiTHWdrotWFD5TCVX66ZwO+TVnhEDmCAY4SNfodEhIeE8A5eRfUv/9CYCqgjkcoBBJdIVApQMQFyxwLN9LjIFcxTjgOVU33XrNa6839SyVIAZGI/E2m23ugPHRIxN6RLfpOmAI69BrDNp2HYzotu3BzNUANgO+nYbn7LsSYy4wFtIiwjcGT73Grk3pYlw7obNVc2p9ays9fc+ecE44d7gaOz4vw/oPj9X36xvlG5IUGdWxb0d07HUN2nYdgui2/WCKsADsMIDDhrfycwnGYTBmwZWENIwB7jofSxza1ki8sZ1s1Gs96qq8Pc6drh9zam8lju+tQOmxWmdZqfPk1km1H3rCPH/vZ8eZiAOQikvhZowRAMQNW7wfwH4AOLd50r/CwBaZuKIzBiLKBDIZ4AC8hjhiNbOrrzTGaJEAZEIFVAePsZraVTl9p/2fNXrZgHkPSXrtjw35alwiw4i9xFiuAYCnp4PWtsdVQzvErvn1PX3a9RzeFlKPWCDOLgCbgPYZMzwnodUe4UKvY2AmiUtmEEIBEi3ezbOhHsI4XNVeiQEkyYwiE0Ippms4+XpFsE/WHeePTkoMHZbWMVTp1QlomyGArgS4Ad9xaDXFTPPuZyCvxLgMxsznp0KvAAfGOFy1PgkBHMLirBTZPpR6JEYxnGnLjdJ6m7vE2ferorN9Xyk4PvZUefUvExNx8pwJ4vhxeM4HgRkcSGSMOWoBPBDsYQSFBACqXc5TVlPEcP8uJez7FYBg5SnuN87obgPiigCwTIeDHM0UKxr5+2BKJ209C+k6OeyPj03s1q5HvyhfrUaKVOtiTKzkIMEZ42BcAWCCpERBlgVIeMAYh25IEMJvWi/neyUJkLgBIgJTzNB0YiSIeV06rArHy4u+RD8zx4ibEqhWMPjqqhjjb3IGDYAOxgTAFHApBIpsDuCgwRASDKNlOHAOyJIBIgGmmKHrjJEQTPMa8Hl0kFODUaeBfAaRzOiGq2P0UEP0zVyjPUfh9dN7WBF63O8KRIDJxvm0UGVNDc5Of/5zZ8EfJ3pYx45RKEGlCnBHC8zmZbMA1Q6ZP+cQ9/eMurt9aenC/Bc23A4GyrQ33ey4mPkA2JcMmulLXH1d1/CburQLEZVOXZFkziSZQ5LDIcmR4FI4GLOASxLA6lFa5kZFbReUnYsDkQRrqAwh6NKBl02G1yfjTEUCKmo6oOyME7LkAxiH2cxxrrQetfurMOraeFTX60ySOJMkBkni4JIFXAoD4xFgPBSy5EXZ2VpU1LTHmYoEeH0yrLYW4BAqgyCh7FwsKmq7oLTMC8ANLvGG+IBLDJLMwCXOGGP8XL2u9GkfKq5tFz5+12b06tMHSGxCOZubmlbtdpkxRp8s39Vz+dCQLQ/3jp78HIMI7Hr67QQgJx0Skcrnfc51IkQk39n9b7c6rms/9o7uL4AQN+9zrlNOuhRcan2Jci4nADbGu3SOsXLhJwA7H6eKhh/GGHTNhX2He0A3P4OXXgduv+cT3HZPMTZvqYTVpjTJACEI1jAFq9eW4pa7i3DHvZ/g7Q9iYViewd6DcQC5IZlknC1zIZwBJouM4NgHNU7gAtVFBjf2HoyFbn4aS5fH4857P8Etdxdh1ZpSWMMugYNNwZZtlbjtnmLcfs+n+MurBN38NPYd6Qldc4Fzfv5RDQmonx7EGbrFWEwmg3eJjYBhbXt55jXw6LNPdCKKGnxj7IMTf399j+T07n8hQnRLeNSsAGTkwmDMIQxNRD5za/eFE2YPitI7hnnHPTIwVL2jZ5ahiXCWkWtk5MK4FJKJgdfVdOF0aoI1OC6iwE/QbzLIkg/7D0eh14Bn8P6yVdi3dzv69++JvIKdmP5IEU6edEEx8wv6HkIQzCEytm+vxszZRfjk010Ycv1AFBSsxOYtu9Gp1+9w4KgMSAYsFhleAi4Y3mrETCLApAgcPCKhY8/fYdu2/cjLW44hQwbhk093YebsInxZXA1zyIWWgAhQTBwlJW5Mf7gYefk70a9fD3z99Q7kvrcCva96BvsPR0OWfSBiF7x3wz0YmM8gEDEvACjS5SPOBh7pIur/7ui5aMJvBsUaHcM9Yx8ZGDb3th5ZhibCLscj3mQhA1CevjruuZzp/bYVvDL660cXDrtfskik1frMzMRp1oIbpuW9PGr/0qmJnz3VL/YZAHJzjQgHQOl3QqqxYvuXx2tKfbqAwiHIIJB+nhCSxFFb54ItagKcdTX46qvteP/95Rg7NhmM+XDwcAVyl5VADpFhXER8rnC8tfQYzp6thmF4MXnyNOTlrcfq1csQagsDScPgrqlFxy4RcNsUnDzjRohZgqELwKAGIWCMw+NxQec3ICwsHCtXvof8/PWYMmUGDMOL8vIqLF56FFy5UAgNQZBDZbz3QQkOHDoHxnwYPXo83ntvOfbu3YWamkrYoiagttYFiTGQERB+EcCfQxCBdpbWV7IwY9+BY5A3l0C/ZLEJMD1zVdz8nBkDigpeGf31r7OGTmcmTr4ar4WbJZqdNXRm3j9H7X9nSuKnT/SPmQNAaopH8kWVfs4A0R3odddVMc9ePa0fcE08DLcuNK/BucKhew0W3SZEjJ+c2BZXxbbto+0aunLPuRUM2NNM4EFHcsFPEEqHR9XMW7q+5G8zp/U16gxipBkMggCJgTOCx8MQHt4JRAY+++xzZGRkYMuWLQAYNJ8bR094AOPCt+AcIC/hRIkXwvCAMeCeSZPQq2cPHD12BIwM2MK6wOUWiLEyjL+rJ9766y483T8GMgOET4AL8ptizuB2GbDZOgNkYM/uPbjt1ltx8NAhMMYgDC+Ol3hAHgHOL6qmCeDYSS80nxsAw9NPz8HKlctRXLwNEAbCwzvD7ZJgswpAFyCDQEJAGAIRVkXkbjgtbz9T85fhd+P0tvdBQNMCEORRP0Xpe/eg2Gf6T+vr55FLF5rvPI+i2oTQ+CmJ7TAgpl0PrzHsvd0VHzDg64t5xC/WVlUF9wJHNpxyrvUYBJ9H130ew7+rJvkLLT6PwX1uXfcJwqennQXVwFFVBXc0kygXA1pPBlPiev3VJRuOZi3OOSyHWSWDfIJIEwFLzGA2A5WuUrRpE4uePXti+5fF0DQNRISw8DgMvqYPSNcu1D4DYMzA4KR+MFkiAQA1Tic2bt6CpBuGQlYk1HrKYDFLcFd6cd2QBFw3vjOef3UPJCLBBUF4jfOmXOGo856BrEgYcsMN2Lp1M7weD0AEkzkS1w4eAMYFDOPCtI80H64Z1Bth4fEgIuiahu1ffomePXogoW08Kl2lMJsJ5COQ7hcCoROiQhR9eeFp+dWPT77Wa4zvH/s2Qvr0BOqaKzoEeVSpaQc/KnHmewXgcwV4xM7zSPMazOfRda8gfFrqytOBE03x6BvBQWEhUMeZln+kdnlHizxs8MgOXQOGmjWqtgkJ4G+8uKNwVs7BifWcuTZtuiC8+QZUAsKWD+WeMtrwr3srLWbiw5NubGv4CJyZJRAjWBUFZzacQHl9GK658Ubs2P0VamprEGK14O6M6zDzvjiEWHXIsgzdJ0AEhISZANLRuVMESs/IKCmrRp8ObfHYsGsxbVB/iKPHQfoWxHQxIOoE3BVuXNU7EjVn3bRqzQk+fGQHIoUzmCQQCGarAueXpThxwoQk+004eOQwysrPwqQoSEkeiMdmdUa4zQez1QTNZ4AMgjlEAZeADm0tqKkLxYmSKshWC7p074a5c38HZ8lpGHuXo0NfA7rLAFwaDJeOCInrH6w6Kv91+cHX+t7lnVO2F3x/EWorAe1Svr+wEKjnTMs7UvNBxxBleNLIDl38EyHnKxVMYkISxF9/ceeGX7938LY6ztxN8ahJv223Q/74Y+hDuTTinU/u2NhxYJzhqvFKYIxAxEIiTOLQ1rP89hHv3bCbYfNNN0EuLGzeZ51v76dLJ7/INY3Pg7FxiJT94MyBj/7i8YG6m5jMQxl8a8OB/Qoq9DoYEZGoqfagLr4MHZIldIg1wxwuY0dhGXSvgcE3dwNA+PCNvegxIAZd+0fC7TRw6LAblvxI9AyJQp3XDV3TIEsh4GOqweNqIc5pZPIaWLpkP3tnxb5PJ0zodeMj6vXksypgYYzpX1pBG0NRpdfCE2KDV2M46zuNdncSOnewwBrCcabEje0fn0Ly1ERAlrD7oxOoqfRi2MTO8NZoKCn34uRyQnhdPCIiLeA11YiVw4CBHsgDz0E/oyGMk7787QPyX9/e+1r3O31Pl+6EtK8C1ZMmQcvMBF1uIWiQRyNM0rglH9+Z335A7IU8ijSLA5+X8gmjl117lKHozjsh5TYRDDaZBYwIFB0G9YnoZDpZJ3SnzwixKSIk0swsoYownD7DVFInkrpEtiECi4+/NLLBYZHc3Fxjcwk8+cmQRm425vzjnzteeu9vX8lWEzdI+BcOa7qEGGsU4l0GenMz7Ne1QfduVpBgMHwMoWEK3nlxB74sOI6VL+3Exg8OI7ptKLwuAmcMA/qFoX27UJRXaNB1ExizQTcYoBkgnwELZ/TGG/vY4mV7//jrTPHo+vX7X/x7VhGzEJG/ekTwaQyR5ii01Ti6eDnsV7dFn74h4IzB4wHCYsz4ZM0xrH1tD7auPYo3s4sQGWuB4QOEYOjezQp7UgJ6MwviXQZiLVHQDQkwDAiPjjCLZHyQc0j+y5LdryVO8j1TtR3yvi2oPnQIPocDgjEQbVTlSw3TBHnUv2dUB9PJOmHU+/QQmyJCogI8qvUaplNOMaxTWMKl7iM3d3MHQJGMD4grOsOhC9PXjOFwubu+b7vQ0K6aweO3n0W0hfUFsCLx7KW7isHiUMXWyR2PclPZ4MGveJAMy/itxhMvXVtsjWoTMn305N5CjHRyHq/DKJMBCaAuPrh7eoGawNSPW0PPgbGY/PRgfJR7EOHRFvz2JTvCIkzwuXUwxuD26WDJ1bB+ZQVVSIBJQOrsAkXWI0STxFtv7eaLc/Y9N2kO/eM/7yLmtqcx/9XH9tRGx4U8+8unrhGiv4dZrATjsAnCYGDxGrz9PWD1BA4GkIDZLGP288PwwSt7cPirCsxUr0fvwfHw1Pr8MwF1AjSoGmSxgEoUAD6Y2niBdjUIhSTyVx6WXnx11+tJM/Snj26D8uVZVB0j+BgD1X0xrc3hgyecbKSj/lI0beAR6Kq4bWVc+AzzfmI4cs5d2bddaHRXzeBtdpxFjFnuA2B1czxizUWaDkBM6hwx4rZ21sW1Cj/y3q6qP48el5iwdeth181dQh8xeY12/zlRf8f7p+q2NFd2DEqeq3j6raZY6zD9nGuodfDrQ4PW5777OpsK3j9uS+0Z98mflozvY25jFcIM3ni4jXzsm+1emwKY/OGL7tSgawZY0P2RP7JhSiDN0gwYNT6Yvcw4trNcmv3ox8t7POCacmIdbCdOotIcDkmkQO+wzLbqxSUTRrdLjDY8spB4IF1nPIADXdAah2KSIIUGJoO8Bjz1GthFZWJm9kdP5BMQ9T7wOiHqTtXz3/y6sKgkourmzmGQNhxAZUkJ3LTRLrORhXp90ZTbzKGmubpG77jrve9H3bD4WLAVf/G8ZC5g3NcpYvTEDiFvlhPtOx0Ztadoc+UbJrm2z539Y56R3Hrc0mOu21aW1RY1xyO5mUhTAMDbx2s2vX28pjfgb0zMubHjPY/9Z/YHjN27BIANgLPx95scaMjINZxbhU0OUR6X40Ph3DYtxXbt62spJ531y8gVpwkVE2Jr1x77qqJP/9j2wl0Lzk08sOX2N50U4wxupwaQ1vA3u+AMOH9KRm4G0gSo3oDhFJAUsKKtZ3C60vXu4Dqb/Ok5Z11xKdxJpZCL9kO/8e/O5fuKzoxu1zsSwiXALNL5xg7/Rm8cmk/A5/E0dP5YEz0CcjOQLkAuA0adAavCaMuOcpworckZdTd8n/4HrKQEHgYAI0YIOnCV2efyTJe6RSeJ/RUhjOQ3/UOq7BsuNjfQH1h8ouajxSdqegNwb35l+J13zbCUJt6+ZPcHG0uWAbAAcF2KR/wyE4CcM3goJ0dKT4dUXeupWZb51gDOGCTOnJedQk3P9U951Hd8x3uy5ktNM35HjHmI/GPYcYBgEkg3jFpPjRdw6RBuDdBFoEzafL+dS/6fJjt05Nd8cmsgrw54NcCl8+oqLwyBmnNeRucMeAFQN0AwGeTRUOeu9QH1GsilgTTjkhRiDOdxaKpBRADpfhzgCeDh1llNpRdeQ1R6vaDyKngCRo0x5hDVp2qtYOwD7XjNSl0zlkQOfb0SI5qfZ2zEI/dG1W47d6Y25sEXl9TkpEPiDIIxuC7Ho0sKgMNfaWWZe/aQP4KkUxaTkiCI2Dt33CldbuYviPgxHJOrPN4Jpu5/mx82+LUN/qZGQKoFEBZm7hQVokAEGCDqNZBHv6BM22LQBcitg+o1kEv3/+42AI8uYm0KTGbExcbWaV0CXz8LMAggwiZ3iAs3AU4fkUvzX+/R/ZXCKwWDQB4dVK8D7gAOHh3CrVF0iIwQi5xgRJ3PmoJ0ihq5uNp89SuvmXr9faIw9DcJYBjpuGSpPZP8AlQOcwIkqbawEHp6okqC/OP6l+NRS2YCKbArN85U0DHOEetX7twWT2h0HbnY03bYv8/6I9vzy5ji00EA5Mhwc49IiwRfjYfB5W+XkjPABK/hZwJdpgEfZLyrMfPPC4Fw6SIhwowwi9wZgKjyNKqBEBAZaekVH6ZAr/Hh2+EAQCeQx0CDALk0CJcfJ7gNGE6dYm0KIq3mrhVfA7bIJkrxG+0yY4Dt+sVlzN+2uLQE+tc9UqhJ6io0cfoijC4rvS2dBwhsvV9QuXZ+Ci19elQ8y9pw5kpmzwL7AF1QK8jJgWAMMTER5k4hIGi1GmOWQG3eECBNgCkGSOFgMgckHhBZdp7xwv9DugA0/zXwGSCv/wceHfDo0AUhJkRCRKi5y8mTOrNFguEMWHw6CLlQosPN3cMVDl+Nl5FJAhH5NVkTYL7GOLDAQTONcAh+N4ADdAHyiQAOOuAxALcOTTNYhMIRblM6ffUVTBE26BfTkI0s1OFfbIMWbQqV6SA4AAbWySm0dYHhjRabrZYvWshU/bNnEMfCLXIigDNXMnvW1OFOnIOigDaxNiVB9hnw6oJJweaMLgCTAEwckAM/PEB81riD20gA9EYC4BMXEt9nsAiZIyJE6fzV8fPEDwphtE3pZBUEvdbHmFUGCX+zipkMf8ahBJgv8eZxMITfCmgG4BMg33khJLcB3auzEAZEhiod6isQ2qUbappRImrh9BFjDPT608lxDJB/6Vhf2twCmO88Fh5ktNPp281NSs+WjCBfKgBRA6Ftggmd2oaZLHDpJJwao3q/6RVBE1wX/NsXMMu+8+Y58Luo811osuv1hn+DJlir11gIESKsSof6owgN1f1hJuegeCAhJlRpI3sN6HUao3r9wvsH8BANnzWBQ8PfjfHQGtwR3Bp0p8YUTSDaKrfRnYiMauFkdnN0DI7qt7XhKgE64h8mvbJ1AVeybIkC+eiZtVmp+gfq+C6M5R9rTuKC8xbN/f/ewEvF2OSe7UIVoN5nEOMyASCDwHThr94pEpjMAJmDeOBGjBGXQBCAYQjOBMACVqPBFVzgBgwYLp1ZDYEos9RGq0NUm26o6QFIhwA9zorO7WyKCW5NEBj34yACOPgtit8CcJDkx4EYSJIYgQBDJ86ILsTBF3ADPgPwGv4g0KUzToQYsxxp0tHG3AbHkgBejOb79UH6NUlHv1JyxljP8lpfbmNF/SFWBiEz0z9t6NOM7VYrH9ooCGkyJmrG9J+PvgkIM5s7xkgMel0gBQtqVZ0voP0+CKcGo9YHUeejECIjxBCM1WlccuvcRiCTZhh6rQ9GY+vRYAl0fzDm1hhz64gySREWhlhzG1BEW38gGB5i7hhvkkjU+YjqL9Tm4O+izo+DUesjqxBGqCDGnTrn9Tq3EcGsB3Co00BO3Z/JuC60Av4gVRPxFpmHSDwhOgKi5jI8YA0yfyEdVRWcAbRcTe4DsPr7sj+qCCxspR/KAvjXzBFYRkbYrqnXOIcunjM6Bg5HZXCBSEMUO7JQ9+yY8X9SqDLTV+68PnToW6dUVeWOJs7J0SDc3nqNyKmDZOHPO43zAR15GJjCyRamCF2HtG1HhbRhS5m7vNJ9XJGl0L7dwjuOvSFBSoixkM+jC4/bkJguwBpZAXgNP/ENAd1nCDJBD/GBBaduNBJuj0tjqNf9VoYIMGS/9psMCH8MQqE2WTDi0t7ic9KHX5Tqp864jnIGqUuHsG7JQxOkLu1CoWuG4arX/TjoTeFA8HkNCAWay3OpbXPTJcZyDff2aZlKqGmGp8qVZLt+cVmwKpiZSeRwMFhMbFhVvdjQOCD8wQTAbwVUlpvrMO65Ork4Jsw8mgE5pKq8IfIsjw8cyCzOMFBJHVP0gPUgh8PRuJYtChlwzvB9suWEkw1uY0UtYyTpxFiA8Nwskc2mCM0gaeveKmnNF2UVRV+f+/eJOu9/eBRO+eqhrC86NXj956ceGDGwzYjkwfFSQoQiPB4dXrfO4fObb+ExoOiGUV+v86+rPAfDOuLYniNQtBK4VBX83//Utm496XSP6RRmhsKEYRDnuvC7H5NEoTZZQJC0d1ettPqLsvote8tzT1S6l3gjcQQewFJU2q9wc+mMoQNib7n5+jZSp1gLdJ9huFy6BJ8/IBReHcxrCEMT2FlWX2XYxN6y4zAdAtxNV1GDrpTXkKBjBoQW/MS/2JWJZeroXpCAu+fnHW6qXPy9Lg27eJlYZiZjN4SmzKqvNt67Y0F+aWMr0FJIAhQlHXL8F7Z//XpAbMbwrjZDM0lEZokpFhlexqSdp+qxZld5+fYj1UvKyPvv8b/FoZrDUbyquAqwwUifBd8f/gCLsRfj+rSJeHhEYox9fGIU4qwSGR7DMLw6kzTBmMfgb+yqRG5Z1f2Dh3mXFW6BVnwEtYmA0i8HRs2j1gXTe8U+mdYrgsgikTBJkK0SGTKX9p/1YPWOc86iI5X/Oel2v3n9TOyOqorCkSNV8LogRt8F34d7IJ34N4b3irPNGtor+ua0ATHoEK5AeA1D9xqQfAYpPsGXf13DXztUMe+qVPeLuz+FKNiLqis128FFOfkLUx6qdBlr73Y0H4v9IAIQNOfvq2P7h1pNNyTPWfPqxUehnS/4OC7V2+b2zjAp7REdWmJ7YWSC7RfXtw9FiFVGiVvHx8fqyr48XfPvctn774nTcbj0M0i7t0N4K+ApDoxM2QEJnSFvOgbf9dfDJvZjQp+4iIftXSNuvD4hBGYinCz34OOyetcXlc7snjd4Xj12DFi7DRXwD14we2eYbf1hNXaFZNrjbA8lxVvlqDAFtcTw8Ym6mm0lNTmluvvNG+/CHlQCW7YAzkPwBNbzURCHWcegLbwZZl8h7H1ibLOGdo5IuamDjYVzhhqnhg0nnGLD2bp/dOjnyq4oh/FVMSoPAd7LMRuZAJj/sOog7VfMSx6icKl7yjNr3v4ux9B9680bgg9dl5Uy2euh3bc61hU15+cvA1JSEsx9+kA+sFG6KZabhpkkZqv26Yedku+j66fhaPlnkM7uhFFYDk9zs3J2QA4KwsCBCDeflsa2MVnt8ZFyt07dQjp8uP/0Y92Hoqh2N6xf1aDy0KHAGryAIF7VBtbx94K//Dz6Pji+6++hCdsnO0uXey2+j0f9Ens9p8G2bAGMQ3AHhI+aGIGXznaGMusYtHnjYOHbcVMHS8j4cLPUplYzzpyF98PrRxtbS3ZBPnEaNcWlcF+h9jMiwt9mjQjt2TnswWOVnldmZq+vbXRY5n9PAILVqlfmjAnvHGWaUVJR/fK0RZ87vyUyPKktLEPvhBE9HHRsD3gXAHs3QT67F7gU45sSBGsPSFMXQF9fBb75PZj+fdegu1xOqdvcf379p4/211WrKujiPQNUu112FBbqH/1hzC3t40KvPeasfGXuzk/Krq+CeccuMO/XDVbnsu+WDkh1PSBPXQD9b3Fgzndg6hsGFlUGaW8xlOM6nBcJ4BUrnaHjQNqzaz//lkr3/UBwL73l8yYMzl94wc5a3wrsgNwDMNs7w9IDMLckTW1u7/10QEru4b8XAKydN+y2jxaNmRM8uNF/3UaZKKfh+ryFE9I2/CH1yUnXRYcHXIMFl9jujUjll3rfdEBKBEz2zrAM6dCwfyD/thYXAFbMSx7SsLn1j2K72OAWrNmpv1i9ICXZv2IlXcKPCBo2d14w/oaChalPrZh/c5uLv7NuQcrd+dkp04JW8cd0qmcQl5xnRrXPX5T65POPjw290oMsf3ACqyr4uqzU2e8HtjD9ttJ5JUfIEancWTQlrfqTX0Y1nkBqCoJCuXL+uD5rF4x7Yvs7s0bolSvVyn2v3rwqc/R9eYvS7giWXemyB0D41xbVbps2rG7r1P6NP7scna50J6/gqO8Ljw6x5i9KffIDdXyXy73rf18AAi+1RE0Oz8tOm/Pe3JGdg9nCt7lPSzqLAEAHHjF7tk//zFk0+ZoLM49LWwJ1YudI5/7XdxNtIip7j7YsfSi50fWXZ2TDGQfTX/fsmP6Y/9ocqSU4X3mc5df0vKyUR1bNG3fdj8b0N/eC/pM7b34mR7UnXAmywe3incXTpji3TpkQPGTh+zWlKg8u76478OYaok3kPfa2Z/fGRQkAsHGjXf4BSMOCJ5jVb52aVf35tGj/OQbEWsh8FCxMm762iUOxfnTQsK/975O752WnPPH60zfGtQTpRprPfDtnnPPtmLHjSgXvssRsdEhjQXbqjA1/vHOSXr3mrq9XPXXbWseY36ydn3zVxe/Rkme3VLNrt0y9ic49TvVFU2e3xBIGafLRoltmNHkC+vclnT9EPMAcDrFsbnL30DAp46zbueRXjsKSnPR0KSP3G3sHgAhs0ya7NDikZ2+zTVIViaeDCJpOi71eeuFrYH9S0iv6tz0xq3GRZO285CGSSbrJEMbHKXPyNjfEB2pKQriV3ckZVewrEctmv5TnDZa3v8vu50TEqjdNjgiJNqdwiS1gFqk9eY063WfMcRv8P1FJL9cGBlqpccAXSFFZwcK0aSSoYvzTaz74LsWe/29R9wfq+C4fLkqbs+y5lL5NSbB/10titcXT+mp7HiihisdJ2zlD03bN1KnqCfLtmrn39GdTOwcPe/42kTMQPKU8dUZBVtr0t+fcGNWQwtFGeWOjAybzsieMzctOeWJ1VmrSxe9y5cz3nwdUv23aw1Qym+jIw+QrnmbQ1w8SVTxOruJpf/Knoo2OtAk864VHh1jzslIeCWZVP6TZZz+kO3A4HCLn6RvjIqPC7/MZ2Jr29NqPGQDRqG5NBIZMlblvLu0gWTDHpEgPkiB4vcYCb139HyKHL626kjp30CQzBlIBPjQ7bTzj6KfremHKM3nbGuPW0GsPtKYZA72vjo0PCzVNBDFy62zVxLmrzlxsSa7UPbm/nDpEMSsv81BTIrm0Mq/HmB0S7VuDLv/yNmyXELj/UnVMuxir+R4h9E8mPJP/xU9K85uLCV58JNmcvzB1ZoH/RA5+sVQ39qO+nTMO+nZML77S6Jno/GHMALBuYdo1Bdmpv1mXnXJ78JRy9TJn9TTGac28CYPzF6Y9ui4rZeILjw6xXml8cHHGUPPFlOup7FFybZ36i8ZpY+P3WzUv9br1i1KfXLFgXI8ffcD3bYK0ddkpqfkL0x59X03ucHEQ5Z8YJubcMi25bsvU0UQqb+7830sxfvlz43sXLEx7oCA7bcr788a3bYpxwWs8X874yLt9Rt4FDGkUfat2u5y3ICU5f2Hao/lZE0alNypwXQlzgkJQ98Xkx+jAI2Z/FnA+MFXtdnndgpS787JTH1yiJof/bJh/Ud+ABRm0fmHq4+uyU8d/Fz+rXnS66KrnxvQsyE6dkb8o5f41Cyb0utS9/QIA7t0xfbVn+4ylTRVyGscQS9Tk8HXZKbcXLEr9TcHCZHsTgsCuRBEa47Ry/rg+BQtTH88L+Pv/dhXyv1pNCvozNT3RNCSp+62MjDZej75uoqPgUANhMgEgk5oabiD/NARr7BNXP5fSVzFhKGNc8er06c1z1+wOCkjmd4ziL/b9b6v22Dhr6CgCTxBEu8r2OzdPWVzoOY/7JVvfoI12mY8s1AlAjmq3RVhtaQyI9bi9K29xrD8RiEkuyAp+VgIQ1IQgkVao43qYrUoyGKpcVZ6827M/qmhEdKKcHI70dPjHYzJE8DrVbpcHj7VdY5LZIAb4PIbvi1vmFuy/OAi83LtLkl/IDIMut76BUSPBy1HHRYdZ5OFMQifodLTC69o8yVF4rrF1yvQLMgNygcw91Ehoed78FDuT+CBiYnvyU2s3ftsg8ycpAE1p1pr5E4YpMh8MopP17voNtzkKq5u6ZunTo9pEhlmTGGNdATrr0bXNtz1bcPIKGe9/bwbyb0MKgKEe1KJFLhcIwvOPjw3tG61cZ1ZYH2FQncZQnDZn7b7mLl47L3mIYuLX6gYrO1VZlTf9+c/rGmcg/198848hQGQMNHNmknJb1wS7xNCfgJL6as/GlAem36DEx9x7Ztee1VtWr9RDwkIjNV3sK6uuLpr+/Od157XNQS1lfDrAE+1grxUiYdHt3T8GGPvtskM3/Tkdp3Nzz6+6vRJBAIBV81P7yzINYsQi6mpq9g0cnVzVJemqJ8jp3rnx3cWbQHwwBFU43b4Ndzg+PNs4HcX/OjSO0F+emaSsmj9++PoXbn/Yd2KpTlRIvuNL65cEMocgbFTt8pU0WPyraBkk2f+oZ9O6vUa7JhHt/CU9m9btFQCQZA7OGdSW9+z9J502wv9N9T7L4t9cO7jqq3/sIyok0j6kvSufmvP6I/6y+JUEjv9z0JiQ6Tnpku/Eu6vIk081e17Z8v7ckaM+yBrf5WLCERELtqNbQFQFQMf0XpH37Fg70Ueeh3XyPKwXr57ouaVTRDqANrhsK9ifvjWVXeSo46ILXrh5yAe/s99atuWF143q1cI4nXuUaHc0AGzcqMr0I2P8j1IKc3LSpYyMXKOo6GWlT6fYAWuXvHvM7KzuazErfQQgky5O65o4eLC29vjjf9rsvtS9gjtpPNgt4vYxSXHz40Z2bNf5+oTw9t0jDJ/XH/0pZpkd/7pSOvlFWUXpppITG7489+SrJ2rWt2DDZf6+mtwuxCL1AKgLZzALwUqra5y77l5YeMx55N2r62p9pW0H3nv2x2ruf3JmKEcdF21WeC9FlrqQIcI4Yx5dGGd9mjhV7XOf2bG9rPalvEMN83Yb7XZ5ZGGhnnV13No5T14zAek9AUX2rxqWgqeVEGBRAK8PePcA5v1h+3vP7j6XHrwWAOx2u/zL3kpoeJwcawuhdhJYeybxCIPgZYJOuV2eA3fO33i8gbCB9VxBK/VtZvb/GyD/mJnt9/H+FC0zM5NlZmYSY6wSwGYAm+12uzxrhNIu1KR0DDFJvaLCzP06jYqqGT64y6nj5+rPbN1xsu4dZ6EOBnxxxvl/2w7XVA+q8jAvGJcb7+ohAL3WC7MhRPGRGrGlzPUCEdjkEcdk9b6rbd3bRsYmRIW1VziP0wyd+8io9NTrO09Xaicf/nuh8xtuzOEgRkRExAHQj5X5P9mqoqpeehizUYn5O1u4y52CGoxBflQjWj9nF9AUgzJVlfnrLs2ngyrAM3PSGdIvc8NcIDMjl5rd9Sy4GNb/rP9q1a4VWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWqEVWuGy8P8AaS2iL+hfePQAAAAASUVORK5CYII=" alt="Coherencia">
+    <div>
+      <div class="logo">COSMO</div>
+      <div class="logo-sub">Equipo · Ruta Anual · Inversiones</div>
+      <div class="logo-valor">Coherencia · La constelación armoniosa</div>
+    </div>
+    <span id="sync-dot" class="sync-dot" title="Sincronización" onclick="_fbFlushAll();_fbPull(true);"></span>
+  </div>
+</header>
+
+<div id="app">
+  <div class="page-title">
+    <h1>👥 EQUIPO</h1>
+    <p>Roles y fortalezas del equipo, el mapa de crecimiento del año, y las inversiones en curso — todo sincronizado con el Hub.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-team" onclick="switchVista('team')">👥 Equipo & Roles</button>
+    <button class="tab-btn" id="tab-taller" onclick="switchVista('taller')">🏭 Taller</button>
+    <button class="tab-btn" id="tab-ruta" onclick="switchVista('ruta')">🧭 Ruta Anual</button>
+    <button class="tab-btn" id="tab-inversiones" onclick="switchVista('inversiones')">🚀 Inversiones</button>
+  </div>
+
+  <div class="vista active" id="vista-team">
+    <div id="team-panel-root"></div>
+    <button onclick="addMember()" style="width:100%;margin-top:10px;padding:9px;background:rgba(124,58,237,0.07);border:1px dashed rgba(124,58,237,0.3);border-radius:9px;color:#a855f7;font-size:11px;cursor:pointer;">+ Agregar miembro</button>
+    <button onclick="window._resetTeam()" style="width:100%;margin-top:6px;padding:7px;background:rgba(239,68,68,0.06);border:1px dashed rgba(239,68,68,0.2);border-radius:9px;color:#ef4444;font-size:10px;cursor:pointer;">↺ Resetear equipo a datos originales</button>
+    <div style="margin-top:8px;font-size:9px;color:#6B5A73;text-align:center;">Haz clic en nombre, cargo o nota para editar · ✕ en etiqueta para quitarla</div>
+  </div>
+
+  <div class="vista" id="vista-taller">
+    <div id="taller-root" style="padding-bottom:24px;"></div>
+  </div>
+
+  <div class="vista" id="vista-ruta">
+    <div id="ruta-root" style="padding-bottom:24px;"></div>
+  </div>
+
+  <div class="vista" id="vista-inversiones">
+    <div id="inversiones-root" style="padding-bottom:24px;"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function safeParse(raw, fb){ if(raw==null) return fb; try{ var v = JSON.parse(raw); return v==null ? fb : v; }catch(e){ return fb; } }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg, ms){
+  var t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.style.display = 'none'; }, ms||2400);
+}
+
+function switchVista(id){
+  ['team','taller','ruta','inversiones'].forEach(function(v){
+    document.getElementById('vista-'+v).classList.toggle('active', v===id);
+    document.getElementById('tab-'+v).classList.toggle('active', v===id);
+  });
+  // Taller lee datos que pudieron cambiar en otra pestaña o desde el Hub —
+  // se refresca al entrar, no solo cuando se toca algo dentro de él.
+  if(id==='taller' && typeof window._tallerRender==='function') window._tallerRender();
+  // Por si el mouse quedó sobre un nodo de Inversiones justo al cambiar de
+  // pestaña (el mouseleave no siempre alcanza a dispararse a tiempo).
+  if(id!=='inversiones' && typeof window._invTipOcultar==='function') window._invTipOcultar();
+}
+
+// ══════════════════════════════════════
+// RUTA ANUAL — mapa de metas del año, con etapas y enlace a Misiones del Hub
+// ══════════════════════════════════════
+function initRuta(){
+  var el=document.getElementById('ruta-root'); if(!el) return;
+
+  var ESTADOS=['Por iniciar','En progreso','Completado','Pausado'];
+  var ESTADO_COLOR={'Por iniciar':'#6B5A73','En progreso':'#06d6c8','Completado':'#15803d','Pausado':'#f59e0b'};
+  var ESTADO_BG={'Por iniciar':'rgba(51,65,85,0.2)','En progreso':'rgba(6,214,200,0.12)','Completado':'rgba(60,252,160,0.12)','Pausado':'rgba(245,158,11,0.12)'};
+  var PRIORIDADES=['Alta','Media','Estratégico'];
+  var PRIORIDAD_COLOR={'Alta':'#f5c842','Media':'#06d6c8','Estratégico':'#a855f7'};
+
+  var DEFAULT_METAS=[
+    {id:1,icon:'🤝',titulo:'Modelo de Expansión Colombia',desc:'Marcas aliadas, distribuidores oficiales y Marcas N1/N2/N3. Base del crecimiento estructurado.',prioridad:'Alta',estado:'En progreso',requiere:[],etapas:[]},
+    {id:2,icon:'🛡️',titulo:'Registro de Marca & Legal',desc:'Protección legal antes de salir del país. Sin esto la expansión internacional es frágil.',prioridad:'Alta',estado:'Por iniciar',requiere:[],etapas:[]},
+    {id:3,icon:'👥',titulo:'1° Integrante Tiempo Completo',desc:'Cuando la expansión y defensa estén más sólidas, será el momento de sumar al equipo.',prioridad:'Alta',estado:'Por iniciar',requiere:[],etapas:[]},
+    {id:4,icon:'📦',titulo:'Ampliar Portafolio',desc:'Masas, bases toppers, cejas, pestañas, resina UV, linternas, moldes, kits inicio.',prioridad:'Media',estado:'Por iniciar',requiere:[],etapas:[]},
+    {id:5,icon:'🌐',titulo:'Página Web Operativa',desc:'Canal propio de ventas y vitrina profesional para B2B e internacionalización.',prioridad:'Media',estado:'Por iniciar',requiere:[2],etapas:[]},
+    {id:6,icon:'🛒',titulo:'Plataformas Digitales',desc:'Mercado Libre, Etsy, Amazon. Canales que amplifican sin estructura adicional.',prioridad:'Media',estado:'Por iniciar',requiere:[5],etapas:[]},
+    {id:7,icon:'🌎',titulo:'Reforzar Presencia Internacional',desc:'Panamá, Venezuela, Ecuador — ya hay llegada. Consolidar, no solo estar.',prioridad:'Estratégico',estado:'Por iniciar',requiere:[1,2],etapas:[]},
+    {id:8,icon:'🚀',titulo:'Replicar Modelo Nuevos Países',desc:'Brasil, Chile, Perú. Una vez el modelo esté documentado y probado en Colombia.',prioridad:'Estratégico',estado:'Por iniciar',requiere:[7],etapas:[]},
+    {id:9,icon:'✨',titulo:'Identidad Visual & Catálogos',desc:'Actualización constante en WhatsApp, Instagram y web. La imagen vende antes que el precio.',prioridad:'Estratégico',estado:'En progreso',requiere:[],etapas:[]},
+    {id:10,icon:'🏭',titulo:'Profesionalizar Espacios',desc:'Áreas de producción (despacho y resina) con estándares profesionales.',prioridad:'Estratégico',estado:'Por iniciar',requiere:[],etapas:[]},
+  ];
+
+  var metas = safeParse(localStorage.getItem('cosmo_metas2026'), null) || DEFAULT_METAS;
+  metas.forEach(function(m){ if(!m.etapas) m.etapas=[]; });
+  function save(){ metasSave(metas); }
+  _diagMigrarAMisEtapaB2B(metas, save);
+
+  var dragSrc=null;
+  var editingIdx=null;
+  var expandedIdx=null;
+
+  function getMissions(){ return safeParse(localStorage.getItem('cosmo_missions'), []); }
+  function saveMissions(ms){ missionsSave(ms); }
+
+  function pushEtapaToMissions(meta, etapa){
+    var ms = getMissions();
+    if(ms.find(function(m){ return m.fromEtapa===etapa.eid; })) return;
+    var newId = 'me_'+Date.now();
+    ms.push({
+      id: newId, fromEtapa: etapa.eid, title: meta.icon+' '+etapa.titulo,
+      status: 'active', priority: meta.prioridad==='Alta'?'high':(meta.prioridad==='Media'?'med':'low'),
+      due: '', owner: 'Diego', collapsed: false, categories: [], reward: '', tasks: []
+    });
+    saveMissions(ms);
+  }
+  function removeEtapaFromMissions(eid){
+    var ms = getMissions();
+    var i = ms.findIndex(function(m){ return m.fromEtapa===eid; });
+    if(i===-1) return;
+    if(ms[i].tasks && ms[i].tasks.length===0 && !ms[i].reward && !ms[i].due){
+      ms.splice(i,1);
+      saveMissions(ms);
+    }
+  }
+
+  function isDesbloqueada(meta){
+    if(!meta.requiere||meta.requiere.length===0) return true;
+    return meta.requiere.every(function(rid){
+      var dep=metas.find(function(m){return m.id===rid;});
+      return dep&&(dep.estado==='En progreso'||dep.estado==='Completado');
+    });
+  }
+
+  function renderEditPanel(idx){
+    var m=metas[idx];
+    var h='<div id="ruta-edit-panel" style="background:#fff;border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:16px;margin-bottom:14px;">';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">';
+    h+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#a855f7;">✏️ Editando: '+m.icon+' '+m.titulo+'</div>';
+    h+='<button onclick="window._rutaCerrarEdit()" style="background:none;border:none;color:#6B5A73;cursor:pointer;font-size:14px;">✕</button>';
+    h+='</div>';
+
+    h+='<div style="display:grid;grid-template-columns:52px 1fr;gap:8px;margin-bottom:10px;">';
+    h+='<div><div style="font-size:8px;color:#6B5A73;margin-bottom:3px;">Ícono</div>';
+    h+='<input id="re-icon" value="'+esc(m.icon)+'" style="width:100%;background:#fff;border:1px solid rgba(90,60,100,0.14);border-radius:7px;padding:7px;color:#2A1F30;font-size:18px;text-align:center;outline:none;"></div>';
+    h+='<div><div style="font-size:8px;color:#6B5A73;margin-bottom:3px;">Título</div>';
+    h+='<input id="re-titulo" value="'+m.titulo.replace(/"/g,'&quot;')+'" style="width:100%;background:#fff;border:1px solid rgba(90,60,100,0.14);border-radius:7px;padding:7px 10px;color:#2A1F30;font-size:11px;outline:none;"></div></div>';
+
+    h+='<div style="margin-bottom:10px;"><div style="font-size:8px;color:#6B5A73;margin-bottom:3px;">Descripción</div>';
+    h+='<textarea id="re-desc" style="width:100%;background:#fff;border:1px solid rgba(90,60,100,0.14);border-radius:7px;padding:8px 10px;color:#6B5A73;font-size:10px;line-height:1.6;resize:none;outline:none;min-height:50px;box-sizing:border-box;font-family:inherit;">'+m.desc+'</textarea></div>';
+
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">';
+    h+='<div><div style="font-size:8px;color:#6B5A73;margin-bottom:5px;">Prioridad</div><div style="display:flex;flex-direction:column;gap:4px;">';
+    PRIORIDADES.forEach(function(p){
+      var pc=PRIORIDAD_COLOR[p]; var act=m.prioridad===p;
+      h+='<button data-p="'+p+'" onclick="window._rutaSetPrio(this.dataset.p)" style="padding:5px 8px;border-radius:7px;font-size:9px;font-weight:'+(act?'700':'400')+';cursor:pointer;text-align:left;border:1px solid '+(act?pc+'55':'rgba(90,60,100,0.10)')+';background:'+(act?pc+'18':'transparent')+';color:'+(act?pc:'#6B5A73')+';">'+p+'</button>';
+    });
+    h+='</div></div>';
+    h+='<div><div style="font-size:8px;color:#6B5A73;margin-bottom:5px;">Estado</div><div style="display:flex;flex-direction:column;gap:4px;">';
+    ESTADOS.forEach(function(est){
+      var ec=ESTADO_COLOR[est]; var act=m.estado===est;
+      h+='<button data-e="'+est+'" onclick="window._rutaSetEstadoEdit(this.dataset.e)" style="padding:5px 8px;border-radius:7px;font-size:9px;font-weight:'+(act?'700':'400')+';cursor:pointer;text-align:left;border:1px solid '+(act?ec+'55':'rgba(90,60,100,0.10)')+';background:'+(act?ec+'18':'transparent')+';color:'+(act?ec:'#6B5A73')+';">'+est+'</button>';
+    });
+    h+='</div></div></div>';
+
+    h+='<div style="margin-bottom:14px;"><div style="font-size:8px;color:#6B5A73;margin-bottom:6px;">🔗 Depende de</div>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:5px;">';
+    metas.forEach(function(om,oi){
+      if(oi===idx) return;
+      var linked=m.requiere&&m.requiere.indexOf(om.id)!==-1;
+      h+='<button data-oid="'+om.id+'" onclick="window._rutaToggleDep('+om.id+')" style="padding:4px 9px;border-radius:20px;font-size:8px;cursor:pointer;border:1px solid '+(linked?'rgba(168,85,247,0.5)':'rgba(90,60,100,0.12)')+';background:'+(linked?'rgba(168,85,247,0.15)':'transparent')+';color:'+(linked?'#c084fc':'#9C8BA3')+';">'+om.icon+' '+om.titulo+'</button>';
+    });
+    h+='</div></div>';
+
+    h+='<button onclick="window._rutaGuardarEdit()" style="width:100%;padding:9px;background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(6,214,200,0.15));border:1px solid rgba(168,85,247,0.3);border-radius:9px;color:#2A1F30;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:1px;">💾 GUARDAR CAMBIOS</button>';
+    h+='</div>';
+    return h;
+  }
+
+  function renderEtapasPanel(idx){
+    var m=metas[idx];
+    var pc=PRIORIDAD_COLOR[m.prioridad]||'#6B5A73';
+    var ms=getMissions();
+
+    var h='<div id="ruta-etapas-panel" style="background:'+pc+'08;border:1px solid '+pc+'22;border-radius:14px;padding:14px;margin-bottom:14px;">';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">';
+    h+='<div style="display:flex;align-items:center;gap:7px;">';
+    h+='<span style="font-size:15px;">'+m.icon+'</span>';
+    h+='<div><div style="font-size:7px;text-transform:uppercase;letter-spacing:1.5px;color:'+pc+';">Etapas</div>';
+    h+='<div style="font-size:11px;font-weight:700;color:#2A1F30;">'+m.titulo+'</div></div></div>';
+    h+='<button onclick="window._rutaCerrarEtapas()" style="background:none;border:none;color:#6B5A73;cursor:pointer;font-size:14px;">✕</button>';
+    h+='</div>';
+
+    if(m.etapas.length===0){
+      h+='<div style="text-align:center;padding:14px 0;font-size:10px;color:#9C8BA3;">Sin etapas aún — agrega la primera</div>';
+    } else {
+      m.etapas.forEach(function(eta, ei){
+        var ec=ESTADO_COLOR[eta.estado]||'#6B5A73';
+        var eb=ESTADO_BG[eta.estado]||'rgba(51,65,85,0.2)';
+        var hasMission=ms.find(function(mx){ return mx.fromEtapa===eta.eid; });
+
+        h+='<div style="background:rgba(90,60,100,0.035);border:1px solid rgba(90,60,100,0.10);border-radius:9px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:8px;">';
+        h+='<div style="color:#9C8BA3;font-size:10px;cursor:grab;">⠿</div>';
+
+        h+='<div style="flex:1;min-width:0;overflow:hidden;">';
+        h+='<input id="etapa-edit-'+idx+'-'+ei+'" value="'+eta.titulo.replace(/"/g,'&quot;')+'" '+
+           'style="flex:1;min-width:0;width:100%;background:transparent;border:none;border-bottom:1px solid transparent;'+
+           'color:#2A1F30;font-size:11px;font-weight:600;outline:none;padding:0 0 1px 0;cursor:text;'+
+           'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" '+
+           'onfocus=\'this.style.borderBottomColor="rgba(90,60,100,0.35)";this.style.textOverflow="clip";this.style.whiteSpace="normal"\'  '+
+           'onblur=\'this.style.borderBottomColor="transparent";this.style.textOverflow="ellipsis";this.style.whiteSpace="nowrap";window._etapaEditTitulo('+idx+','+ei+',this.value)\' '+
+           'onkeydown=\'if(event.key==="Enter"){this.blur();}\'>';
+        if(hasMission){
+          h+='<div style="font-size:8px;color:#06d6c8;margin-top:2px;display:inline-flex;align-items:center;gap:3px;padding:2px 5px;border-radius:4px;border:1px solid rgba(6,214,200,0.15);">↗ Ya es una misión en COSMO Hub</div>';
+        }
+        h+='</div>';
+
+        h+='<button data-mi="'+idx+'" data-ei="'+ei+'" onclick="window._diagramaAbrirEtapa('+idx+','+ei+')" title="Diagrama de esta etapa" ';
+        h+='style="background:none;border:none;color:#0e7490;cursor:pointer;font-size:11px;padding:0 2px;flex-shrink:0;">🗺️</button>';
+
+        h+='<button data-mi="'+idx+'" data-ei="'+ei+'" onclick="window._etapaNextEstado('+idx+','+ei+')" ';
+        h+='style="background:'+eb+';border:1px solid '+ec+'44;border-radius:20px;color:'+ec+';font-size:7px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;cursor:pointer;white-space:nowrap;flex-shrink:0;">'+eta.estado+' ›</button>';
+
+        h+='<button data-mi="'+idx+'" data-ei="'+ei+'" onclick="window._etapaDel('+idx+','+ei+')" ';
+        h+='style="background:none;border:none;color:#9C8BA3;cursor:pointer;font-size:11px;padding:0 2px;flex-shrink:0;">✕</button>';
+
+        h+='</div>';
+      });
+    }
+
+    h+='<div style="display:flex;gap:7px;margin-top:10px;">';
+    h+='<input id="nueva-etapa-txt" placeholder="Título de la etapa..." ';
+    h+='style="flex:1;background:#fff;border:1px solid rgba(90,60,100,0.14);border-radius:8px;padding:7px 10px;color:#2A1F30;font-size:10px;outline:none;" ';
+    h+='onkeydown="if(event.key===\'Enter\')window._etapaAdd('+idx+')">';
+    h+='<button onclick="window._etapaAdd('+idx+')" ';
+    h+='style="background:'+pc+'20;border:1px solid '+pc+'44;border-radius:8px;color:'+pc+';font-size:10px;font-weight:700;padding:7px 12px;cursor:pointer;white-space:nowrap;">+ Agregar</button>';
+    h+='</div>';
+
+    h+='</div>';
+    return h;
+  }
+
+  function render(){
+    var h='';
+
+    h+='<div style="background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.06));border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">';
+    h+='<span style="font-size:16px;">🧭</span>';
+    h+='<div><div style="font-size:7px;text-transform:uppercase;letter-spacing:2px;color:#7c3aed;">Norte 2026</div>';
+    h+='<div style="font-size:10px;color:#2A1F30;font-weight:600;">Consolidar COSMO en Colombia · Construir base para expansión internacional</div></div>';
+    h+='</div>';
+
+    var completadas=metas.filter(function(m){return m.estado==='Completado';}).length;
+    var progPct=Math.round(completadas/metas.length*100);
+    h+='<div style="margin-bottom:14px;">';
+    h+='<div style="display:flex;justify-content:space-between;margin-bottom:4px;">';
+    h+='<span style="font-size:8px;color:#6B5A73;text-transform:uppercase;letter-spacing:1px;">Progreso 2026</span>';
+    h+='<span style="font-size:8px;font-weight:700;color:#15803d;">'+completadas+'/'+metas.length+' · '+progPct+'%</span>';
+    h+='</div>';
+    h+='<div style="height:3px;background:rgba(90,60,100,0.06);border-radius:2px;overflow:hidden;">';
+    h+='<div style="height:100%;width:'+progPct+'%;background:linear-gradient(90deg,#7c3aed,#15803d);border-radius:2px;transition:width 0.5s;"></div>';
+    h+='</div></div>';
+
+    if(editingIdx!==null) h+=renderEditPanel(editingIdx);
+    if(expandedIdx!==null) h+=renderEtapasPanel(expandedIdx);
+
+    h+='<div id="ruta-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">';
+
+    metas.forEach(function(meta,idx){
+      var desbloqueada=isDesbloqueada(meta);
+      var pc=PRIORIDAD_COLOR[meta.prioridad]||'#6B5A73';
+      var ec=ESTADO_COLOR[meta.estado];
+      var eb=ESTADO_BG[meta.estado];
+      var locked=!desbloqueada;
+      var isEdit=editingIdx===idx;
+      var isExpand=expandedIdx===idx;
+
+      var etapasActivas=meta.etapas?meta.etapas.filter(function(e){
+        return e.estado==='En progreso'||e.estado==='Completado';
+      }).length:0;
+      var totalEtapas=meta.etapas?meta.etapas.length:0;
+
+      h+='<div draggable="'+(editingIdx===null&&expandedIdx===null?'true':'false')+'" data-idx="'+idx+'" ';
+      h+='ondragstart="window._rutaDragStart(event,'+idx+')" ';
+      h+='ondragover="window._rutaDragOver(event)" ';
+      h+='ondrop="window._rutaDrop(event,'+idx+')" ';
+      h+='ondragend="window._rutaDragEnd()" ';
+      h+='style="background:'+(isEdit||isExpand?'rgba(90,60,100,0.06)':'rgba(90,60,100,0.035)')+';';
+      h+='border:1px solid '+(isEdit?'rgba(168,85,247,0.35)':isExpand?pc+'33':(locked?'rgba(90,60,100,0.05)':'rgba(90,60,100,0.12)'))+';';
+      h+='border-radius:12px;padding:11px;position:relative;overflow:hidden;';
+      h+='opacity:'+(locked?'0.45':'1')+';transition:all 0.2s;cursor:'+(editingIdx===null&&expandedIdx===null?'grab':'default')+'">';
+
+      h+='<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,'+pc+',transparent);"></div>';
+
+      h+='<div style="position:absolute;top:7px;right:7px;display:flex;gap:4px;align-items:center;">';
+      if(locked) h+='<span style="font-size:10px;">🔒</span>';
+      h+='<button onclick="window._rutaToggleEtapas('+idx+')" title="Ver etapas" ';
+      h+='style="background:'+(isExpand?pc+'22':'none')+';border:1px solid '+(isExpand?pc+'44':'transparent')+';border-radius:6px;color:'+(isExpand?pc:'#9C8BA3')+';cursor:pointer;font-size:10px;padding:1px 5px;line-height:1.6;transition:all 0.15s;" ';
+      h+='onmouseover="this.style.color=\''+pc+'\'" onmouseout="this.style.color=\''+(isExpand?pc:'#9C8BA3')+'\'">📋'+(totalEtapas>0?' '+totalEtapas:'')+'</button>';
+      h+='<button onclick="window._rutaEditCard('+idx+')" title="Editar" ';
+      h+='style="background:'+(isEdit?'rgba(168,85,247,0.2)':'none')+';border:1px solid '+(isEdit?'rgba(168,85,247,0.4)':'transparent')+';border-radius:6px;color:'+(isEdit?'#a855f7':'#9C8BA3')+';cursor:pointer;font-size:10px;padding:1px 5px;line-height:1.6;transition:all 0.15s;" ';
+      h+='onmouseover="this.style.color=\'#a855f7\'" onmouseout="this.style.color=\''+(isEdit?'#a855f7':'#9C8BA3')+'\'">⚙️</button>';
+      h+='</div>';
+
+      h+='<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:7px;padding-right:55px;">';
+      h+='<span style="font-size:17px;flex-shrink:0;">'+meta.icon+'</span>';
+      h+='<div>';
+      h+='<div style="font-size:7px;text-transform:uppercase;letter-spacing:1.5px;color:'+pc+';margin-bottom:1px;">'+meta.prioridad+'</div>';
+      h+='<div style="font-size:11px;font-weight:700;color:#2A1F30;line-height:1.3;">'+meta.titulo+'</div>';
+      h+='</div></div>';
+
+      h+='<div style="font-size:9px;color:#6B5A73;line-height:1.6;margin-bottom:9px;">'+meta.desc+'</div>';
+
+      h+='<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">';
+
+      if(!locked){
+        h+='<button onclick="window._rutaNextEstado('+idx+')" ';
+        h+='style="background:'+eb+';border:1px solid '+ec+'44;border-radius:20px;color:'+ec+';';
+        h+='font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;';
+        h+='padding:3px 9px;cursor:pointer;transition:filter 0.15s;" ';
+        h+='onmouseover="this.style.filter=\'brightness(1.3)\'" onmouseout="this.style.filter=\'none\'">'+meta.estado+' ›</button>';
+      } else {
+        var depNames=meta.requiere.map(function(rid){
+          var d=metas.find(function(m){return m.id===rid;});
+          return d?d.icon:'';
+        }).filter(Boolean).join(' ');
+        h+='<div style="font-size:8px;color:#9C8BA3;">🔒 Espera '+depNames+'</div>';
+      }
+
+      if(totalEtapas>0){
+        h+='<div style="display:flex;align-items:center;gap:4px;">';
+        h+='<div style="font-size:8px;color:#9C8BA3;">'+etapasActivas+'/'+totalEtapas+'</div>';
+        h+='<div style="width:32px;height:3px;background:rgba(90,60,100,0.07);border-radius:2px;overflow:hidden;">';
+        h+='<div style="height:100%;width:'+(totalEtapas>0?Math.round(etapasActivas/totalEtapas*100):0)+'%;background:'+pc+';border-radius:2px;"></div>';
+        h+='</div></div>';
+      }
+
+      h+='</div>';
+      h+='</div>';
+    });
+
+    h+='</div>';
+
+    h+='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid rgba(90,60,100,0.06);align-items:center;">';
+    ['Alta','Media','Estratégico'].forEach(function(p){
+      var pc=PRIORIDAD_COLOR[p];
+      h+='<div style="display:flex;align-items:center;gap:4px;">';
+      h+='<div style="width:7px;height:7px;border-radius:50%;background:'+pc+'33;border:1px solid '+pc+'66;"></div>';
+      h+='<span style="font-size:8px;color:#9C8BA3;">'+p+'</span></div>';
+    });
+    h+='<div style="margin-left:auto;font-size:8px;color:#9C8BA3;">↕ arrastra · 📋 etapas (con su propio 🗺️ diagrama cada una) · ⚙️ edita</div>';
+    h+='</div>';
+
+    el.innerHTML=h;
+  }
+
+  window._rutaToggleEtapas=function(idx){
+    if(expandedIdx===idx){ expandedIdx=null; }
+    else { expandedIdx=idx; editingIdx=null; }
+    render();
+    if(expandedIdx!==null){
+      var p=document.getElementById('ruta-etapas-panel');
+      if(p && typeof p.scrollIntoView==='function') setTimeout(function(){ p.scrollIntoView({behavior:'smooth',block:'nearest'}); },50);
+    }
+  };
+
+  window._etapaAdd=function(idx){
+    var inp=document.getElementById('nueva-etapa-txt');
+    if(!inp) return;
+    var txt=inp.value.trim(); if(!txt) return;
+    if(!metas[idx].etapas) metas[idx].etapas=[];
+    metas[idx].etapas.push({ eid:'eta_'+Date.now(), titulo:txt, estado:'Por iniciar' });
+    save(); render();
+    setTimeout(function(){ var ni=document.getElementById('nueva-etapa-txt'); if(ni) ni.focus(); },50);
+  };
+
+  window._etapaNextEstado=function(mi,ei){
+    var eta=metas[mi].etapas[ei];
+    var prev=eta.estado;
+    var i=ESTADOS.indexOf(eta.estado);
+    eta.estado=ESTADOS[(i+1)%ESTADOS.length];
+    if((eta.estado==='En progreso'||eta.estado==='Completado')&&(prev==='Por iniciar'||prev==='Pausado')){
+      pushEtapaToMissions(metas[mi], eta);
+    }
+    if(eta.estado==='Por iniciar'){ removeEtapaFromMissions(eta.eid); }
+    save(); render();
+  };
+
+  window._etapaEditTitulo=function(mi,ei,val){
+    val=val.trim(); if(!val) return;
+    metas[mi].etapas[ei].titulo=val;
+    save();
+    var ms=getMissions();
+    var m=ms.find(function(mx){ return mx.fromEtapa===metas[mi].etapas[ei].eid; });
+    if(m){ m.title=metas[mi].icon+' '+val; saveMissions(ms); }
+  };
+
+  window._etapaDel=function(mi,ei){
+    var eta=metas[mi].etapas[ei];
+    removeEtapaFromMissions(eta.eid);
+    metas[mi].etapas.splice(ei,1);
+    save(); render();
+  };
+
+  window._rutaEditCard=function(idx){
+    editingIdx=(editingIdx===idx)?null:idx;
+    if(editingIdx!==null) expandedIdx=null;
+    render();
+    if(editingIdx!==null){
+      var p=document.getElementById('ruta-edit-panel');
+      if(p && typeof p.scrollIntoView==='function') setTimeout(function(){ p.scrollIntoView({behavior:'smooth',block:'nearest'}); },50);
+    }
+  };
+  window._rutaCerrarEdit=function(){ editingIdx=null; render(); };
+  window._rutaCerrarEtapas=function(){ expandedIdx=null; render(); };
+
+  window._rutaSetPrio=function(p){ if(editingIdx===null) return; metas[editingIdx].prioridad=p; render(); };
+  window._rutaSetEstadoEdit=function(e){ if(editingIdx===null) return; metas[editingIdx].estado=e; render(); };
+  window._rutaToggleDep=function(oid){
+    if(editingIdx===null) return;
+    var req=metas[editingIdx].requiere||[];
+    var i=req.indexOf(oid);
+    if(i===-1) req.push(oid); else req.splice(i,1);
+    metas[editingIdx].requiere=req; render();
+  };
+  window._rutaGuardarEdit=function(){
+    if(editingIdx===null) return;
+    var m=metas[editingIdx];
+    var ti=document.getElementById('re-icon'); if(ti) m.icon=ti.value.trim()||m.icon;
+    var tt=document.getElementById('re-titulo'); if(tt) m.titulo=tt.value.trim()||m.titulo;
+    var td=document.getElementById('re-desc'); if(td) m.desc=td.value.trim()||m.desc;
+    save(); editingIdx=null; render();
+  };
+
+  window._rutaNextEstado=function(idx){
+    var m=metas[idx];
+    var i=ESTADOS.indexOf(m.estado);
+    m.estado=ESTADOS[(i+1)%ESTADOS.length];
+    save(); render();
+  };
+
+  window._rutaDragStart=function(e,idx){
+    if(editingIdx!==null||expandedIdx!==null) return;
+    dragSrc=idx; e.dataTransfer.effectAllowed='move';
+    e.currentTarget.style.opacity='0.3';
+  };
+  window._rutaDragOver=function(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; };
+  window._rutaDrop=function(e,idx){
+    e.preventDefault();
+    if(dragSrc===null||dragSrc===idx) return;
+    var tmp=metas[dragSrc]; metas.splice(dragSrc,1); metas.splice(idx,0,tmp);
+    dragSrc=null; save(); render();
+  };
+  window._rutaDragEnd=function(){ dragSrc=null; render(); };
+  window._rutaRender=render;
+  window._rutaGetMetas=function(){ return metas; };
+
+  render();
+}
+
+// ══════════════════════════════════════
+// DIAGRAMA DE FRENTES — mapa libre de nodos y flechas por meta, para
+// desglosar los frentes que abre una meta grande (ej. "Modelo de Expansión
+// Colombia" → Marcas Aliadas, Distribuidores, Marcas N1/N2/N3...). Vive
+// aparte de las Etapas — esas siguen para lo puntual y se conectan con
+// Misiones del Hub; el diagrama es la vista de conjunto, libre: agregas
+// nodos donde quieras y los conectas como quieras, no una jerarquía fija.
+// ══════════════════════════════════════
+// Migración de una sola vez: el mapa de la meta se movió a vivir dentro de
+// cada etapa (ya no hay botón de diagrama en la tarjeta de la meta). Si ya
+// existía un diagrama armado a nivel de meta (ej. "Modelo de Expansión
+// Colombia"), se traslada a su etapa "...B2B..." en vez de perderlo.
+function _diagMigrarAMisEtapaB2B(metas, save){
+  var FLAG = 'cosmo_diag_migrado_b2b_v1';
+  if(localStorage.getItem(FLAG)) return;
+  localStorage.setItem(FLAG, '1');
+  var cambio = false;
+  (metas||[]).forEach(function(meta){
+    if(!meta.diagrama || !meta.diagrama.nodos || !meta.diagrama.nodos.length) return;
+    var etapaB2B = (meta.etapas||[]).find(function(e){ return /b2b/i.test(e.titulo||''); });
+    if(!etapaB2B) return;
+    if(etapaB2B.diagrama && etapaB2B.diagrama.nodos && etapaB2B.diagrama.nodos.length) return; // ya tiene el suyo, no se pisa
+    etapaB2B.diagrama = meta.diagrama;
+    meta.diagrama = {nodos:[], conexiones:[]};
+    cambio = true;
+  });
+  if(cambio && typeof save==='function') save();
+}
+
+var DIAG_ESTADOS = ['Por iniciar','En progreso','Completado','Pausado'];
+var DIAG_ESTADO_COLOR = {'Por iniciar':'#9C8BA3','En progreso':'#0e7490','Completado':'#15803d','Pausado':'#b45309'};
+var DIAG_W = 1400, DIAG_H = 820; // tamaño virtual del lienzo — más aire para que no se amontone
+var DIAG_NODE_W = 170; // ancho de tarjeta (para calcular huecos libres)
+
+// Formas de nodo — para clasificar visualmente sin imponer un significado
+// fijo (tú decides qué representa cada una: ej. rombo = decisión, hexágono =
+// riesgo, óvalo = hito). Se ciclan tocando el ícono de forma en cada nodo.
+var DIAG_FORMAS = ['rect','ovalo','rombo','hexagono'];
+var DIAG_FORMA_LABEL = {rect:'Recuadro', ovalo:'Óvalo', rombo:'Rombo', hexagono:'Hexágono'};
+var DIAG_FORMA_ICON = {rect:'▭', ovalo:'⬭', rombo:'◆', hexagono:'⬡'};
+function _diagFormaCSS(forma){
+  if(forma==='ovalo') return {clip:'', radiusTop:'28px', pad:'9px 16px'};
+  if(forma==='rombo') return {clip:'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', radiusTop:'0', pad:'20px 32px'};
+  if(forma==='hexagono') return {clip:'polygon(22% 0%, 78% 0%, 100% 50%, 78% 100%, 22% 100%, 0% 50%)', radiusTop:'0', pad:'16px 28px'};
+  return {clip:'', radiusTop:'12px', pad:'8px 10px'}; // rect
+}
+
+var _diagMetasCache = null;   // arreglo de metas cargado al abrir — única fuente mientras esté abierto
+var _diagMetaId = null;
+var _diagEtapaId = null;      // si tiene valor, el diagrama abierto es el de ESTA etapa dentro de la meta, no el de la meta
+var _diagModo = 'mover';      // 'mover' | 'conectar'
+var _diagConectarDesde = null;
+var _diagDrag = null;         // {id, offX, offY}
+
+// Devuelve el "dueño" del diagrama que está abierto — puede ser la meta
+// completa, o una etapa puntual dentro de ella (ej. "Distribuidores
+// Oficiales" dentro de "Modelo de Expansión Colombia"). El resto del
+// módulo no necesita saber cuál de las dos es: ambas tienen .titulo y
+// .diagrama, así que todo lo demás funciona igual sin cambios.
+function _diagMetaActual(){
+  if(!_diagMetasCache) return null;
+  var meta = _diagMetasCache.find(function(m){ return m.id===_diagMetaId; });
+  if(!meta) return null;
+  if(!_diagEtapaId) return meta;
+  return (meta.etapas||[]).find(function(e){ return e.eid===_diagEtapaId; }) || null;
+}
+function _diagGuardar(){ if(_diagMetasCache) metasSave(_diagMetasCache); }
+
+window._diagramaAbrir = function(idx){
+  var metas = (typeof window._rutaGetMetas==='function') ? window._rutaGetMetas() : safeParse(localStorage.getItem('cosmo_metas2026'), []);
+  var meta = metas[idx];
+  if(!meta) return;
+  if(!meta.diagrama) meta.diagrama = {nodos:[], conexiones:[]};
+  if(!meta.diagrama.nodos) meta.diagrama.nodos = [];
+  if(!meta.diagrama.conexiones) meta.diagrama.conexiones = [];
+  _diagMetasCache = metas;
+  _diagMetaId = meta.id;
+  _diagEtapaId = null;
+  _diagModo = 'mover';
+  _diagConectarDesde = null;
+  _diagRender();
+};
+
+// Igual que arriba, pero para el diagrama propio de UNA etapa dentro de la
+// meta — cada etapa (ej. "Distribuidores Oficiales") puede tener su propio
+// plan/proceso, aparte del panorama general de la meta.
+window._diagramaAbrirEtapa = function(metaIdx, etapaIdx){
+  var metas = (typeof window._rutaGetMetas==='function') ? window._rutaGetMetas() : safeParse(localStorage.getItem('cosmo_metas2026'), []);
+  var meta = metas[metaIdx]; if(!meta) return;
+  var etapa = (meta.etapas||[])[etapaIdx]; if(!etapa) return;
+  if(!etapa.diagrama) etapa.diagrama = {nodos:[], conexiones:[]};
+  if(!etapa.diagrama.nodos) etapa.diagrama.nodos = [];
+  if(!etapa.diagrama.conexiones) etapa.diagrama.conexiones = [];
+  _diagMetasCache = metas;
+  _diagMetaId = meta.id;
+  _diagEtapaId = etapa.eid;
+  _diagModo = 'mover';
+  _diagConectarDesde = null;
+  _diagRender();
+};
+
+window._diagramaCerrar = function(){
+  var ov = document.getElementById('diagrama-overlay');
+  if(ov && ov.parentNode) ov.parentNode.removeChild(ov);
+  _diagMetasCache = null; _diagMetaId = null; _diagEtapaId = null; _diagDrag = null;
+};
+
+// ── Exportar el diagrama actual a PDF ────────────────────────────────────
+// Reusa el mismo jsPDF que ya carga Cosmo_Pedidos.html (mismo CDN). Como el
+// diagrama mezcla tarjetas HTML (con clip-path) y líneas SVG, se envuelve
+// el lienzo tal cual está en pantalla dentro de un SVG con <foreignObject>,
+// se rasteriza a un <canvas> y esa imagen es la que entra al PDF — así no
+// hace falta ninguna librería aparte de captura de pantalla.
+window._diagramaExportarPDF = function(){
+  var meta = _diagMetaActual(); if(!meta) return;
+  if(!meta.diagrama.nodos.length){
+    alert('Agrega al menos un frente antes de descargar el diagrama.');
+    return;
+  }
+  if(typeof window.jspdf === 'undefined'){
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    script.onload = function(){ _diagGenerarPDF(meta); };
+    script.onerror = function(){ alert('Error cargando el generador de PDF. Verifica tu conexión.'); };
+    document.head.appendChild(script);
+  } else {
+    _diagGenerarPDF(meta);
+  }
+};
+
+function _diagGenerarPDF(meta){
+  var lienzo = document.getElementById('diag-lienzo'); if(!lienzo) return;
+  var w = DIAG_W, h = DIAG_H, escala = 2; // escala 2x para que se vea nítido en el PDF
+
+  var svgFuente = '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+    + '<foreignObject width="'+w+'" height="'+h+'">'
+    + '<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;background:#F2EAF4;font-family:DM Sans,Arial,sans-serif;">'
+    + lienzo.innerHTML
+    + '</div></foreignObject></svg>';
+
+  var img = new Image();
+  img.onload = function(){
+    var canvas = document.createElement('canvas');
+    canvas.width = w*escala; canvas.height = h*escala;
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#F2EAF4'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    var dataUrl;
+    try{ dataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ alert('No se pudo generar la imagen del diagrama.'); return; }
+    _diagArmarPDF(meta, dataUrl, w, h);
+  };
+  img.onerror = function(){ alert('No se pudo generar la imagen del diagrama.'); };
+  img.src = 'data:image/svg+xml;charset=utf-8;base64,' + btoa(unescape(encodeURIComponent(svgFuente)));
+}
+
+function _diagArmarPDF(meta, dataUrl, w, h){
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+  var pageW = doc.internal.pageSize.getWidth(), pageH = doc.internal.pageSize.getHeight();
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(42,31,48);
+  doc.text(_diagEtapaId ? 'Diagrama de la etapa' : 'Diagrama de frentes', 12, 16);
+  doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(107,90,115);
+  doc.text(meta.titulo||'', 12, 23);
+
+  var imgW = pageW-24, imgH = imgW*(h/w);
+  if(imgH > pageH-40){ imgH = pageH-40; imgW = imgH*(w/h); }
+  var x = (pageW-imgW)/2;
+  doc.addImage(dataUrl, 'PNG', x, 28, imgW, imgH);
+
+  doc.setFontSize(8); doc.setTextColor(156,139,163);
+  doc.text('Generado el '+new Date().toLocaleDateString('es-CO'), 12, pageH-6);
+
+  var nombreArchivo = 'Diagrama - '+(meta.titulo||'frentes').replace(/[\\/:*?"<>|]/g,'').trim()+'.pdf';
+  doc.save(nombreArchivo);
+}
+
+window._diagModoSet = function(m){
+  _diagModo = m; _diagConectarDesde = null;
+  _diagRender();
+};
+
+window._diagNodoAgregar = function(){
+  var meta = _diagMetaActual(); if(!meta) return;
+  var texto = prompt('¿Cómo se llama este frente?');
+  if(!texto || !texto.trim()) return;
+  var libre = _diagBuscarHueco(meta.diagrama.nodos);
+  meta.diagrama.nodos.push({
+    id: 'dn_'+Date.now(),
+    x: libre.x, y: libre.y,
+    texto: texto.trim(), estado: 'Por iniciar', forma: 'rect'
+  });
+  _diagGuardar(); _diagRender();
+};
+
+// Busca un hueco libre en el lienzo para el nodo nuevo, en vez de una
+// fórmula fija de rejilla — así no cae encima de algo que ya moviste.
+function _diagBuscarHueco(nodos){
+  var pasoX=200, pasoY=120, margen=40;
+  for(var y=margen; y<DIAG_H-90; y+=pasoY){
+    for(var x=margen; x<DIAG_W-DIAG_NODE_W-margen; x+=pasoX){
+      var choca = (nodos||[]).some(function(n){
+        return Math.abs(n.x-x) < DIAG_NODE_W-20 && Math.abs(n.y-y) < 80;
+      });
+      if(!choca) return {x:x, y:y};
+    }
+  }
+  // Si ya está todo ocupado, lo pone debajo de todo lo demás.
+  var maxY = (nodos||[]).reduce(function(m,n){ return Math.max(m, n.y); }, 0);
+  return {x:margen, y:maxY+140};
+}
+
+window._diagNodoClick = function(nid){
+  var meta = _diagMetaActual(); if(!meta) return;
+  if(_diagModo === 'conectar'){
+    if(!_diagConectarDesde){
+      _diagConectarDesde = nid;
+      _diagRender();
+      return;
+    }
+    if(_diagConectarDesde !== nid){
+      var yaExiste = meta.diagrama.conexiones.some(function(c){
+        return (c.from===_diagConectarDesde && c.to===nid) || (c.from===nid && c.to===_diagConectarDesde);
+      });
+      if(!yaExiste){
+        meta.diagrama.conexiones.push({from:_diagConectarDesde, to:nid});
+        _diagGuardar();
+      }
+    }
+    _diagConectarDesde = null;
+    _diagRender();
+  }
+};
+
+window._diagNodoCiclarEstado = function(nid, ev){
+  if(ev) ev.stopPropagation();
+  var meta = _diagMetaActual(); if(!meta) return;
+  var nodo = meta.diagrama.nodos.find(function(n){ return n.id===nid; }); if(!nodo) return;
+  var i = DIAG_ESTADOS.indexOf(nodo.estado);
+  nodo.estado = DIAG_ESTADOS[(i+1)%DIAG_ESTADOS.length];
+  _diagGuardar(); _diagRender();
+};
+
+window._diagNodoCiclarForma = function(nid, ev){
+  if(ev) ev.stopPropagation();
+  var meta = _diagMetaActual(); if(!meta) return;
+  var nodo = meta.diagrama.nodos.find(function(n){ return n.id===nid; }); if(!nodo) return;
+  var i = DIAG_FORMAS.indexOf(nodo.forma||'rect');
+  nodo.forma = DIAG_FORMAS[(i+1)%DIAG_FORMAS.length];
+  _diagGuardar(); _diagRender();
+};
+
+window._diagNodoRenombrar = function(nid, ev){
+  if(ev) ev.stopPropagation();
+  var meta = _diagMetaActual(); if(!meta) return;
+  var nodo = meta.diagrama.nodos.find(function(n){ return n.id===nid; }); if(!nodo) return;
+  var t = prompt('Nombre del frente', nodo.texto);
+  if(t===null || !t.trim()) return;
+  nodo.texto = t.trim();
+  _diagGuardar(); _diagRender();
+};
+
+window._diagNodoBorrar = function(nid, ev){
+  if(ev) ev.stopPropagation();
+  var meta = _diagMetaActual(); if(!meta) return;
+  if(!confirm('¿Quitar este frente del diagrama?')) return;
+  meta.diagrama.nodos = meta.diagrama.nodos.filter(function(n){ return n.id!==nid; });
+  meta.diagrama.conexiones = meta.diagrama.conexiones.filter(function(c){ return c.from!==nid && c.to!==nid; });
+  _diagGuardar(); _diagRender();
+};
+
+window._diagConexionBorrar = function(i){
+  var meta = _diagMetaActual(); if(!meta) return;
+  meta.diagrama.conexiones.splice(i,1);
+  _diagGuardar(); _diagRender();
+};
+
+// Borrar una conexión tocándola directo en el lienzo (marcador ✕ en su punto medio).
+window._diagConexionBorrarPar = function(from, to, ev){
+  if(ev) ev.stopPropagation();
+  var meta = _diagMetaActual(); if(!meta) return;
+  if(!confirm('¿Quitar esta conexión?')) return;
+  var i = meta.diagrama.conexiones.findIndex(function(c){ return c.from===from && c.to===to; });
+  if(i===-1) return;
+  meta.diagrama.conexiones.splice(i,1);
+  _diagGuardar(); _diagRender();
+};
+
+// ── Arrastrar nodos (pointer events: mismo código para mouse y táctil) ──
+function _diagDragStart(ev, nid){
+  if(_diagModo !== 'mover') return;
+  ev.preventDefault();
+  var meta = _diagMetaActual(); if(!meta) return;
+  var nodo = meta.diagrama.nodos.find(function(n){ return n.id===nid; }); if(!nodo) return;
+  var wrap = document.getElementById('diag-lienzo');
+  var rect = wrap.getBoundingClientRect();
+  var scaleX = rect.width>0 ? DIAG_W/rect.width : 1, scaleY = rect.height>0 ? DIAG_H/rect.height : 1;
+  var px = (ev.clientX - rect.left)*scaleX, py = (ev.clientY - rect.top)*scaleY;
+  _diagDrag = { id:nid, offX: px-nodo.x, offY: py-nodo.y, scaleX:scaleX, scaleY:scaleY, rect:rect };
+  document.addEventListener('pointermove', _diagDragMove);
+  document.addEventListener('pointerup', _diagDragEnd);
+}
+function _diagDragMove(ev){
+  if(!_diagDrag) return;
+  var meta = _diagMetaActual(); if(!meta) return;
+  var nodo = meta.diagrama.nodos.find(function(n){ return n.id===_diagDrag.id; }); if(!nodo) return;
+  var px = (ev.clientX - _diagDrag.rect.left)*_diagDrag.scaleX, py = (ev.clientY - _diagDrag.rect.top)*_diagDrag.scaleY;
+  var nx = px - _diagDrag.offX, ny = py - _diagDrag.offY;
+  if(isFinite(nx)) nodo.x = Math.max(0, Math.min(DIAG_W-170, nx));
+  if(isFinite(ny)) nodo.y = Math.max(0, Math.min(DIAG_H-60, ny));
+  // Antes esto reconstruía TODO el lienzo (todas las tarjetas + todas las
+  // líneas) en cada milímetro de movimiento — se sentía lento con varios
+  // nodos. Luego se limitó a redibujar solo las líneas, pero seguía
+  // reconstruyendo el SVG completo (con TODAS las conexiones) en cada
+  // cuadro. Ahora solo se tocan, por atributo directo, las conexiones que
+  // de verdad tienen algo que ver con el nodo que se está moviendo — el
+  // resto del SVG ni se toca.
+  var elNodo = document.querySelector('.diag-nodo[data-id="'+nodo.id+'"]');
+  if(elNodo){ elNodo.style.left = nodo.x+'px'; elNodo.style.top = nodo.y+'px'; }
+  if(_diagRAF) return;
+  var raf = window.requestAnimationFrame || function(fn){ return setTimeout(fn, 16); };
+  var idArrastrado = _diagDrag.id;
+  _diagRAF = raf(function(){
+    _diagRAF = null;
+    _diagActualizarLineasDe(_diagMetaActual(), idArrastrado);
+  });
+}
+var _diagRAF = null;
+
+// Misma geometría que usa _diagLineasSVG, aislada para poder reusarla aquí
+// sin reconstruir el SVG entero.
+function _diagConexionGeo(a, b){
+  var x1=a.x+170, y1=a.y+30, x2=b.x, y2=b.y+30;
+  if(b.x > a.x+170){ x1=a.x+170; x2=b.x; } else if(b.x+170 < a.x){ x1=a.x; x2=b.x+170; } else { x1=a.x+85; x2=b.x+85; }
+  var curva = _diagCurva(x1,y1,x2,y2, _diagHashPar(a.id,b.id));
+  return { x1:x1, y1:y1, x2:x2, y2:y2, curva:curva };
+}
+
+// Actualiza en el DOM, por atributo, solo las conexiones que tocan al nodo
+// que se está arrastrando — nada de volver a montar HTML/SVG.
+function _diagActualizarLineasDe(meta, nodoId){
+  if(!meta || typeof document==='undefined' || !document) return;
+  meta.diagrama.conexiones.forEach(function(c){
+    if(c.from!==nodoId && c.to!==nodoId) return;
+    var a = meta.diagrama.nodos.find(function(n){ return n.id===c.from; });
+    var b = meta.diagrama.nodos.find(function(n){ return n.id===c.to; });
+    if(!a || !b) return;
+    var g = document.querySelector('g.diag-conexion[data-from="'+c.from+'"][data-to="'+c.to+'"]');
+    if(!g) return;
+    var geo = _diagConexionGeo(a,b);
+    var d = 'M '+geo.x1+','+geo.y1+' Q '+geo.curva.cx+','+geo.curva.cy+' '+geo.x2+','+geo.y2;
+    var paths = g.querySelectorAll('path');
+    if(paths[0]) paths[0].setAttribute('d', d);
+    if(paths[1]) paths[1].setAttribute('d', d);
+    var circ = g.querySelector('circle'); if(circ){ circ.setAttribute('cx', geo.curva.pmx); circ.setAttribute('cy', geo.curva.pmy); }
+    var txt = g.querySelector('text'); if(txt){ txt.setAttribute('x', geo.curva.pmx); txt.setAttribute('y', geo.curva.pmy+3); }
+  });
+}
+function _diagActualizarSVG(meta){
+  if(!meta || typeof document==='undefined' || !document) return;
+  var lienzo = document.getElementById('diag-lienzo'); if(!lienzo) return;
+  var viejo = lienzo.querySelector('svg'); if(!viejo) return;
+  var temp = document.createElement('div');
+  temp.innerHTML = _diagLineasSVG(meta);
+  lienzo.replaceChild(temp.firstChild, viejo);
+}
+function _diagDragEnd(){
+  document.removeEventListener('pointermove', _diagDragMove);
+  document.removeEventListener('pointerup', _diagDragEnd);
+  if(_diagDrag){
+    _diagDrag=null;
+    _diagGuardar();
+    _diagRenderLienzo(); // al soltar sí se redibuja completo, para que quede 100% consistente
+  }
+}
+window._diagDragStart = _diagDragStart;
+
+function _diagNodoHTML(nodo, meta){
+  var ec = DIAG_ESTADO_COLOR[nodo.estado]||'#9C8BA3';
+  var seleccionado = _diagConectarDesde===nodo.id;
+  var f = _diagFormaCSS(nodo.forma||'rect');
+  var borde = seleccionado?'#7c3aed':'rgba(90,60,100,0.14)';
+  var sombraSel = seleccionado ? '0 0 0 3px rgba(124,58,237,0.18),' : '';
+
+  var h = '<div class="diag-nodo" data-id="'+nodo.id+'" onpointerdown="window._diagDragStart(event,\''+nodo.id+'\')" onclick="window._diagNodoClick(\''+nodo.id+'\')" ';
+  h += 'style="position:absolute;left:'+nodo.x+'px;top:'+nodo.y+'px;width:170px;box-shadow:'+sombraSel+'0 4px 14px rgba(90,60,100,0.14);cursor:'+(_diagModo==='mover'?'grab':'pointer')+';touch-action:none;user-select:none;transition:box-shadow .15s;">';
+
+  // Zona de FORMA: solo el título — aquí sí se aplica el recorte (rombo/hexágono/óvalo),
+  // así el texto nunca choca con los botones de abajo, sin importar la forma o el largo.
+  h += '<div style="background:#fff;border:1.5px solid '+borde+';border-bottom:none;';
+  h += (f.clip ? 'clip-path:'+f.clip+';' : 'border-radius:'+f.radiusTop+' '+f.radiusTop+' 0 0;');
+  h += 'padding:'+f.pad+';">';
+  h += '<div style="display:flex;align-items:flex-start;gap:6px;">';
+  h += '<span onclick="window._diagNodoCiclarEstado(\''+nodo.id+'\',event)" title="Toca para cambiar el estado" style="width:11px;height:11px;border-radius:50%;background:'+ec+';box-shadow:0 0 0 3px '+ec+'22;flex-shrink:0;margin-top:2px;cursor:pointer;"></span>';
+  h += '<span style="font-size:11px;font-weight:700;color:#2A1F30;flex:1;overflow-wrap:break-word;word-break:break-word;white-space:normal;line-height:1.4;">'+esc(nodo.texto)+'</span>';
+  h += '</div></div>';
+
+  // Franja de abajo: SIEMPRE rectangular, nunca se recorta — estado (como pastilla) + botones.
+  h += '<div style="background:'+ec+'0c;border:1.5px solid '+borde+';border-top:1px solid '+ec+'30;border-radius:0 0 9px 9px;padding:6px 9px;display:flex;align-items:center;justify-content:space-between;">';
+  h += '<span style="font-size:7px;color:'+ec+';font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">'+nodo.estado+'</span>';
+  h += '<span class="diag-ctrl" style="display:flex;gap:7px;opacity:0.4;transition:opacity .15s;">';
+  h += '<span onclick="window._diagNodoCiclarForma(\''+nodo.id+'\',event)" title="Toca para cambiar la forma ('+DIAG_FORMA_LABEL[nodo.forma||'rect']+')" style="cursor:pointer;font-size:9px;">'+DIAG_FORMA_ICON[nodo.forma||'rect']+'</span>';
+  h += '<span onclick="window._diagNodoRenombrar(\''+nodo.id+'\',event)" style="cursor:pointer;font-size:9px;">✎</span>';
+  h += '<span onclick="window._diagNodoBorrar(\''+nodo.id+'\',event)" style="cursor:pointer;font-size:9px;color:#c0392b;">✕</span>';
+  h += '</span></div>';
+
+  h += '</div>';
+  return h;
+}
+
+// Punto de control para una curva suave entre dos nodos, en vez de una línea
+// recta — se ve mucho más profesional y ayuda a que dos flechas entre las
+// mismas zonas no queden exactamente encimadas. El lado de la curva se
+// decide con un hash estable del par (mismo par → siempre la misma curva).
+function _diagCurva(x1,y1,x2,y2, seed){
+  var mx=(x1+x2)/2, my=(y1+y2)/2;
+  var dx=x2-x1, dy=y2-y1;
+  var len = Math.sqrt(dx*dx+dy*dy) || 1;
+  var nx=-dy/len, ny=dx/len;
+  var curv = Math.min(50, len*0.22);
+  var signo = (seed%2===0) ? 1 : -1;
+  var cx = mx+nx*curv*signo, cy = my+ny*curv*signo;
+  // Punto medio real sobre la curva (t=0.5 de una bézier cuadrática), para
+  // colocar ahí el marcador de borrar — no el punto medio de la recta.
+  var pmx = (x1 + 2*cx + x2)/4, pmy = (y1 + 2*cy + y2)/4;
+  return { cx:cx, cy:cy, pmx:pmx, pmy:pmy };
+}
+function _diagHashPar(a,b){
+  var s=String(a)+'|'+String(b), h=0;
+  for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))|0;
+  return Math.abs(h);
+}
+
+function _diagLineasSVG(meta){
+  // xmlns explícito a propósito: cuando se genera en pantalla, el navegador
+  // reconoce <svg> automáticamente aunque no lo lleve. Pero al exportar a
+  // PDF, este bloque termina metido dentro de un <div> con xmlns de HTML —
+  // eso pisa el espacio de nombres por defecto y el navegador deja de ver
+  // esto como SVG de verdad, así que las flechas no salían en el PDF. Con
+  // el xmlns puesto aquí mismo, no depende de dónde termine insertado.
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="'+DIAG_W+'" height="'+DIAG_H+'" viewBox="0 0 '+DIAG_W+' '+DIAG_H+'" style="position:absolute;left:0;top:0;pointer-events:none;">';
+  svg += '<defs><marker id="diagArrow" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#a855f7"/></marker></defs>';
+  meta.diagrama.conexiones.forEach(function(c){
+    var a = meta.diagrama.nodos.find(function(n){ return n.id===c.from; });
+    var b = meta.diagrama.nodos.find(function(n){ return n.id===c.to; });
+    if(!a || !b) return;
+    var geo = _diagConexionGeo(a,b);
+    var d = 'M '+geo.x1+','+geo.y1+' Q '+geo.curva.cx+','+geo.curva.cy+' '+geo.x2+','+geo.y2;
+    // Agrupadas bajo un <g> marcado con el par origen→destino: así, al
+    // arrastrar, se puede encontrar y actualizar SOLO esta conexión por
+    // atributo (ver _diagActualizarLineasDe) sin tocar el resto del SVG.
+    svg += '<g class="diag-conexion" data-from="'+c.from+'" data-to="'+c.to+'">';
+    svg += '<path d="'+d+'" fill="none" stroke="#a855f7" stroke-width="2" marker-end="url(#diagArrow)" opacity="0.5" stroke-linecap="round"/>';
+    // Zona invisible más ancha, fácil de tocar, para poder borrar la línea directo en el lienzo.
+    svg += '<path d="'+d+'" fill="none" stroke="transparent" stroke-width="18" style="pointer-events:stroke;cursor:pointer;" onclick="window._diagConexionBorrarPar(\''+c.from+'\',\''+c.to+'\',event)"><title>Tocar para quitar esta conexión</title></path>';
+    // Marcador ✕ en el punto medio REAL de la curva — atenuado hasta pasar el mouse.
+    svg += '<g class="diag-conn-x" style="pointer-events:all;cursor:pointer;opacity:0.35;transition:opacity .15s;" onclick="window._diagConexionBorrarPar(\''+c.from+'\',\''+c.to+'\',event)">';
+    svg += '<circle cx="'+geo.curva.pmx+'" cy="'+geo.curva.pmy+'" r="8" fill="#fff" stroke="#a855f7" stroke-width="1.5"/>';
+    svg += '<text x="'+geo.curva.pmx+'" y="'+(geo.curva.pmy+3)+'" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="700">✕</text>';
+    svg += '</g>';
+    svg += '</g>';
+  });
+  svg += '</svg>';
+  return svg;
+}
+
+function _diagRenderLienzo(){
+  var meta = _diagMetaActual(); if(!meta) return;
+  var lienzo = document.getElementById('diag-lienzo'); if(!lienzo) return;
+  var h = _diagLineasSVG(meta);
+  meta.diagrama.nodos.forEach(function(n){ h += _diagNodoHTML(n, meta); });
+  lienzo.innerHTML = h;
+}
+
+function _diagRender(){
+  var meta = _diagMetaActual();
+  var existing = document.getElementById('diagrama-overlay');
+  if(!existing){
+    existing = document.createElement('div');
+    existing.id = 'diagrama-overlay';
+    document.body.appendChild(existing);
+  }
+  existing.style.cssText = 'position:fixed;inset:0;z-index:2000;background:rgba(42,31,48,0.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;';
+  if(!meta){ existing.innerHTML=''; return; }
+
+  var h = '<style>.diag-nodo:hover{box-shadow:0 8px 22px rgba(90,60,100,0.22) !important;} .diag-nodo:hover .diag-ctrl{opacity:1 !important;} .diag-conn-x:hover{opacity:1 !important;}</style>';
+  h += '<div style="background:var(--bg);border-radius:16px;width:min(1160px,96vw);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.35);overflow:hidden;">';
+
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border2);flex-shrink:0;">';
+  h += '<div><div style="font-size:8px;text-transform:uppercase;letter-spacing:2px;color:#7c3aed;">🗺️ '+(_diagEtapaId?'Diagrama de la etapa':'Diagrama de frentes')+'</div>';
+  h += '<div style="font-size:13px;font-weight:700;color:var(--text);">'+(meta.icon||'📍')+' '+esc(meta.titulo)+'</div></div>';
+  h += '<button onclick="window._diagramaCerrar()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;">✕</button>';
+  h += '</div>';
+
+  h += '<div style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;">';
+  h += '<button onclick="window._diagNodoAgregar()" style="padding:6px 12px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(168,85,247,0.35);background:rgba(168,85,247,0.10);color:#7c3aed;">+ Nodo</button>';
+  h += '<button onclick="window._diagModoSet(\'mover\')" style="padding:6px 12px;border-radius:20px;font-size:10px;font-weight:'+(_diagModo==='mover'?'700':'400')+';cursor:pointer;border:1px solid '+(_diagModo==='mover'?'rgba(14,116,144,0.4)':'var(--border2)')+';background:'+(_diagModo==='mover'?'rgba(14,116,144,0.12)':'transparent')+';color:'+(_diagModo==='mover'?'#0e7490':'var(--muted)')+';">✋ Mover</button>';
+  h += '<button onclick="window._diagModoSet(\'conectar\')" style="padding:6px 12px;border-radius:20px;font-size:10px;font-weight:'+(_diagModo==='conectar'?'700':'400')+';cursor:pointer;border:1px solid '+(_diagModo==='conectar'?'rgba(168,85,247,0.4)':'var(--border2)')+';background:'+(_diagModo==='conectar'?'rgba(168,85,247,0.12)':'transparent')+';color:'+(_diagModo==='conectar'?'#7c3aed':'var(--muted)')+';">🔗 Conectar</button>';
+  h += '<button onclick="window._diagramaExportarPDF()" title="Descargar este diagrama como PDF" style="padding:6px 12px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid rgba(14,116,144,0.35);background:rgba(14,116,144,0.08);color:#0e7490;">⬇️ PDF</button>';
+  h += '<span style="font-size:9px;color:var(--muted2);">'+(_diagModo==='mover'?'Arrastra un nodo para moverlo · toca el punto de color para cambiar su estado':(_diagConectarDesde?'Toca el segundo nodo para unirlo':'Toca dos nodos, en orden, para conectarlos con una flecha'))+'</span>';
+  h += '</div>';
+
+  h += '<div style="flex:1;overflow:auto;padding:16px;">';
+  h += '<div id="diag-lienzo" style="position:relative;width:'+DIAG_W+'px;height:'+DIAG_H+'px;background:radial-gradient(circle,rgba(90,60,100,0.06) 1px,transparent 1px);background-size:22px 22px;border-radius:10px;">';
+  h += _diagLineasSVG(meta);
+  meta.diagrama.nodos.forEach(function(n){ h += _diagNodoHTML(n, meta); });
+  h += '</div>';
+  if(meta.diagrama.nodos.length===0){
+    h += '<div style="text-align:center;padding:30px;color:var(--muted2);font-size:11px;">Sin frentes todavía — toca "+ Nodo" para agregar el primero (ej. "Marcas Aliadas", "Distribuidores oficiales"...)</div>';
+  }
+  h += '</div>';
+
+  if(meta.diagrama.conexiones.length){
+    h += '<div style="border-top:1px solid var(--border);padding:10px 16px;flex-shrink:0;max-height:110px;overflow:auto;">';
+    h += '<div style="font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;">Conexiones</div>';
+    meta.diagrama.conexiones.forEach(function(c, i){
+      var a = meta.diagrama.nodos.find(function(n){ return n.id===c.from; });
+      var b = meta.diagrama.nodos.find(function(n){ return n.id===c.to; });
+      if(!a||!b) return;
+      h += '<div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text);padding:3px 0;">';
+      h += '<span style="flex:1;">'+esc(a.texto)+' → '+esc(b.texto)+'</span>';
+      h += '<span onclick="window._diagConexionBorrar('+i+')" style="cursor:pointer;color:#c0392b;font-size:10px;">✕</span>';
+      h += '</div>';
+    });
+    h += '</div>';
+  }
+
+  h += '</div>';
+  existing.innerHTML = h;
+}
+
+
+// ══════════════════════════════════════
+// INVERSIONES
+// ══════════════════════════════════════
+function initInversiones(){
+  var el=document.getElementById('inversiones-root'); if(!el) return;
+  var ESTADOS=['Planeada','En evaluación','Aprobada','Ejecutada','Pausada'];
+  var COLORES={'Planeada':'#8b93a8','En evaluación':'#fbbf24','Aprobada':'#38bdf8','Ejecutada':'#34e07a','Pausada':'#f87171'};
+  var data=safeParse(localStorage.getItem('cosmo_inversiones'), []);
+  data.forEach(function(inv){ if(!inv.requiere) inv.requiere=[]; });
+  function save(){ inversionesSave(data); }
+  function fmtM(n){ if(!n) return '$0'; if(n>=1000000) return '$'+(n/1000000).toFixed(1)+'M'; if(n>=1000) return '$'+(n/1000).toFixed(0)+'k'; return '$'+n; }
+
+  // Por ahora, solo estas 4 áreas para categorizar inversiones (subconjunto
+  // de las 7 del Taller — se puede ampliar después sin tocar Taller).
+  var INV_CATEGORIAS = ZONAS_TALLER.filter(function(z){
+    return ['impresion','corte','despacho','resina'].indexOf(z.id)!==-1;
+  });
+  var _invNuevaCategoria = null; // categoría elegida para la inversión que se está por crear
+
+  // ── Lienzo libre — mismo motor (arrastrar, conectar, curvas, redibujo
+  // quirúrgico por rAF) que ya se construyó y se probó para el diagrama de
+  // Ruta Anual, adaptado aquí para que las conexiones SEAN los requisitos
+  // de desbloqueo, no solo decoración. ──
+  var INV_W=1100, INV_H=560;
+  var INV_NODE=92; // diámetro del círculo
+  var INV_SLOT_W=140, INV_SLOT_H=150; // "casilla" que ocupa un nodo (círculo+etiqueta) para el hueco libre
+
+  var _invModo='mover', _invConectarDesde=null, _invDrag=null, _invRAF=null;
+
+  function desbloqueada(inv){
+    if(!inv.requiere||!inv.requiere.length) return true;
+    return inv.requiere.every(function(rid){
+      var req=data.find(function(x){return x.id===rid;});
+      return req && req.estado==='Ejecutada';
+    });
+  }
+
+  function _invBuscarHueco(){
+    var pasoX=160, pasoY=150, margen=30;
+    for(var y=margen; y<INV_H-INV_SLOT_H; y+=pasoY){
+      for(var x=margen; x<INV_W-INV_SLOT_W-margen; x+=pasoX){
+        var choca=data.some(function(n){ return Math.abs((n.x||0)-x)<INV_SLOT_W-30 && Math.abs((n.y||0)-y)<INV_SLOT_H-40; });
+        if(!choca) return {x:x,y:y};
+      }
+    }
+    var maxY=data.reduce(function(m,n){ return Math.max(m,n.y||0); },0);
+    return {x:margen, y:maxY+INV_SLOT_H};
+  }
+
+  function _invCurva(x1,y1,x2,y2,seed){
+    var mx=(x1+x2)/2, my=(y1+y2)/2;
+    var dx=x2-x1, dy=y2-y1;
+    var len=Math.sqrt(dx*dx+dy*dy)||1;
+    var nx=-dy/len, ny=dx/len;
+    var curv=Math.min(55, len*0.25);
+    var signo=(seed%2===0)?1:-1;
+    var cx=mx+nx*curv*signo, cy=my+ny*curv*signo;
+    var pmx=(x1+2*cx+x2)/4, pmy=(y1+2*cy+y2)/4;
+    return {cx:cx,cy:cy,pmx:pmx,pmy:pmy};
+  }
+  function _invHashPar(a,b){
+    var s=String(a)+'|'+String(b), h=0;
+    for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))|0;
+    return Math.abs(h);
+  }
+  function _invConexionGeo(a,b){
+    var cx1=(a.x||0)+INV_NODE/2, cy1=(a.y||0)+INV_NODE/2;
+    var cx2=(b.x||0)+INV_NODE/2, cy2=(b.y||0)+INV_NODE/2;
+    var dx=cx2-cx1, dy=cy2-cy1, dist=Math.sqrt(dx*dx+dy*dy)||1;
+    var ux=dx/dist, uy=dy/dist, r=INV_NODE/2+3;
+    var x1=cx1+ux*r, y1=cy1+uy*r, x2=cx2-ux*r, y2=cy2-uy*r;
+    var curva=_invCurva(x1,y1,x2,y2,_invHashPar(a.id,b.id));
+    return {x1:x1,y1:y1,x2:x2,y2:y2,curva:curva};
+  }
+
+  function _invLineasSVG(){
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+INV_W+'" height="'+INV_H+'" viewBox="0 0 '+INV_W+' '+INV_H+'" style="position:absolute;left:0;top:0;pointer-events:none;">';
+    svg+='<defs>';
+    svg+='<marker id="invArrowOn" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#34e07a"/></marker>';
+    svg+='<marker id="invArrowOff" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7c6ba8"/></marker>';
+    svg+='</defs>';
+    data.forEach(function(inv){
+      (inv.requiere||[]).forEach(function(rid){
+        var a=data.find(function(x){return x.id===rid;});
+        var b=inv;
+        if(!a) return;
+        var cumplido = a.estado==='Ejecutada';
+        var geo=_invConexionGeo(a,b);
+        var d='M '+geo.x1+','+geo.y1+' Q '+geo.curva.cx+','+geo.curva.cy+' '+geo.x2+','+geo.y2;
+        svg+='<g class="inv-conexion" data-from="'+a.id+'" data-to="'+b.id+'">';
+        svg+='<path d="'+d+'" fill="none" stroke="'+(cumplido?'#34e07a':'#7c6ba8')+'" stroke-width="'+(cumplido?'2.6':'2')+'" marker-end="url(#'+(cumplido?'invArrowOn':'invArrowOff')+')" opacity="'+(cumplido?'0.85':'0.4')+'" stroke-linecap="round" style="'+(cumplido?'filter:drop-shadow(0 0 3px rgba(52,224,122,0.7));':'')+'"/>';
+        svg+='<path d="'+d+'" fill="none" stroke="transparent" stroke-width="18" style="pointer-events:stroke;cursor:pointer;" onclick="window._invConexionBorrarPar(\''+a.id+'\',\''+b.id+'\',event)"><title>Tocar para quitar este requisito</title></path>';
+        svg+='<g class="inv-conn-x" style="pointer-events:all;cursor:pointer;opacity:0.3;transition:opacity .15s;" onclick="window._invConexionBorrarPar(\''+a.id+'\',\''+b.id+'\',event)">';
+        svg+='<circle cx="'+geo.curva.pmx+'" cy="'+geo.curva.pmy+'" r="8" fill="#1a1233" stroke="'+(cumplido?'#34e07a':'#7c6ba8')+'" stroke-width="1.5"/>';
+        svg+='<text x="'+geo.curva.pmx+'" y="'+(geo.curva.pmy+3)+'" text-anchor="middle" font-size="10" fill="#f87171" font-weight="700">✕</text>';
+        svg+='</g></g>';
+      });
+    });
+    svg+='</svg>';
+    return svg;
+  }
+
+  function _invNodoHTML(inv){
+    var ok=desbloqueada(inv);
+    var col=COLORES[inv.estado]||'#8b93a8';
+    var seleccionado=_invConectarDesde===inv.id;
+    var glow = inv.estado==='Ejecutada' ? '0 0 18px '+col+'99, 0 0 4px '+col : (ok? '0 0 10px '+col+'44':'none');
+    var zona = ZONAS_TALLER.find(function(z){ return z.id===inv.categoria; });
+    var h='<div class="inv-nodo" data-id="'+inv.id+'" onpointerdown="window._invDragStart(event,\''+inv.id+'\')" onclick="window._invNodoClick(\''+inv.id+'\')" onmouseenter="window._invTipMostrar(\''+inv.id+'\',event)" onmouseleave="window._invTipOcultar()" ';
+    h+='style="position:absolute;left:'+(inv.x||0)+'px;top:'+(inv.y||0)+'px;width:'+INV_SLOT_W+'px;display:flex;flex-direction:column;align-items:center;cursor:'+(_invModo==='mover'?'grab':'pointer')+';touch-action:none;user-select:none;">';
+
+    h+='<div style="width:'+INV_NODE+'px;height:'+INV_NODE+'px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;';
+    h+='background:'+(ok?'radial-gradient(circle at 35% 30%, '+col+'40, #1a1233 72%)':'radial-gradient(circle at 35% 30%, #2a2440, #171126 72%)')+';';
+    h+='border:2.5px solid '+(seleccionado?'#c084fc':(ok?col:'#4a4368'))+';';
+    h+='box-shadow:'+(seleccionado?'0 0 0 4px rgba(192,132,252,0.35), ':'')+glow+';';
+    h+='filter:'+(ok?'none':'grayscale(0.55)')+';opacity:'+(ok?'1':'0.65')+';transition:box-shadow .2s;">';
+    h+='<span style="font-size:28px;">'+(ok?(inv.estado==='Ejecutada'?'⭐':'🪙'):'🔒')+'</span>';
+    if(zona){
+      h+='<span title="'+esc(zona.nombre)+'" style="position:absolute;bottom:-3px;right:-3px;width:22px;height:22px;border-radius:50%;background:'+zona.color+';border:2px solid #1a1233;display:flex;align-items:center;justify-content:center;font-size:11px;">'+zona.icon+'</span>';
+    }
+    h+='</div>';
+
+    h+='<div style="margin-top:6px;font-size:9px;font-weight:700;color:'+(ok?'#f1e9ff':'#867ea8')+';text-align:center;line-height:1.3;overflow-wrap:break-word;word-break:break-word;max-width:'+INV_SLOT_W+'px;">'+esc(inv.nombre)+'</div>';
+    h+='<div style="font-size:10px;font-weight:700;color:'+(ok?'#fbbf24':'#6d6690')+';font-family:Space Mono,monospace;">'+fmtM(inv.monto)+'</div>';
+    h+='<span style="display:inline-block;margin-top:2px;padding:1px 7px;border-radius:20px;font-size:6.5px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;background:'+col+'22;border:1px solid '+col+'55;color:'+col+';">'+inv.estado+'</span>';
+
+    h+='<span class="inv-ctrl" style="display:flex;gap:8px;margin-top:3px;opacity:0.35;transition:opacity .15s;">';
+    if(inv.estado!=='Ejecutada'){
+      h+='<span onclick="event.stopPropagation();window._invEjecutar(\''+inv.id+'\')" title="Marcar como Ejecutada — el punto que desbloquea la siguiente" style="cursor:pointer;font-size:11px;">⭐</span>';
+    }
+    h+='<span onclick="event.stopPropagation();window._invEditToggle(\''+inv.id+'\')" style="cursor:pointer;font-size:9px;">✎</span>';
+    h+='<span onclick="event.stopPropagation();window._invDel(\''+inv.id+'\')" style="cursor:pointer;font-size:9px;color:#f87171;">✕</span>';
+    h+='</span>';
+
+    h+='</div>';
+    return h;
+  }
+
+  function renderLienzo(){
+    var h='<style>.inv-nodo:hover .inv-ctrl{opacity:1 !important;} .inv-conn-x:hover{opacity:1 !important;}</style>';
+    h+=_invLineasSVG();
+    data.forEach(function(inv){ h+=_invNodoHTML(inv); });
+    return h;
+  }
+
+  function renderArbolLibre(){
+    if(!data.length){
+      return '<div style="text-align:center;padding:34px 0;color:#a89dd6;font-size:11px;background:radial-gradient(ellipse at center,#231a3d,#150f26);border-radius:16px;">Sin inversiones todavía — agrega la primera abajo para empezar tu árbol</div>';
+    }
+    var h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">';
+    h+='<button onclick="window._invModoSet(\'mover\')" style="padding:6px 12px;border-radius:20px;font-size:10px;font-weight:'+(_invModo==='mover'?'700':'400')+';cursor:pointer;border:1px solid '+(_invModo==='mover'?'rgba(56,189,248,0.5)':'rgba(90,60,100,0.16)')+';background:'+(_invModo==='mover'?'rgba(56,189,248,0.14)':'transparent')+';color:'+(_invModo==='mover'?'#0ea5e9':'#6B5A73')+';">✋ Mover</button>';
+    h+='<button onclick="window._invModoSet(\'conectar\')" style="padding:6px 12px;border-radius:20px;font-size:10px;font-weight:'+(_invModo==='conectar'?'700':'400')+';cursor:pointer;border:1px solid '+(_invModo==='conectar'?'rgba(168,85,247,0.5)':'rgba(90,60,100,0.16)')+';background:'+(_invModo==='conectar'?'rgba(168,85,247,0.14)':'transparent')+';color:'+(_invModo==='conectar'?'#7c3aed':'#6B5A73')+';">🔗 Conectar</button>';
+    h+='<span style="font-size:9px;color:#6B5A73;">'+(_invModo==='mover'?'Arrastra un nodo para acomodar tu árbol':(_invConectarDesde?'Toca la inversión que se desbloquea con esta':'Toca la inversión que hace falta, luego la que desbloquea'))+'</span>';
+    h+='</div>';
+    h+='<div style="overflow:auto;border-radius:16px;background:radial-gradient(ellipse 80% 60% at 50% 0%,#2c2154 0%,#170f2b 60%,#0d0919 100%);box-shadow:inset 0 0 60px rgba(124,58,237,0.12);padding:16px;">';
+    h+='<div id="inv-lienzo" style="position:relative;width:'+INV_W+'px;height:'+INV_H+'px;background-image:radial-gradient(rgba(255,255,255,0.06) 1px,transparent 1px);background-size:26px 26px;">';
+    h+=renderLienzo();
+    h+='</div></div>';
+    return h;
+  }
+
+  function render(){
+    var h='';
+    var total=data.reduce(function(s,i){return s+(parseFloat(i.monto)||0);},0);
+    var ejecutadas=data.filter(function(i){return i.estado==='Ejecutada';}).reduce(function(s,i){return s+(parseFloat(i.monto)||0);},0);
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">';
+    h+='<div style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:10px;padding:10px;text-align:center;">';
+    h+='<div style="font-size:8px;color:#6B5A73;margin-bottom:3px;">Total planeado</div>';
+    h+='<div style="font-size:14px;font-weight:700;color:#fbbf24;font-family:Space Mono,monospace;">'+fmtM(total)+'</div></div>';
+    h+='<div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px;text-align:center;">';
+    h+='<div style="font-size:8px;color:#6B5A73;margin-bottom:3px;">Ejecutado</div>';
+    h+='<div style="font-size:14px;font-weight:700;color:#22c55e;font-family:Space Mono,monospace;">'+fmtM(ejecutadas)+'</div></div>';
+    h+='<div style="background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.15);border-radius:10px;padding:10px;text-align:center;">';
+    h+='<div style="font-size:8px;color:#6B5A73;margin-bottom:3px;">Inversiones</div>';
+    h+='<div style="font-size:14px;font-weight:700;color:#38bdf8;font-family:Space Mono,monospace;">'+data.length+'</div></div>';
+    h+='</div>';
+
+    h+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#6B5A73;margin-bottom:8px;">🌳 Árbol de inversiones — arrástralas y conéctalas: cada una se desbloquea cuando lo que necesita queda Ejecutada</div>';
+    h+=renderArbolLibre();
+
+    if(_invEditId){
+      var inv=data.find(function(x){return x.id===_invEditId;});
+      if(inv){
+        h+='<div style="background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.15);border-radius:10px;padding:12px;margin-top:12px;">';
+        h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">';
+        h+='<div style="font-size:9px;color:#fbbf24;text-transform:uppercase;letter-spacing:1px;">Editar: '+esc(inv.nombre)+'</div>';
+        h+='<span onclick="window._invEditToggle(\''+inv.id+'\')" style="cursor:pointer;font-size:12px;color:#6B5A73;">✕</span>';
+        h+='</div>';
+        h+='<input id="inv-edit-nombre" value="'+inv.nombre.replace(/"/g,'&quot;')+'" placeholder="Nombre" style="width:100%;background:#fff;border:1px solid rgba(90,60,100,0.18);border-radius:6px;padding:6px 9px;color:#2A1F30;font-size:11px;outline:none;box-sizing:border-box;margin-bottom:6px;">';
+        h+='<input id="inv-edit-monto" type="number" value="'+inv.monto+'" placeholder="Monto $" style="width:100%;background:#fff;border:1px solid rgba(251,191,36,0.25);border-radius:6px;padding:6px 9px;color:#fbbf24;font-size:11px;outline:none;box-sizing:border-box;margin-bottom:6px;">';
+        h+='<textarea id="inv-edit-desc" placeholder="Descripción (opcional)" style="width:100%;background:#fff;border:1px solid rgba(90,60,100,0.14);border-radius:6px;padding:6px 9px;color:#6B5A73;font-size:10px;outline:none;box-sizing:border-box;resize:none;height:44px;margin-bottom:8px;">'+(inv.descripcion||'')+'</textarea>';
+
+        h+='<div style="font-size:8px;color:#6B5A73;margin-bottom:5px;">💡 Los requisitos se conectan directo en el árbol de arriba (modo 🔗 Conectar) — no hace falta elegirlos aquí.</div>';
+
+        h+='<div style="font-size:8px;color:#6B5A73;margin:10px 0 5px;">Área a la que corresponde:</div>';
+        h+='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">';
+        INV_CATEGORIAS.forEach(function(zona){
+          var act=inv.categoria===zona.id;
+          h+='<span onclick="window._invSetCategoria(\''+inv.id+'\',\''+zona.id+'\')" style="padding:4px 9px;border-radius:20px;font-size:9px;cursor:pointer;border:1px solid '+(act?zona.color:'rgba(90,60,100,0.14)')+';background:'+(act?zona.color+'22':'transparent')+';color:'+(act?zona.color:'#9C8BA3')+';">'+zona.icon+' '+esc(zona.nombre)+'</span>';
+        });
+        h+='</div>';
+
+        h+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;">';
+        ESTADOS.forEach(function(est){
+          var act=inv.estado===est;
+          h+='<span onclick="window._invEstado(\''+inv.id+'\',\''+est+'\')" style="padding:3px 9px;border-radius:12px;font-size:8px;cursor:pointer;border:1px solid '+(act?COLORES[est]:'rgba(90,60,100,0.14)')+';background:'+(act?COLORES[est]+'22':'transparent')+';color:'+(act?COLORES[est]:'#9C8BA3')+';">'+est+'</span>';
+        });
+        h+='</div>';
+
+        h+='<div style="display:flex;gap:5px;">';
+        h+='<button onclick="window._invSaveEdit(\''+inv.id+'\')" style="flex:1;padding:7px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);border-radius:6px;color:#8a6a1a;font-size:10px;cursor:pointer;font-weight:700;">💾 Guardar</button>';
+        h+='</div>';
+        h+='</div>';
+      }
+    }
+
+    h+='<div style="background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.15);border-radius:12px;padding:14px;margin-top:12px;">';
+    h+='<div style="font-size:9px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">+ Nueva inversión</div>';
+    h+='<div style="display:grid;gap:8px;">';
+    h+='<input id="inv-nombre" placeholder="Nombre (ej. Máquina UV, Local, Inventario)" style="width:100%;background:#fff;border:1px solid rgba(90,60,100,0.18);border-radius:7px;padding:7px 10px;color:#2A1F30;font-size:11px;outline:none;box-sizing:border-box;">';
+    h+='<input id="inv-monto" type="number" placeholder="Monto $" style="width:100%;background:#fff;border:1px solid rgba(251,191,36,0.25);border-radius:7px;padding:7px 10px;color:#fbbf24;font-size:11px;outline:none;box-sizing:border-box;">';
+    h+='<div>';
+    h+='<div style="font-size:8px;color:#6B5A73;margin-bottom:5px;">Área a la que corresponde (opcional):</div>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:5px;">';
+    INV_CATEGORIAS.forEach(function(zona){
+      var act=_invNuevaCategoria===zona.id;
+      h+='<span onclick="window._invNuevaCategoriaSet(\''+zona.id+'\')" style="padding:4px 9px;border-radius:20px;font-size:9px;cursor:pointer;border:1px solid '+(act?zona.color:'rgba(90,60,100,0.14)')+';background:'+(act?zona.color+'22':'transparent')+';color:'+(act?zona.color:'#9C8BA3')+';">'+zona.icon+' '+esc(zona.nombre)+'</span>';
+    });
+    h+='</div></div>';
+    h+='<textarea id="inv-desc" placeholder="Descripción o justificación (opcional)" style="width:100%;background:#fff;border:1px solid rgba(90,60,100,0.14);border-radius:7px;padding:7px 10px;color:#6B5A73;font-size:10px;outline:none;box-sizing:border-box;resize:none;height:52px;"></textarea>';
+    h+='<button onclick="window._invAdd()" style="width:100%;padding:9px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.35);border-radius:8px;color:#fbbf24;font-size:11px;font-weight:700;cursor:pointer;">💾 Registrar inversión</button>';
+    h+='</div></div>';
+    el.innerHTML=h;
+  }
+
+  var _invEditId=null;
+
+  // ── Arrastrar (mismo motor probado en Ruta Anual: mutación directa +
+  // redibujo quirúrgico de solo las líneas afectadas, vía rAF) ──
+  function _invActualizarLineasDe(nodoId){
+    data.forEach(function(inv){
+      var tocaEsta = inv.id===nodoId || (inv.requiere||[]).indexOf(nodoId)!==-1;
+      if(!tocaEsta) return;
+      (inv.requiere||[]).forEach(function(rid){
+        if(rid!==nodoId && inv.id!==nodoId) return;
+        var a=data.find(function(x){return x.id===rid;});
+        if(!a) return;
+        var g=document.querySelector('g.inv-conexion[data-from="'+rid+'"][data-to="'+inv.id+'"]');
+        if(!g) return;
+        var geo=_invConexionGeo(a,inv);
+        var d='M '+geo.x1+','+geo.y1+' Q '+geo.curva.cx+','+geo.curva.cy+' '+geo.x2+','+geo.y2;
+        var paths=g.querySelectorAll('path');
+        if(paths[0]) paths[0].setAttribute('d',d);
+        if(paths[1]) paths[1].setAttribute('d',d);
+        var circ=g.querySelector('circle'); if(circ){ circ.setAttribute('cx',geo.curva.pmx); circ.setAttribute('cy',geo.curva.pmy); }
+        var txt=g.querySelector('text'); if(txt){ txt.setAttribute('x',geo.curva.pmx); txt.setAttribute('y',geo.curva.pmy+3); }
+      });
+    });
+  }
+
+  window._invDragStart=function(ev,id){
+    if(_invModo!=='mover') return;
+    ev.preventDefault();
+    var inv=data.find(function(x){return x.id===id;}); if(!inv) return;
+    var wrap=document.getElementById('inv-lienzo');
+    var rect=wrap.getBoundingClientRect();
+    var scaleX=rect.width>0?INV_W/rect.width:1, scaleY=rect.height>0?INV_H/rect.height:1;
+    var px=(ev.clientX-rect.left)*scaleX, py=(ev.clientY-rect.top)*scaleY;
+    _invDrag={id:id, offX:px-(inv.x||0), offY:py-(inv.y||0), scaleX:scaleX, scaleY:scaleY, rect:rect};
+    document.addEventListener('pointermove', _invDragMove);
+    document.addEventListener('pointerup', _invDragEnd);
+  };
+  function _invDragMove(ev){
+    if(!_invDrag) return;
+    var inv=data.find(function(x){return x.id===_invDrag.id;}); if(!inv) return;
+    var px=(ev.clientX-_invDrag.rect.left)*_invDrag.scaleX, py=(ev.clientY-_invDrag.rect.top)*_invDrag.scaleY;
+    var nx=px-_invDrag.offX, ny=py-_invDrag.offY;
+    if(isFinite(nx)) inv.x=Math.max(0, Math.min(INV_W-INV_SLOT_W, nx));
+    if(isFinite(ny)) inv.y=Math.max(0, Math.min(INV_H-INV_SLOT_H, ny));
+    var elNodo=document.querySelector('.inv-nodo[data-id="'+inv.id+'"]');
+    if(elNodo){ elNodo.style.left=inv.x+'px'; elNodo.style.top=inv.y+'px'; }
+    if(_invRAF) return;
+    var raf=window.requestAnimationFrame||function(fn){return setTimeout(fn,16);};
+    var idArrastrado=_invDrag.id;
+    _invRAF=raf(function(){ _invRAF=null; _invActualizarLineasDe(idArrastrado); });
+  }
+  function _invDragEnd(){
+    document.removeEventListener('pointermove', _invDragMove);
+    document.removeEventListener('pointerup', _invDragEnd);
+    if(_invDrag){ _invDrag=null; save(); }
+  }
+
+  window._invModoSet=function(m){ _invModo=m; _invConectarDesde=null; render(); };
+
+  window._invNodoClick=function(id){
+    if(_invModo!=='conectar') return;
+    if(!_invConectarDesde){ _invConectarDesde=id; render(); return; }
+    if(_invConectarDesde!==id){
+      var destino=data.find(function(x){return x.id===id;});
+      if(destino){
+        if(!destino.requiere) destino.requiere=[];
+        if(destino.requiere.indexOf(_invConectarDesde)===-1 && destino.id!==_invConectarDesde){
+          destino.requiere.push(_invConectarDesde);
+          save();
+        }
+      }
+    }
+    _invConectarDesde=null;
+    render();
+  };
+
+  window._invConexionBorrarPar=function(fromId, toId, ev){
+    if(ev) ev.stopPropagation();
+    var destino=data.find(function(x){return x.id===toId;}); if(!destino) return;
+    destino.requiere=(destino.requiere||[]).filter(function(rid){return rid!==fromId;});
+    save(); render();
+  };
+
+  // ── Tooltip propio con la descripción — el title nativo del navegador
+  // tarda en aparecer y pasa desapercibido, así que se reemplaza por uno
+  // fijo (colgado de document.body, mismo truco que el selector de área del
+  // widget del Hub) que se ve al instante al pasar el mouse. ──
+  window._invTipMostrar=function(id, ev){
+    var inv=data.find(function(x){return x.id===id;}); if(!inv) return;
+    var texto = inv.nombre + (inv.descripcion ? ' — '+inv.descripcion : '');
+    var tip=document.getElementById('inv-tooltip');
+    if(!tip){
+      tip=document.createElement('div');
+      tip.id='inv-tooltip';
+      tip.style.cssText='position:fixed;z-index:2100;background:#1a1233;color:#f1e9ff;padding:7px 11px;border-radius:8px;font-size:11px;line-height:1.45;max-width:230px;box-shadow:0 8px 22px rgba(0,0,0,0.4);border:1px solid rgba(168,85,247,0.4);pointer-events:none;';
+      document.body.appendChild(tip);
+    }
+    tip.textContent=texto;
+    tip.style.display='block';
+    var r=(ev.currentTarget||ev.target).getBoundingClientRect();
+    var left=Math.max(8, Math.min((window.innerWidth||900)-238, r.left+r.width/2-115));
+    tip.style.left=left+'px';
+    tip.style.top=(r.bottom+8)+'px';
+  };
+  window._invTipOcultar=function(){
+    var tip=document.getElementById('inv-tooltip');
+    if(tip) tip.style.display='none';
+  };
+
+  window._invNuevaCategoriaSet=function(zonaId){
+    // El formulario se reconstruye entero al re-renderizar (es innerHTML), así
+    // que hay que guardar y devolver lo que la persona ya había escrito para
+    // no perderlo solo por tocar una categoría.
+    var nombreVal=(document.getElementById('inv-nombre')||{}).value||'';
+    var montoVal=(document.getElementById('inv-monto')||{}).value||'';
+    var descVal=(document.getElementById('inv-desc')||{}).value||'';
+    _invNuevaCategoria = (_invNuevaCategoria===zonaId) ? null : zonaId;
+    render();
+    var nEl=document.getElementById('inv-nombre'); if(nEl) nEl.value=nombreVal;
+    var mEl=document.getElementById('inv-monto'); if(mEl) mEl.value=montoVal;
+    var dEl=document.getElementById('inv-desc'); if(dEl) dEl.value=descVal;
+  };
+  window._invAdd=function(){
+    var nombre=(document.getElementById('inv-nombre')||{}).value||'';
+    var monto=parseFloat((document.getElementById('inv-monto')||{}).value)||0;
+    var desc=(document.getElementById('inv-desc')||{}).value||'';
+    if(!nombre||!monto) return;
+    var libre=_invBuscarHueco();
+    var nueva={id:'inv_'+Date.now(),nombre:nombre,monto:monto,descripcion:desc,estado:'Planeada',requiere:[],x:libre.x,y:libre.y};
+    if(_invNuevaCategoria) nueva.categoria=_invNuevaCategoria;
+    data.push(nueva);
+    _invNuevaCategoria=null;
+    save(); render();
+  };
+  window._invDel=function(id){
+    if(!confirm('¿Eliminar esta inversión? También se quitará de lo que dependa de ella.')) return;
+    data=data.filter(function(x){return x.id!==id;});
+    data.forEach(function(inv){ inv.requiere=(inv.requiere||[]).filter(function(rid){return rid!==id;}); });
+    if(_invEditId===id) _invEditId=null;
+    save(); render();
+  };
+  // Sella el momento exacto en que una inversión pasó a Ejecutada. Ese sello es
+  // lo que Cosmo_Facturacion.html usa como fecha del gasto y como parte del id
+  // del registro derivado — si se deshace la ejecución, se borra el sello (y
+  // allá desaparece el gasto); si se vuelve a ejecutar, nace un sello nuevo.
+  function _invSellarEjecucion(inv, est){
+    if(est==='Ejecutada'){ if(!inv.fechaEjecutada) inv.fechaEjecutada = Date.now(); }
+    else if(inv.fechaEjecutada) delete inv.fechaEjecutada;
+  }
+  window._invEstado=function(id,est){
+    var inv=data.find(function(x){return x.id===id;}); if(!inv) return;
+    inv.estado=est; _invSellarEjecucion(inv, est); save(); render();
+  };
+  window._invEjecutar=function(id){
+    var inv=data.find(function(x){return x.id===id;}); if(!inv) return;
+    inv.estado='Ejecutada'; _invSellarEjecucion(inv, 'Ejecutada'); save(); render();
+  };
+  window._invSetCategoria=function(id, zonaId){
+    var inv=data.find(function(x){return x.id===id;}); if(!inv) return;
+    inv.categoria = (inv.categoria===zonaId) ? undefined : zonaId;
+    save(); render();
+  };
+  window._invEditToggle=function(id){
+    _invEditId = (_invEditId===id) ? null : id;
+    render();
+  };
+  window._invSaveEdit=function(id){
+    var inv=data.find(function(x){return x.id===id;}); if(!inv) return;
+    var nEl=document.getElementById('inv-edit-nombre');
+    var mEl=document.getElementById('inv-edit-monto');
+    var dEl=document.getElementById('inv-edit-desc');
+    if(!nEl||!mEl) return;
+    var nombre=nEl.value.trim();
+    var monto=parseFloat(mEl.value)||0;
+    var desc=dEl?dEl.value.trim():'';
+    if(!nombre||!monto){ alert('Nombre y monto son obligatorios.'); return; }
+    inv.nombre=nombre; inv.monto=monto; inv.descripcion=desc;
+    save(); render();
+  };
+
+  // Migra inversiones que no tengan posición todavía (de antes del árbol libre)
+  var faltaPosicion=false;
+  data.forEach(function(inv){ if(inv.x===undefined || inv.y===undefined){ var libre=_invBuscarHueco(); inv.x=libre.x; inv.y=libre.y; faltaPosicion=true; } });
+  if(faltaPosicion) save();
+
+  window._invRender=render;
+  render();
+}
+
+var _DEFAULT_TEAM = [
+  {id:'d',name:'Diego',role:'Fundador & CEO',color:0,note:'Salir de producción → liderar crecimiento',roleTags:['CEO','Fundador/a'],stats:[75,92,70,88,60,90],tags:['Estrategia','Modelos de negocio','Negociación','Sistemas','Ventas','Producción','Compras'],qualidades:'Visión estratégica, liderazgo y comunicación. Usar en negociación con Marcas Aliadas, apertura de nuevos canales y toma de decisiones clave de crecimiento.'},
+  {id:'k',name:'Kehyly',role:'Fundadora & COO',color:1,note:'Carga alta — considerar delegación',roleTags:['COO','Fundador/a'],stats:[88,78,92,80,75,70],tags:['Diseño','Logística','Contenido','Operaciones','Despacho'],qualidades:'Ejecución, diseño y gestión operativa. Clave para mantener la calidad visual de COSMO y la logística fluida. Liberar de tareas operativas menores para que pueda enfocarse en diseño y contenido estratégico.'},
+  {id:'h',name:'Hermano',role:'Producción Resina',color:2,note:'~2-3h cada dos días (parcial)',roleTags:['Producción','Parcial'],stats:[85,65,45,55,90,40],tags:['Producción','Operaciones'],qualidades:'Conocimiento directo del proceso de resina y operación de máquinas. Aprovechar para aumentar volumen de producción en temporadas altas con turnos más estructurados.'},
+];
+const AVATAR_COLORS = ['linear-gradient(135deg,#7c3aed,#a855f7)','linear-gradient(135deg,#06b6d4,#0891b2)','linear-gradient(135deg,#374151,#6b7280)','linear-gradient(135deg,#dc2626,#ef4444)','linear-gradient(135deg,#059669,#10b981)'];
+
+// Ejes de fortaleza por rol — compartido entre Equipo (radar) y Taller (afinidad de zona)
+const AREAS_BY_ROLE = {
+  'CEO':     { areas:['Visión','Alianzas','Decisiones','Gestión eq.','Ejecución','Comunicación'], icons:['🔭','🤝','⚡','👥','🎯','📣'], colors:['#a855f7','#06b6d4','#f59e0b','#22c55e','#f97316','#f472b6'] },
+  'COO':     { areas:['Creatividad','Contenido','Aliadas','Organización','Finanzas','Iniciativa'], icons:['🎨','📱','🤝','📋','💰','🚀'], colors:['#f472b6','#06b6d4','#a855f7','#22c55e','#f59e0b','#f97316'] },
+  'Producción': { areas:['Velocidad','Precisión','Autonomía','Insumos','Fallos','Volumen'], icons:['⚡','🎯','🧠','📦','🔧','🏭'], colors:['#f97316','#22c55e','#06b6d4','#f59e0b','#a855f7','#f472b6'] },
+};
+const AREAS_DEFAULT = { areas:['Ejecución','Creatividad','Comunicación','Técnica','Organización','Iniciativa'], icons:['⚡','🎨','💬','🔧','📋','🚀'], colors:['#06b6d4','#f472b6','#22c55e','#f97316','#a855f7','#f59e0b'] };
+function getAxes(m){
+  const primaryRole = (m.roleTags||[])[0]||'';
+  return AREAS_BY_ROLE[primaryRole] || AREAS_DEFAULT;
+}
+function getTop2Areas(m){
+  const ax = getAxes(m);
+  const stats = m.stats||[0,0,0,0,0,0];
+  return stats.map(function(v,i){ return {v:v,i:i}; }).sort(function(a,b){ return b.v-a.v; }).slice(0,2)
+    .map(function(t){ return { nombre: ax.areas[t.i], icon: ax.icons[t.i], color: ax.colors[t.i], valor: t.v }; });
+}
+function teamLoadAll(){ return safeParse(localStorage.getItem('cosmo_team'), null) || _DEFAULT_TEAM.map(function(m){ return Object.assign({},m); }); }
+
+// ══════════════════════════════════════
+// TALLER — plano visto desde arriba: solo asigna quién trabaja en cada área.
+// Sin cronómetro ni historial — es un organigrama, no un reloj de turnos.
+// (El estado "conectado ahora" vive aparte, en el widget del Hub.)
+// ══════════════════════════════════════
+var ZONAS_TALLER = [
+  {id:'contenido',      nombre:'Contenido',                       icon:'📱', color:'#f472b6', afines:['creatividad','contenido']},
+  {id:'impresion',      nombre:'Impresión y Gestión de Pedidos',  icon:'🖨️', color:'#0ea5e9', afines:['organización','precisión','velocidad']},
+  {id:'corte',          nombre:'Corte',                           icon:'✂️', color:'#f97316', afines:['precisión','velocidad']},
+  {id:'resina',         nombre:'Resina',                          icon:'🧪', color:'#f59e0b', afines:['velocidad','autonomía','volumen']},
+  {id:'despacho',       nombre:'Despacho',                        icon:'📦', color:'#0e7490', afines:['organización','logística']},
+  {id:'atencion',       nombre:'Atención al Cliente',             icon:'💬', color:'#7c3aed', afines:['comunicación','iniciativa','atención','aliadas']},
+  {id:'administracion', nombre:'Administración',                  icon:'🗂️', color:'#6366f1', afines:['decisiones','finanzas','organización','gestión eq.']},
+];
+
+function initTaller(){
+  var el=document.getElementById('taller-root'); if(!el) return;
+  var asignaciones = tallerAsignNormalizar(tallerAsignacionesLoad());
+  var zonaAbierta = null;
+  function saveAsignaciones(){ tallerAsignacionesSave(asignaciones); }
+
+  function esAfin(persona, zona){
+    return getTop2Areas(persona).some(function(a){
+      return zona.afines.some(function(af){ return (a.nombre||'').toLowerCase().indexOf(af)!==-1; });
+    });
+  }
+
+  function render(){
+    // Siempre en fresco: una sincronización externa puede haber cambiado
+    // localStorage sin pasar por saveAsignaciones() de aquí.
+    asignaciones = tallerAsignNormalizar(tallerAsignacionesLoad());
+    var members = teamLoadAll();
+    var h = '<div style="font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:14px;">Toca una zona para elegir quién trabaja ahí — una persona puede estar en varias áreas.</div>';
+
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr;grid-template-areas:\'contenido impresion\' \'corte resina\' \'despacho atencion\' \'administracion administracion\';gap:10px;">';
+
+    ZONAS_TALLER.forEach(function(zona){
+      var asignados = Object.keys(asignaciones).filter(function(pid){ return (asignaciones[pid]||[]).indexOf(zona.id)!==-1; })
+        .map(function(pid){ return members.find(function(m){ return m.id===pid; }); }).filter(Boolean);
+      var abierta = zonaAbierta===zona.id;
+
+      h += '<div style="grid-area:'+zona.id+';background:'+zona.color+'0d;border:1.5px solid '+zona.color+'40;border-radius:14px;padding:12px;min-height:110px;cursor:pointer;transition:all 0.15s;" onclick="window._tallerToggleZona(\''+zona.id+'\')">';
+      h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">';
+      h += '<span style="font-size:15px;">'+zona.icon+'</span>';
+      h += '<span style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:'+zona.color+';font-weight:700;">'+zona.nombre+'</span>';
+      h += '</div>';
+
+      if(asignados.length){
+        h += '<div style="display:flex;flex-wrap:wrap;gap:10px;">';
+        asignados.forEach(function(p){
+          var afin = esAfin(p, zona);
+          h += '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;" title="'+esc(p.name)+' · '+esc(p.role)+'">';
+          if(afin) h += '<span style="position:absolute;top:-6px;right:-4px;font-size:10px;">✨</span>';
+          h += '<div style="background:'+AVATAR_COLORS[p.color%AVATAR_COLORS.length]+';width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Bebas Neue,sans-serif;font-size:15px;color:#fff;">'+p.name.charAt(0).toUpperCase()+'</div>';
+          h += '<span style="font-size:8px;color:var(--muted);max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(p.name)+'</span>';
+          h += '</div>';
+        });
+        h += '</div>';
+      } else {
+        h += '<div style="font-size:9px;color:var(--muted2);font-style:italic;">Nadie asignado aquí</div>';
+      }
+
+      if(abierta){
+        h += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid '+zona.color+'30;display:flex;flex-direction:column;gap:5px;" onclick="event.stopPropagation()">';
+        members.forEach(function(m){
+          var aqui = (asignaciones[m.id]||[]).indexOf(zona.id)!==-1;
+          h += '<label style="display:flex;align-items:center;gap:6px;font-size:10px;color:'+(aqui?'var(--text)':'var(--muted)')+';font-weight:'+(aqui?'700':'400')+';cursor:pointer;">';
+          h += '<input type="checkbox" '+(aqui?'checked':'')+' onchange="window._tallerAsignarZona(\''+zona.id+'\',\''+m.id+'\')" style="accent-color:'+zona.color+';">';
+          h += esc(m.name);
+          h += '</label>';
+        });
+        h += '</div>';
+      }
+
+      h += '</div>';
+    });
+
+    h += '</div>';
+    el.innerHTML = h;
+  }
+
+  window._tallerAsignarZona = function(zid, mid){
+    // Una persona puede estar en varias zonas a la vez — esto solo prende o
+    // apaga esta zona puntual, sin tocar las demás que ya tenga.
+    var lista = asignaciones[mid] || [];
+    var i = lista.indexOf(zid);
+    if(i===-1) lista.push(zid); else lista.splice(i,1);
+    if(lista.length) asignaciones[mid] = lista; else delete asignaciones[mid];
+    saveAsignaciones(); render();
+  };
+  window._tallerToggleZona = function(zid){
+    zonaAbierta = (zonaAbierta===zid) ? null : zid;
+    render();
+  };
+  window._tallerRender = render;
+  render();
+}
+
+function initTeam(){
+  let members = safeParse(localStorage.getItem('cosmo_team'), null) || _DEFAULT_TEAM.map(function(m){ return Object.assign({},m); });
+  const saveT=()=>teamSave(members);
+  const ROLE_TAGS = ['CEO','COO','Fundador/a','Producción','Diseño','Ventas','Marketing','Logística','Operaciones','Tiempo completo','Parcial','Freelance','Nuevo'];
+  const AREAS = ['Ejecución','Inteligencia','Creatividad','Comunicación','Técnica','Liderazgo'];
+
+  function buildRadar(stats, mi){
+    const size = 140, cx = size/2, cy = size/2, r = 48;
+    const axes = getAxes(members[mi]||{});
+    const AICONS = axes.icons;
+    const ACOLORS = axes.colors;
+    const n = axes.areas.length;
+    function pt(i, val){
+      const angle = (Math.PI*2/n)*i - Math.PI/2;
+      const rv = r * (val/100);
+      return [cx + rv*Math.cos(angle), cy + rv*Math.sin(angle)];
+    }
+    function ptOuter(i){
+      const angle = (Math.PI*2/n)*i - Math.PI/2;
+      return [cx + r*Math.cos(angle), cy + r*Math.sin(angle)];
+    }
+    let bgHexes = '';
+    [0.25,0.5,0.75,1].forEach(function(scale){
+      const pts = AREAS.map(function(_,i){
+        const angle = (Math.PI*2/n)*i - Math.PI/2;
+        return (cx+r*scale*Math.cos(angle))+','+(cy+r*scale*Math.sin(angle));
+      }).join(' ');
+      bgHexes += '<polygon points="'+pts+'" fill="none" stroke="rgba(90,60,100,0.10)" stroke-width="0.5"/>';
+    });
+    let axisLines = '';
+    axes.areas.forEach(function(_,i){
+      const op = ptOuter(i);
+      axisLines += '<line x1="'+cx+'" y1="'+cy+'" x2="'+op[0]+'" y2="'+op[1]+'" stroke="rgba(90,60,100,0.14)" stroke-width="0.5"/>';
+    });
+    const statPts = stats.map(function(v,i){ const p=pt(i,v); return p[0]+','+p[1]; }).join(' ');
+    const avgStat = stats.reduce(function(a,b){return a+b;},0)/stats.length;
+    const fillAlpha = 0.15 + (avgStat/100)*0.25;
+    const statPoly = '<polygon points="'+statPts+'" fill="rgba(124,58,237,'+fillAlpha.toFixed(2)+')" stroke="'+ACOLORS[0]+'" stroke-width="1.5"/>';
+    let dots = '';
+    stats.forEach(function(v,i){
+      const p = pt(i,v);
+      dots += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="2.5" fill="'+ACOLORS[i]+'"/>';
+    });
+    let labels = '';
+    axes.areas.forEach(function(name,i){
+      const angle = (Math.PI*2/n)*i - Math.PI/2;
+      const lx = cx + (r+16)*Math.cos(angle);
+      const ly = cy + (r+16)*Math.sin(angle);
+      labels += '<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle" fill="'+ACOLORS[i]+'" font-size="6" font-weight="600" font-family="DM Sans,sans-serif">'+AICONS[i]+'</text>';
+    });
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'+bgHexes+axisLines+statPoly+dots+labels+'</svg>';
+  }
+
+  function buildSlidersHTML(m, mi){
+    const ax = getAxes(m);
+    let html = '<div style="display:flex;flex-direction:column;gap:5px;">';
+    ax.areas.forEach(function(area, ai){
+      const val = (m.stats||[0,0,0,0,0,0])[ai]||0;
+      const col = ax.colors[ai];
+      html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;">'
+        + '<span style="font-size:11px;width:18px;text-align:center;flex-shrink:0;">'+ax.icons[ai]+'</span>'
+        + '<div style="width:78px;font-size:9px;color:'+col+';flex-shrink:0;font-weight:600;">'+area+'</div>'
+        + '<input type="range" min="0" max="100" value="'+val+'" oninput="window._updStat('+mi+','+ai+',this.value);this.nextElementSibling.textContent=this.value" '
+        + 'style="flex:1;height:4px;accent-color:'+col+';cursor:pointer;border-radius:2px;">'
+        + '<div style="width:26px;text-align:right;font-size:10px;font-family:Space Mono,monospace;color:'+col+';font-weight:700;">'+val+'</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function buildRoleTagsHTML(m, mi){
+    let html = '';
+    (m.roleTags||[]).forEach(function(t,ti){
+      html += '<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.3);border-radius:20px;font-size:10px;color:#22d3ee;">'
+        + t + '<span onclick="window._removeRoleTag('+mi+','+ti+')" style="cursor:pointer;opacity:0.6;font-size:9px;">✕</span></span>';
+    });
+    html += '<span onclick="window._showRoleTagInput('+mi+')" style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:rgba(6,182,212,0.04);border:1px dashed rgba(6,182,212,0.2);border-radius:20px;font-size:10px;color:#6B5A73;cursor:pointer;">+ rol</span>';
+    return html;
+  }
+
+  function buildRoleSuggestionsHTML(m, mi){
+    let html = '';
+    ROLE_TAGS.filter(function(t){ return !(m.roleTags||[]).includes(t); }).forEach(function(t){
+      html += '<span onclick="window._addRoleTag('+mi+',\''+t+'\')" style="padding:2px 7px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:20px;font-size:10px;color:#6B5A73;cursor:pointer;">'+t+'</span>';
+    });
+    return html;
+  }
+
+  function renderTeam(){
+    const root=document.getElementById('team-panel-root'); if(!root)return;
+    let html = '';
+    members.forEach(function(m, mi){
+      html += '<div class="tc" style="margin-bottom:10px;position:relative;">'
+        + '<button onclick="window._delMember('+mi+')" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#6B5A73;cursor:pointer;font-size:13px;padding:2px;">✕</button>'
+        + '<div class="tc-top">'
+        + '<div class="tc-avatar" style="background:'+AVATAR_COLORS[m.color%AVATAR_COLORS.length]+';width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Bebas Neue,sans-serif;font-size:18px;color:#fff;flex-shrink:0;">'+m.name.charAt(0).toUpperCase()+'</div>'
+        + '<div style="flex:1;">'
+        + '<div class="tc-name" contenteditable="true" onblur="window._updMember('+mi+',\'name\',this.textContent)" style="font-weight:600;font-size:13px;outline:none;">'+m.name+'</div>'
+        + '<div class="tc-role" contenteditable="true" onblur="window._updMember('+mi+',\'role\',this.textContent)" style="font-size:10px;color:#6B5A73;outline:none;">'+m.role+'</div>'
+        + '</div></div>'
+        + '<div style="display:flex;gap:10px;align-items:flex-start;margin:10px 0 6px;">'
+        + '<div id="radar-'+mi+'" style="flex-shrink:0;">'+buildRadar((m.stats||[0,0,0,0,0,0]),mi)+'</div>'
+        + '<div style="flex:1;" id="sliders-'+mi+'">'+buildSlidersHTML(m,mi)+'</div>'
+        + '</div>'
+        + '<div style="display:flex;flex-wrap:wrap;gap:4px;margin:4px 0;">'+buildRoleTagsHTML(m,mi)+'</div>'
+        + '<div id="role-tag-input-'+mi+'" style="display:none;margin-bottom:8px;padding:8px;background:rgba(6,182,212,0.04);border:1px solid rgba(6,182,212,0.15);border-radius:8px;">'
+        + '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">'+buildRoleSuggestionsHTML(m,mi)+'</div>'
+        + '<div style="display:flex;gap:5px;">'
+        + '<input id="custom-role-tag-'+mi+'" placeholder="Rol personalizado..." style="flex:1;background:#fff;border:1px solid rgba(6,182,212,0.3);border-radius:7px;padding:5px 9px;color:#2A1F30;font-size:11px;outline:none;">'
+        + '<button onclick="window._addCustomRoleTag('+mi+')" style="padding:5px 10px;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);border-radius:7px;color:#22d3ee;font-size:11px;cursor:pointer;">+ Add</button>'
+        + '</div></div>'
+        + '<div style="background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.15);border-radius:8px;padding:9px 10px;margin-bottom:6px;">'
+        + '<div style="font-size:8px;text-transform:uppercase;letter-spacing:1px;color:#6B5A73;margin-bottom:4px;">✨ Cualidades & cómo usarlas en COSMO</div>'
+        + '<div contenteditable="true" onblur="window._updMember('+mi+',\'qualidades\',this.textContent)" style="font-size:10px;color:#fbbf24;line-height:1.6;outline:none;min-height:30px;">'+(m.qualidades||'Describe las fortalezas de esta persona y cómo aprovecharlas para el crecimiento de COSMO...')+'</div>'
+        + '</div>'
+        + '<div style="background:rgba(90,60,100,0.05);border:1px solid rgba(90,60,100,0.10);border-radius:7px;padding:7px 9px;">'
+        + '<div style="font-size:8px;text-transform:uppercase;letter-spacing:1px;color:#6B5A73;margin-bottom:2px;">Nota / foco actual</div>'
+        + '<div contenteditable="true" onblur="window._updMember('+mi+',\'note\',this.textContent)" style="font-size:10px;color:#f59e0b;font-style:italic;outline:none;">'+m.note+'</div>'
+        + '</div></div>';
+    });
+    root.innerHTML = html;
+  }
+
+  window._updMember=function(i,k,v){members[i][k]=v.trim();saveT();};
+  window._delMember=function(i){if(window.confirm('Eliminar este miembro?')){members.splice(i,1);saveT();renderTeam();}};
+  window._removeTag=function(mi,ti){members[mi].tags.splice(ti,1);saveT();renderTeam();};
+  window._addTag=function(mi,tag){if(!members[mi].tags.includes(tag)){members[mi].tags.push(tag);saveT();renderTeam();}};
+  window._updStat=function(mi,ai,val){
+    if(!members[mi].stats) members[mi].stats=[0,0,0,0,0,0];
+    members[mi].stats[ai]=parseInt(val);
+    saveT();
+    var radarEl=document.getElementById('radar-'+mi);
+    if(radarEl){ radarEl.innerHTML=buildRadar(members[mi].stats,mi); }
+  };
+  window._removeRoleTag=function(mi,ti){
+    if(!members[mi].roleTags) members[mi].roleTags=[];
+    members[mi].roleTags.splice(ti,1);saveT();renderTeam();
+  };
+  window._showRoleTagInput=function(mi){
+    var el=document.getElementById('role-tag-input-'+mi);
+    el.style.display=el.style.display==='none'?'block':'none';
+  };
+  window._addRoleTag=function(mi,tag){
+    if(!members[mi].roleTags) members[mi].roleTags=[];
+    if(!members[mi].roleTags.includes(tag)){members[mi].roleTags.push(tag);saveT();renderTeam();}
+  };
+  window._addCustomRoleTag=function(mi){
+    var inp=document.getElementById('custom-role-tag-'+mi);
+    var val=inp.value.trim();
+    if(!members[mi].roleTags) members[mi].roleTags=[];
+    if(val&&!members[mi].roleTags.includes(val)){members[mi].roleTags.push(val);saveT();renderTeam();}
+  };
+  window._resetTeam=function(){
+    if(window.confirm('Resetear equipo a datos originales?')){
+      members = _DEFAULT_TEAM.map(function(m){ return Object.assign({},m); });
+      saveT(); renderTeam();
+    }
+  };
+  window.addMember=function(){
+    members.push({id:'m'+Date.now(),name:'Nuevo miembro',role:'Cargo',color:members.length,note:'Foco del rol',tags:[]});
+    saveT();renderTeam();
+  };
+  window._teamRender=renderTeam;
+  renderTeam();
+}
+
+// ══════════════════════════════════════
+// FIREBASE SYNC — mismo estándar multi-dispositivo que Pedidos v39 / Facturación:
+// fusión por id con lápidas para las 3 colecciones propias (equipo, metas del año,
+// inversiones) más cosmo_missions (solo se agrega desde aquí cuando una etapa pasa
+// a "En progreso" — el Hub la lee para su Árbol de Misiones).
+// ══════════════════════════════════════
+var _FB = 'https://firestore.googleapis.com/v1/projects/cosmo-98107/databases/(default)/documents/cosmo-hub/';
+var _fbPend = {}, _fbT = {}, FB_DEBOUNCE = 900;
+
+function _fbSave(key,value){
+  try{
+    localStorage.setItem('__ts_'+key, String(Date.now()));
+    _fbPend[key] = String(value);
+    clearTimeout(_fbT[key]);
+    _fbT[key] = setTimeout(function(){ _fbFlushKey(key); }, FB_DEBOUNCE);
+  }catch(e){}
+}
+function _fbFlushKey(key){
+  if(!(key in _fbPend)) return;
+  var value = _fbPend[key]; delete _fbPend[key];
+  clearTimeout(_fbT[key]);
+  try{
+    var ts = Date.now();
+    localStorage.setItem('__ts_'+key, String(ts));
+    fetch(_FB+encodeURIComponent(key)+'?updateMask.fieldPaths=data&updateMask.fieldPaths=updatedAt',{
+      method:'PATCH',headers:{'Content-Type':'application/json'},keepalive:true,
+      body:JSON.stringify({fields:{data:{stringValue:value},updatedAt:{integerValue:String(ts)}}})
+    }).then(function(r){
+      if(r.ok){
+        var flds={}; flds[key]={integerValue:String(ts)};
+        fetch(_FB+'__manifest?updateMask.fieldPaths='+encodeURIComponent(key),{method:'PATCH',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({fields:flds})}).catch(function(){});
+      }
+    }).catch(function(){});
+  }catch(e){}
+}
+function _fbFlushAll(){ Object.keys(_fbPend).forEach(_fbFlushKey); }
+window.addEventListener('beforeunload', _fbFlushAll);
+
+var TEAM_DEL_KEY = 'cosmo_team_del';
+var METAS_DEL_KEY = 'cosmo_metas2026_del';
+var INV_DEL_KEY = 'cosmo_inversiones_del';
+var _EQ_DEL_DIAS = 60;
+
+function _eqParseArr(s){ try{ var v=JSON.parse(s||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+
+function _eqMergeTumbas(loc, rem){
+  var idx={};
+  (loc||[]).concat(rem||[]).forEach(function(t){ if(t&&t.id) idx[t.id]=Math.max(idx[t.id]||0, t.ts||0); });
+  var lim = Date.now()-_EQ_DEL_DIAS*86400000;
+  var out=Object.keys(idx).filter(function(id){ return idx[id]>lim; }).map(function(id){ return {id:id, ts:idx[id]}; });
+  out.sort(function(a,b){ return (b.ts-a.ts) || (a.id<b.id?-1:1); });
+  return out;
+}
+
+function _eqSellarArr(key, arrNuevo, delKey){
+  var prev = {}, prevIds = {};
+  _eqParseArr(localStorage.getItem(key)).forEach(function(x){ if(x&&x.id){ prev[x.id]=x; prevIds[x.id]=1; } });
+  var ahora = Date.now();
+  var canon = function(x){ var c={}; for(var k in x){ if(k!=='_m') c[k]=x[k]; } return JSON.stringify(c); };
+  (arrNuevo||[]).forEach(function(x){
+    if(!x||!x.id) return;
+    var pv = prev[x.id];
+    if(!pv){ x._m = ahora; }
+    else{
+      if(canon(pv)!==canon(x)) x._m = ahora;
+      else if(pv._m && !x._m) x._m = pv._m;
+      delete prevIds[x.id];
+    }
+  });
+  if(!delKey) return;
+  var borrados = Object.keys(prevIds);
+  if(!borrados.length) return;
+  var tumbas = _eqParseArr(localStorage.getItem(delKey));
+  borrados.forEach(function(id){ tumbas.push({id:id, ts:ahora}); });
+  tumbas = _eqMergeTumbas(tumbas, []);
+  try{ localStorage.setItem(delKey, JSON.stringify(tumbas)); }catch(e){}
+  _fbSave(delKey, JSON.stringify(tumbas));
+}
+
+function _eqMergeArr(loc, rem, tumbas){
+  var idx={};
+  (loc||[]).forEach(function(x){ if(x&&x.id) idx[x.id]=x; });
+  (rem||[]).forEach(function(x){
+    if(!x||!x.id) return;
+    var mio=idx[x.id];
+    if(!mio){ idx[x.id]=x; return; }
+    var a=(mio._m||0), b=(x._m||0);
+    if(b>a) idx[x.id]=x;
+    else if(b===a && JSON.stringify(x)>JSON.stringify(mio)) idx[x.id]=x;
+  });
+  var tIdx={};
+  (tumbas||[]).forEach(function(t){ if(t&&t.id) tIdx[t.id]=Math.max(tIdx[t.id]||0, t.ts||0); });
+  var out=[];
+  Object.keys(idx).forEach(function(id){
+    if(tIdx[id] && tIdx[id] >= (idx[id]._m||0)) return;
+    out.push(idx[id]);
+  });
+  out.sort(function(a,b){ return String(a.id)<String(b.id)?-1:1; });
+  return out;
+}
+
+function teamSave(arr){ _eqSellarArr('cosmo_team', arr, TEAM_DEL_KEY); var s=JSON.stringify(arr); localStorage.setItem('cosmo_team',s); _fbSave('cosmo_team',s); }
+function metasSave(arr){ _eqSellarArr('cosmo_metas2026', arr, METAS_DEL_KEY); var s=JSON.stringify(arr); localStorage.setItem('cosmo_metas2026',s); _fbSave('cosmo_metas2026',s); }
+function inversionesSave(arr){ _eqSellarArr('cosmo_inversiones', arr, INV_DEL_KEY); var s=JSON.stringify(arr); localStorage.setItem('cosmo_inversiones',s); _fbSave('cosmo_inversiones',s); }
+function missionsSave(arr){ var s=JSON.stringify(arr); localStorage.setItem('cosmo_missions',s); _fbSave('cosmo_missions',s); }
+// Zona "de base" de cada persona (quién trabaja normalmente dónde) — la fija
+// Diego desde Taller. Es lo que usa el widget rápido del Hub para saber si
+// alguien puede "conectarse".
+function tallerAsignacionesLoad(){ return safeParse(localStorage.getItem('cosmo_taller_asignaciones'), {}); }
+function tallerAsignacionesSave(obj){ var s=JSON.stringify(obj); localStorage.setItem('cosmo_taller_asignaciones',s); _fbSave('cosmo_taller_asignaciones',s); }
+// Una persona puede estar en varias áreas — migra el formato viejo de una
+// sola zona (string) al nuevo de varias (array), por si quedó algo del diseño anterior.
+function tallerAsignNormalizar(asign){
+  var out = {};
+  Object.keys(asign||{}).forEach(function(pid){
+    var v = asign[pid];
+    out[pid] = Array.isArray(v) ? v.slice() : (v ? [v] : []);
+  });
+  return out;
+}
+
+var _FB_ARR_MERGE = {};
+_FB_ARR_MERGE['cosmo_team'] = TEAM_DEL_KEY;
+_FB_ARR_MERGE['cosmo_metas2026'] = METAS_DEL_KEY;
+_FB_ARR_MERGE['cosmo_inversiones'] = INV_DEL_KEY;
+_FB_ARR_MERGE['cosmo_missions'] = null;
+
+var _FB_TOMB_KEYS = [TEAM_DEL_KEY, METAS_DEL_KEY, INV_DEL_KEY];
+var _FB_KEYS = ['cosmo_team','cosmo_metas2026','cosmo_inversiones','cosmo_missions','cosmo_taller_asignaciones'].concat(_FB_TOMB_KEYS);
+
+var _fbPulling = false, _fbLastPull = 0;
+function _fbPull(force, cb){
+  if(_fbPulling){ if(cb) cb(); return; }
+  if(!force && Date.now()-_fbLastPull<3000){ if(cb) cb(); return; }
+  _fbPulling = true; _fbLastPull = Date.now();
+  _syncDot('run');
+  fetch(_FB+'__manifest')
+  .then(function(r){ return r.ok ? r.json() : null; })
+  .then(function(doc){
+    if(!doc || !doc.fields){ _syncDot('ok'); return; }
+    var jobs = [];
+    _FB_KEYS.forEach(function(key){
+      var f = doc.fields[key];
+      if(!f || !f.integerValue) return;
+      var remoto = parseInt(f.integerValue,10)||0;
+      var local  = parseInt(localStorage.getItem('__ts_'+key)||'0',10)||0;
+      if(remoto > local) jobs.push({key:key, ts:remoto});
+    });
+    if(!jobs.length){ _syncDot('ok'); return; }
+    jobs.sort(function(a,b){ return (_FB_TOMB_KEYS.indexOf(a.key)===-1?1:0)-(_FB_TOMB_KEYS.indexOf(b.key)===-1?1:0); });
+    var huboCambios = false;
+    var cadena = Promise.resolve();
+    jobs.forEach(function(j){
+      cadena = cadena.then(function(){
+        return fetch(_FB+encodeURIComponent(j.key))
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(d){
+            var remStr = (d && d.fields && d.fields.data && d.fields.data.stringValue) || '';
+            if(!remStr) return;
+            var key = j.key;
+            if(_FB_TOMB_KEYS.indexOf(key)!==-1){
+              var merged = _eqMergeTumbas(_eqParseArr(localStorage.getItem(key)), _eqParseArr(remStr));
+              var mergedStr = JSON.stringify(merged);
+              if(mergedStr !== localStorage.getItem(key)){ localStorage.setItem(key, mergedStr); huboCambios = true; }
+              if(mergedStr !== remStr) _fbSave(key, mergedStr);
+              else localStorage.setItem('__ts_'+key, String(j.ts));
+            } else if(_FB_ARR_MERGE.hasOwnProperty(key)){
+              var delKey = _FB_ARR_MERGE[key];
+              var tumbas = delKey ? _eqParseArr(localStorage.getItem(delKey)) : [];
+              var loc = _eqParseArr(localStorage.getItem(key));
+              var merged2 = _eqMergeArr(loc, _eqParseArr(remStr), tumbas);
+              var merged2Str = JSON.stringify(merged2);
+              if(merged2Str !== localStorage.getItem(key)){ localStorage.setItem(key, merged2Str); huboCambios = true; }
+              if(merged2Str !== remStr) _fbSave(key, merged2Str);
+              else localStorage.setItem('__ts_'+key, String(j.ts));
+            } else {
+              // Adopción simple (cosmo_taller y cualquier otra clave de bajo
+              // riesgo de concurrencia que no esté registrada como arreglo)
+              if(remStr !== localStorage.getItem(key)){ localStorage.setItem(key, remStr); huboCambios = true; }
+              localStorage.setItem('__ts_'+key, String(j.ts));
+            }
+          }).catch(function(){});
+      });
+    });
+    return cadena.then(function(){
+      _syncDot('ok');
+      if(!huboCambios) return;
+      if(document.getElementById('vista-team').classList.contains('active') && typeof window._teamRender==='function') window._teamRender();
+      if(document.getElementById('vista-taller').classList.contains('active') && typeof window._tallerRender==='function') window._tallerRender();
+      if(document.getElementById('vista-ruta').classList.contains('active') && typeof window._rutaRender==='function') window._rutaRender();
+      if(document.getElementById('vista-inversiones').classList.contains('active') && typeof window._invRender==='function') window._invRender();
+      toast('☁️ Datos sincronizados desde otro dispositivo', 2200);
+    });
+  })
+  .catch(function(){ _syncDot(navigator.onLine===false ? 'off' : 'err'); })
+  .then(function(){ _fbPulling = false; if(cb) cb(); });
+}
+
+var SYNC_MS = 10000;
+var _syncTimer = null;
+function _syncStart(){
+  if(_syncTimer) return;
+  _syncTimer = setInterval(function(){ if(document.visibilityState==='visible') _fbPull(); }, SYNC_MS);
+}
+function _syncStop(){ clearInterval(_syncTimer); _syncTimer = null; }
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'hidden'){ _fbFlushAll(); _syncStop(); }
+  else { _fbPull(true); _syncStart(); }
+});
+window.addEventListener('focus',  function(){ _fbPull(); });
+window.addEventListener('online', function(){ _fbPull(true); });
+window.addEventListener('offline',function(){ _syncDot('off'); });
+
+function _syncDot(estado){
+  var d = document.getElementById('sync-dot');
+  if(!d) return;
+  d.className = 'sync-dot ' + estado;
+  if(estado==='ok')       d.title = '☁️ Sincronizado con tus otros dispositivos · toca para forzar ahora';
+  else if(estado==='run') d.title = '☁️ Sincronizando…';
+  else if(estado==='off') d.title = 'Sin conexión — los cambios quedan guardados aquí y suben solos al volver internet';
+  else                    d.title = 'No se pudo sincronizar · toca para reintentar';
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+initTeam();
+initTaller();
+initRuta();
+initInversiones();
+_syncDot(navigator.onLine===false ? 'off' : 'run');
+_fbPull(true, function(){
+  if(typeof window._teamRender==='function') window._teamRender();
+  if(typeof window._tallerRender==='function') window._tallerRender();
+  if(typeof window._rutaRender==='function') window._rutaRender();
+  if(typeof window._invRender==='function') window._invRender();
+});
+if(document.visibilityState !== 'hidden') _syncStart();
+</script>
+</body>
+</html>
